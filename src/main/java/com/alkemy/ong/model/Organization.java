@@ -1,8 +1,8 @@
 package com.alkemy.ong.model;
 
 
-import com.sun.istack.NotNull;
-import com.sun.istack.Nullable;
+import org.springframework.lang.Nullable;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -20,15 +21,15 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
-@SQLDelete(sql = "UPDATE charactr SET deleted = true WHERE id=? and version=?")
+@SQLDelete(sql = "UPDATE organizations SET deleted = true WHERE id=?")
 @Where(clause = "deleted=false")
-public class OrganizationModel {
+public class Organization {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @NotNull(message = "Name cannot be null")
     private String name;
 
     @Nullable
@@ -37,10 +38,10 @@ public class OrganizationModel {
     @Nullable
     private Long phone;
 
-    @NotNull
+    @NotNull(message = "Email cannot be null")
     private String email;
 
-    @NotNull
+    @NotNull(message = "Welcome Text cannot be null")
     private String welcomeText;
 
     @Nullable
@@ -50,6 +51,9 @@ public class OrganizationModel {
     @NotNull
     @Column(nullable = false, updatable = false)
     private LocalDateTime dateCreation;
+
+    @LastModifiedDate
+    private LocalDateTime dateUpdate;
 
     @NotNull
     private boolean deleted = Boolean.FALSE;
