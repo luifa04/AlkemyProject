@@ -1,8 +1,8 @@
 package com.alkemy.ong.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.sun.istack.NotNull;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.springframework.data.annotation.CreatedDate;
@@ -13,30 +13,32 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 
 @Data
+@EqualsAndHashCode
 @NoArgsConstructor
 @Entity
-@SQLDelete(sql = "UPDATE user SET enabled = false WHERE id = ?")
+@SQLDelete(sql = "UPDATE user SET enabled = false WHERE userId = ?")
 @Table(name = "user", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
-public class User implements UserDetails {
+public class User implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer userId;
 
-    @NotNull
+    @NotNull(message = "First name cannot be null")
     private String firstName;
 
-    @NotNull
+    @NotNull(message = "Last name cannot be null")
     private String lastName;
 
-    @NotNull
+    @NotNull(message = "Email cannot be null")
     private String email;
 
-    @NotNull
+    @NotNull(message = "Password cannot be null")
     private String password;
 
     @Nullable
@@ -55,21 +57,12 @@ public class User implements UserDetails {
 
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name="pk_roleId")
-    private Role roleId;
-
-    public User(String firstName, String lastName, String email, String password, String photo, Role roleId) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-        this.photo = photo;
-        this.role = roleId;
-    }
+    @JoinColumn(name="roleId")
+    private Role role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(roleId.name());
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.name());
         return Collections.singletonList(authority);
     }
 
