@@ -32,7 +32,6 @@ public class News {
     @NotNull(message = "image cannot be null")
     private @NonNull String image;
 
-    @NotNull(message = "enabled cannot be null")
     private @NonNull Boolean enabled = Boolean.TRUE;
 
     @CreatedDate
