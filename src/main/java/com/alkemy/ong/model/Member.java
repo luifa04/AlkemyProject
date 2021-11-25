@@ -1,5 +1,7 @@
-package com.alkemy.ong.entities;
+package com.alkemy.ong.model;
 
+
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,17 +16,19 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name="members")
-@SQLDelete(sql = "UPDATE posts SET deleted = true WHERE id=?")
+@SQLDelete(sql = "UPDATE members SET deleted = true WHERE id=?")
 @Where(clause = "deleted=false")
 public class Member {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
+    @NotNull(message = "cannot be null")
     private String name;
     private String facebookUrl;
     private String instagramUrl;
     private String linkedinUrl;
+    @NotNull(message = "cannot be null")
     private String image;
     private String description;
     private LocalDateTime timestamp;
