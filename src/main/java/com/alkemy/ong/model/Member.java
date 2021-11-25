@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -31,7 +33,11 @@ public class Member {
     @NotNull(message = "cannot be null")
     private String image;
     private String description;
-    private LocalDateTime timestamp;
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime dateCreation;
+    @LastModifiedDate
+    private LocalDateTime dateUpdate;
     private boolean deleted = Boolean.FALSE;
 
 }
