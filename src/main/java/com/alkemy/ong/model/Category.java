@@ -1,21 +1,23 @@
 package com.alkemy.ong.model;
 
+import javax.validation.constraints.NotNull;
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "categories")
 @Data
+@SQLDelete(sql = "UPDATE categories SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 public class Category {
 
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
-    @Column(nullable = false)
+    @NotNull(message = "Name cannot be null")
     private String name;
     private String description;
     private String image;
