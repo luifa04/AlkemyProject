@@ -20,7 +20,7 @@ public class OrganizationController {
     private final IOrganizationService iOrganizationService;
 
     @PatchMapping("/public")
-    //@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<OrganizationResponse> updatePublicData(@Valid @RequestBody OrganizationRequest organization){
         return new ResponseEntity<OrganizationResponse>(iOrganizationService.updatePublicData(organization), HttpStatus.OK);
     }
