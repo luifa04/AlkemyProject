@@ -24,7 +24,7 @@ import lombok.Data;
  */
 @Data
 @Entity
-@Table(name="slide")
+@Table(name="slides")
 public class Slide {
     
     @Id
@@ -38,7 +38,7 @@ public class Slide {
     private String text;
     
     @NotNull(message="the order cannot be empity")
-    private Integer order;
+    private Integer orderSlide;
     
     @NotNull(message="the organizationId cannot be empity")
     private Long organizationId;
