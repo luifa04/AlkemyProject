@@ -8,11 +8,13 @@ import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.service.IOrganizationService;
 import lombok.RequiredArgsConstructor;
 import org.openapitools.jackson.nullable.JsonNullable;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -21,15 +23,16 @@ import java.util.function.Consumer;
 public class OrganizationServiceImpl implements IOrganizationService {
 
     private final OrganizationRepository organizationRepository;
+    private final MessageSource messageSource;
     private Boolean hasUpdate = Boolean.FALSE;
+
 
     @Override
     @Transactional
     public OrganizationResponse updatePublicData(OrganizationRequest organizationRequest) {
-
-        final Long organizationId = 1L;//se considera que solo hay una organización
-        Organization organization = organizationRepository.findById(organizationId)
-                                                        .orElseThrow(()-> new NotFoundException(String.format("cannot find organization with id %s", organizationId)));
+        String notFoundOrganizationMessage = messageSource.getMessage("organization.notFound", null, Locale.US);
+        Organization organization = organizationRepository.findAll().stream().findFirst()
+                                                        .orElseThrow(()-> new NotFoundException(notFoundOrganizationMessage));
 
         updateIfNotBlankAndNotEqual(organizationRequest.getName(), organization.getName(), organization::setName , "name");
         updateIfNotBlankAndNotEqual(organizationRequest.getImage(), organization.getImage(), organization::setImage , "image");
@@ -54,9 +57,10 @@ public class OrganizationServiceImpl implements IOrganizationService {
     }
 
     private <T> void updateIfNotBlankAndNotEqual(T source , T destination, Consumer<T> update, String parameterName){
+        String notBeBlankMessage = messageSource.getMessage("organization.blank", null, Locale.US);
         if (source != null && !source.equals(destination)){
             if (source.getClass().equals(String.class) && ((String) source).isBlank()){
-                throw new IllegalArgumentException( String.format("%s cannot be blank", parameterName));
+                throw new IllegalArgumentException(String.format("%s %s", parameterName, notBeBlankMessage));
             }
             update.accept(source);
             hasUpdate = Boolean.TRUE;
@@ -64,10 +68,11 @@ public class OrganizationServiceImpl implements IOrganizationService {
     }
 
     private <T> void updateIfNotEmptyAndNotEqual(JsonNullable<T> source , T destination, Consumer<T> update, String parameterName){
+        String notBeBlankMessage = messageSource.getMessage("organization.blank", null, Locale.US);
         if (source != null) {
             T internalSource = source.orElse(null);
             if (internalSource != null && internalSource.getClass().equals(String.class) && ((String) internalSource).isBlank()) {
-                throw new IllegalArgumentException(String.format("%s cannot be blank", parameterName));
+                throw new IllegalArgumentException(String.format("%s %s", parameterName, notBeBlankMessage));
             }
             if(!Objects.equals(internalSource, destination)){
                 update.accept(internalSource);
