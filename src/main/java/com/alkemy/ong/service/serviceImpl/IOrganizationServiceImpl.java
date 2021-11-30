@@ -35,7 +35,7 @@ public class IOrganizationServiceImpl implements IOrganizationService {
     }
 
     public List<OrganizationPublicDto> getAllOrganizations() {
-        List<Organization> entities = this.organizationRepository.findAll();
+        List<Organization> entities = organizationRepository.findAll();
         List<OrganizationPublicDto> result = this.modelList2DTOList(entities);
         return result;
     }

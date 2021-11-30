@@ -16,11 +16,11 @@ import java.util.List;
 public class OrganizationController {
 
     @Autowired
-    private IOrganizationService IOrganizationService;
+    private IOrganizationService organizationService;
 
     @GetMapping("/public")
     public ResponseEntity<List<OrganizationPublicDto>> getAll() {
-        List<OrganizationPublicDto> organizations = this.IOrganizationService.getAllOrganizations();
+        List<OrganizationPublicDto> organizations = organizationService.getAllOrganizations();
         return ResponseEntity.ok().body(organizations);
 
     }
