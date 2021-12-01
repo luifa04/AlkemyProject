@@ -5,28 +5,15 @@
  */
 package com.alkemy.ong.service;
 
-import com.alkemy.ong.model.Category;
-import com.alkemy.ong.repository.CategoryRepository;
-import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.alkemy.ong.dto.CategoryDto;
+
 
 /**
  *
  * @author mateo
  */
-@Service
-public class CategoryService {
-    @Autowired
-    private CategoryRepository categoryRepository;
-    
-    public Category findById(Long id){
-        Optional<Category> rta= categoryRepository.findById(id);
-        if (rta.isPresent()) {
-            Category category= rta.get();
-            return category;
-        }else{
-          throw  new Error("Error 404");
-        }
-    }
+
+public interface CategoryService {
+
+    public CategoryDto findById(Long id);
 }
