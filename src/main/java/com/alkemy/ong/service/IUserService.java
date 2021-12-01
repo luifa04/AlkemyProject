@@ -1,11 +1,16 @@
 package com.alkemy.ong.service;
 
-import java.util.Optional;
-
+import com.alkemy.ong.dto.UserDto;
 import com.alkemy.ong.model.User;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface IUserService {
 
-	Optional<User> findByEmail(String email);
+    public List<UserDto> getUsers();
 
+    Optional<User> findByEmail(String email);
 }
+
+
