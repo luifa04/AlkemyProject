@@ -301,7 +301,7 @@
                         style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:11px;line-height:1.5;text-align:left;color:#000000;">
                         <p style="text-align: center;"><strong>Datos de contacto: </strong></p>
                         <p style="text-align: center;">Nombre: ${name}</p>
-                        <p style="text-align: center;">Apellido: ${surName}</p>
+                        <p style="text-align: center;">Apellido: ${surname}</p>
                       </div>
 
                     </td>
