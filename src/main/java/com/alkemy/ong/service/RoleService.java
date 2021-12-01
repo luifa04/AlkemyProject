@@ -12,9 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class RoleService {
     @Autowired
-    RoleRepository roleRepository;
+    private RoleRepository roleRepository;
 
     public Role findByName(String name){
         return roleRepository.findByName(name);
     }
+
 }

@@ -1,6 +1,8 @@
 package com.alkemy.ong.service;
 
+import com.alkemy.ong.security.RoleEnum;
 import com.alkemy.ong.dto.UserRequest;
+import com.alkemy.ong.exception.EmailExistException;
 import com.alkemy.ong.model.User;
 import com.alkemy.ong.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -18,19 +20,20 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService implements UserDetailsService {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    RoleService roleService;
+    private RoleService roleService;
 
     @Autowired
-    BCryptPasswordEncoder bCryptPasswordEncoder;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public User createUser(UserRequest userRequest) throws Exception {
-        if(userRepository.findByEmail(userRequest.getEmail()) != null){
-            throw new Exception("There is an account with that email address: " + userRequest.getEmail());
-        }
-        return userRepository.save(generateUser(userRequest));
+    @Transactional
+    public User createUser(UserRequest userRequest) throws EmailExistException {
+            if (userRepository.findByEmail(userRequest.getEmail()) != null) {
+                throw new EmailExistException(userRequest.getEmail());
+            }
+            return userRepository.save(generateUser(userRequest));
     }
 
     private User generateUser(UserRequest userRequest) {
@@ -40,7 +43,7 @@ public class UserService implements UserDetailsService {
         user.setEmail(userRequest.getEmail());
         user.setPhoto(userRequest.getPhoto());
         user.setPassword(bCryptPasswordEncoder.encode(userRequest.getPassword()));
-        user.setRole(roleService.findByName("USER"));
+        user.setRole(roleService.findByName(RoleEnum.USER.getRoleName()));
         return user;
     }
 
