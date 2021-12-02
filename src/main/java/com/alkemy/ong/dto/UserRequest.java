@@ -20,7 +20,7 @@ public class UserRequest {
 
     @NotBlank(message = "Email is necessary.")
     @Email(message = "Email should be valid.", regexp = "[A-Za-z0-9._%-+]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}")
-    private String email;   
+    private String email;
 
     @NotBlank(message = "Password is necessary.")
     @Size(min = 5, max = 15, message = "Password must be between 5 and 15 characters.")

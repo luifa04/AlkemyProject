@@ -23,6 +23,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody UserRequest userRequest, BindingResult bindingResult) throws EmailExistException {
         if (bindingResult.hasErrors()) {
+            modelAndview.addobject("error",bindingResult.getFieldErrors());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>((userService.createUser(userRequest)), HttpStatus.CREATED);
