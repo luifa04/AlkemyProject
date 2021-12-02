@@ -32,17 +32,7 @@ public class JwtProviderImpl implements IJwtProvider{
 	@Value("${app.jwtExpirationInMs}")
 	private static Long JWT_EXPIRATION_TIME;
 	
-	@Override
-	public String generateToken(UserDetailsImpl auth) {
-
-		String authorities = auth.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-				.collect(Collectors.joining(","));
-
-		return Jwts.builder().setSubject(auth.getUsername()).claim("roles", authorities).claim("userId", auth.getId())
-				.setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION_TIME))
-				.signWith(SignatureAlgorithm.HS512, JWT_SECRET).compact();
-
-	}	
+	
 	
 	@Override
 	public Authentication getAuthentication(HttpServletRequest request) {
@@ -81,6 +71,33 @@ public class JwtProviderImpl implements IJwtProvider{
 			return null;
 		}
 		return Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token).getBody();
-	}	
+	}
+
+
+
+	@Override
+	public String generateToken(UserDetailsImpl userDetails) {
+		String authorities = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+				.collect(Collectors.joining(","));
+
+		return Jwts.builder().setSubject(userDetails.getUsername()).claim("roles", authorities).claim("userId", ((UserDetailsImpl) userDetails).getId())
+				.setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION_TIME))
+				.signWith(SignatureAlgorithm.HS512, JWT_SECRET).compact();
+
+	}
+
+	@Override
+	public String generateToken(UserDetails userDetails) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getNombreUsuarioFromToken(String token){
+        return Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token).getBody().getSubject();
+ }
+
+
+
+	
 	
 }
