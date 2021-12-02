@@ -14,8 +14,9 @@ import java.io.IOException;
 
 public class EmailService {
 
-    static SendGrid sendGrid = new SendGrid("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");
-    static Email from = new Email("ok@ong.com");
+    private static final SendGrid sendGrid = new SendGrid("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");
+    private static final Email from = new Email("oalkemy@gmail.com");
+
 
     public void sendMail(String emailTo, String subject, String emailContent) throws IOException {
 
@@ -35,9 +36,6 @@ public class EmailService {
             System.out.println(response.getHeaders());
         } catch (IOException ex) {
         }
-
-
     }
-
 }
 
