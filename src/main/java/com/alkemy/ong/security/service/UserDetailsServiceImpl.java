@@ -1,5 +1,4 @@
-package com.alkemy.ong.security;
-
+package com.alkemy.ong.security.service;
 
 import javax.transaction.Transactional;
 
@@ -8,21 +7,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import com.alkemy.ong.model.User;
-import com.alkemy.ong.security.jwt.JwtProviderImpl;
-import com.alkemy.ong.service.UserServiceImpl;
 
+import com.alkemy.ong.model.User;
+import com.alkemy.ong.service.impl.UserServiceImpl;
 
 @Service
 @Transactional
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    @Autowired(required=true)
-    UserServiceImpl userServiceImpl;
-    
     @Autowired
-    JwtProviderImpl jwtProviderImpl;
-
+    private UserServiceImpl userServiceImpl;
+    
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User usuario = userServiceImpl.findByEmail(email).get();

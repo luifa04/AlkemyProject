@@ -21,6 +21,7 @@ import com.alkemy.ong.security.RoleEnum;
 
 
 
+
 @Entity
 @Table(name = "roles")
 @AllArgsConstructor
@@ -46,11 +47,5 @@ public class Role {
 	 @Temporal(TemporalType.TIMESTAMP)
 	 private Date timestamp;
 
-	public Object stream() {
-		
-		return getRoleEnum();
-	}
-
 	
-	 
 }
