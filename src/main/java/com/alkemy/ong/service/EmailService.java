@@ -14,8 +14,8 @@ import java.io.IOException;
 
 public class EmailService {
 
-    SendGrid sendGrid = new SendGrid("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");
-    Email from = new Email("ok@ong.com");
+    static SendGrid sendGrid = new SendGrid("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");
+    static Email from = new Email("ok@ong.com");
 
     public void sendMail(String emailTo, String subject, String emailContent) throws IOException {
 
