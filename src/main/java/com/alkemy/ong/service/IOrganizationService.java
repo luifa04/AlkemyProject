@@ -1,12 +1,14 @@
 package com.alkemy.ong.service;
 
-
+import com.alkemy.ong.dto.OrganizationPublicDto;
 import com.alkemy.ong.dto.OrganizationRequest;
 import com.alkemy.ong.dto.OrganizationResponse;
-import com.alkemy.ong.model.Organization;
+
+
+import java.util.List;
 
 public interface IOrganizationService {
 
-    public OrganizationResponse updatePublicData(OrganizationRequest organization);
-
+    List<OrganizationPublicDto> getAllOrganizations();
+    OrganizationResponse updatePublicData(OrganizationRequest organization);
 }

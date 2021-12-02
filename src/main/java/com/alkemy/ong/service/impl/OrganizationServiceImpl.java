@@ -2,6 +2,7 @@ package com.alkemy.ong.service.impl;
 
 import com.alkemy.ong.dto.OrganizationRequest;
 import com.alkemy.ong.dto.OrganizationResponse;
+import com.alkemy.ong.dto.OrganizationPublicDto;
 import com.alkemy.ong.exception.NotFoundException;
 import com.alkemy.ong.model.Organization;
 import com.alkemy.ong.repository.OrganizationRepository;
@@ -10,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+
 
 import javax.transaction.Transactional;
 
@@ -17,11 +20,14 @@ import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class OrganizationServiceImpl implements IOrganizationService {
 
+    @Autowired
     private final OrganizationRepository organizationRepository;
     private final MessageSource messageSource;
     private Boolean hasUpdate = Boolean.FALSE;
@@ -79,6 +85,30 @@ public class OrganizationServiceImpl implements IOrganizationService {
                 hasUpdate = Boolean.TRUE;
             }
         }
+    }
+
+    public OrganizationPublicDto model2DTO(Organization model){
+        OrganizationPublicDto dto = new OrganizationPublicDto();
+        dto.setName(model.getName());
+        dto.setImage(model.getImage());
+        dto.setAddress(model.getAddress());
+        dto.setPhone(model.getPhone());
+
+        return dto;
+    }
+
+    public List<OrganizationPublicDto> modelList2DTOList(List<Organization> entities){
+        List<OrganizationPublicDto> dtos = new ArrayList<>();
+        for (Organization entity : entities) {
+            dtos.add(model2DTO(entity));
+        }
+        return dtos;
+    }
+
+    public List<OrganizationPublicDto> getAllOrganizations() {
+        List<Organization> entities = organizationRepository.findAll();
+        List<OrganizationPublicDto> result = this.modelList2DTOList(entities);
+        return result;
     }
 
 }
