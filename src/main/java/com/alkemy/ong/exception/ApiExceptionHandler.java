@@ -12,10 +12,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.servlet.http.HttpServletRequest;
+
 
 @ControllerAdvice
 public class ApiExceptionHandler {
-	
 
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(Exception.class)
@@ -54,6 +55,18 @@ public class ApiExceptionHandler {
         });
 		return new ExceptionMessage(HttpStatus.BAD_REQUEST.value(),"bad request", LocalDateTime.now(), errors);
 	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(EmailExistException.class)
+	@ResponseBody
+	public ExceptionMessage handleEmailExist(HttpServletRequest request,
+													 EmailExistException e) {
+
+		return new ExceptionMessage(HttpStatus.BAD_REQUEST.value(), e.getMessage(), LocalDateTime.now());
+
+	}
+
+
 	
 	
 }

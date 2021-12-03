@@ -3,6 +3,9 @@ package com.alkemy.ong.security;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.alkemy.ong.dto.UserRequest;
+import com.alkemy.ong.exception.EmailExistException;
+import com.alkemy.ong.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +23,9 @@ import com.alkemy.ong.model.User;
 public class AuthController {
 
 	@Autowired
+	private UserServiceImpl userServiceImpl;
+
+	@Autowired
 	private AuthenticationServiceImpl authenticationServiceImpl;
 
 	@PostMapping("/login")
@@ -35,6 +41,14 @@ public class AuthController {
 			return new ResponseEntity<>("{ok = false }" + "error: " + e.getLocalizedMessage(), HttpStatus.CONFLICT);
 		}
 
+	}
+
+	@PostMapping("/register")
+	public ResponseEntity<?> registerUser(@Valid @RequestBody UserRequest userRequest, BindingResult bindingResult) throws EmailExistException {
+		if (bindingResult.hasErrors()) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>((userServiceImpl.createUser(userRequest)), HttpStatus.CREATED);
 	}
 
 }
