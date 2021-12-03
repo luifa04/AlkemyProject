@@ -53,7 +53,8 @@ public class ApiExceptionHandler {
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-		return new ExceptionMessage(HttpStatus.BAD_REQUEST.value(),"bad request", LocalDateTime.now(), errors);
+
+		return new ExceptionMessage(HttpStatus.BAD_REQUEST.value(),"Bad Request", LocalDateTime.now(), errors);
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -67,6 +68,4 @@ public class ApiExceptionHandler {
 	}
 
 
-	
-	
 }

@@ -5,8 +5,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
@@ -19,6 +21,7 @@ import java.time.LocalDateTime;
 @Entity
 @SQLDelete(sql = "UPDATE user SET enabled = false WHERE userId = ?")
 @Table(name = "user", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
+@EntityListeners(AuditingEntityListener.class)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,17 +37,15 @@ public class User {
     private String email;
 
     @NotNull(message = "Password cannot be null")
+    @Length(min = 5, message = "Ingrese una contraseña de minímo 5 carácteres")
     private String password;
 
     @Nullable
     private String photo;
 
-    @NotNull
     private Boolean enabled=true;
 
     @CreatedDate
-    @NotNull
-    @Column(updatable=false)
     private LocalDateTime dateCreation;
 
     @LastModifiedDate

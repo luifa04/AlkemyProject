@@ -19,14 +19,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements IUserService, UserDetailsService {
 
-    private final UserRepository userRepository;
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -38,6 +38,8 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 
     @Transactional
     public User createUser(UserRequest userRequest) throws EmailExistException {
+        System.out.println(userRepository.findByEmail(userRequest.getEmail()));
+
         if (userRepository.findByEmail(userRequest.getEmail()) != null) {
             throw new EmailExistException(userRequest.getEmail());
         }
@@ -45,6 +47,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
     }
 
     private User generateUser(UserRequest userRequest) {
+        System.out.println("generate user");
         User user = new User();
         user.setFirstName(userRequest.getFirstName());
         user.setLastName(userRequest.getLastName());
@@ -64,8 +67,8 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
         return userDto;
     }
 
-    @Override
-    public Optional<User> findByEmail(String email) {
+
+    public User findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 

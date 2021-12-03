@@ -10,7 +10,7 @@ public interface IUserService {
 
     public List<UserDto> getUsers();
 
-    Optional<User> findByEmail(String email);
+    User findByEmail(String email);
 }
 
 
