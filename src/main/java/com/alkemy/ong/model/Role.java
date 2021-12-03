@@ -2,6 +2,8 @@ package com.alkemy.ong.model;
 
 import java.util.Date;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,6 +18,8 @@ import javax.validation.constraints.NotNull;
 
 import lombok.NonNull;
 import org.springframework.lang.Nullable;
+
+import com.alkemy.ong.security.RoleEnum;
 
 
 
@@ -34,11 +38,21 @@ public class Role {
 	 @NotEmpty(message = "role name cannot be empty")
 	 private String name;
 	 
+	 @NotNull
+	 @Enumerated(EnumType.STRING)
+	 private RoleEnum roleEnum;
+	 
 	 @Nullable
 	 private String description;
 	 
 	 @Temporal(TemporalType.TIMESTAMP)
 	 private Date timestamp;
-	 
+
+	public Object stream() {
+		
+		return getRoleEnum();
+	}
+
+	
 	 
 }
