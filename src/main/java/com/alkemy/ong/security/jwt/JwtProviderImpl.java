@@ -14,8 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-
-import com.alkemy.ong.security.UserDetailsImpl;
+import com.alkemy.ong.security.service.UserDetailsImpl;
 import com.alkemy.ong.util.SecurityUtils;
 
 import io.jsonwebtoken.Claims;

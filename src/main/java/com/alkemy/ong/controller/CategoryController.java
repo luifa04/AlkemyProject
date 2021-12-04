@@ -1,12 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.alkemy.ong.controller;
 
 import com.alkemy.ong.dto.CategoryDto;
-import com.alkemy.ong.service.CategoryService;
+import com.alkemy.ong.service.ICategoryService;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,16 +13,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- *
- * @author mateo
- */
+
 @RestController
 @RequestMapping("/category")
 public class CategoryController {
      
     @Autowired
-    private CategoryService categoryService;
+    private ICategoryService categoryService;
     
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole(T(com.alkemy.ong.security.RoleEnum).ADMIN)")

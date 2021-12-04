@@ -8,13 +8,13 @@ import com.alkemy.ong.repository.UserRepository;
 import com.alkemy.ong.security.RoleEnum;
 import com.alkemy.ong.service.IUserService;
 import com.alkemy.ong.service.RoleService;
-import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,10 +23,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
-public class UserServiceImpl implements IUserService, UserDetailsService {
 
-    private final UserRepository userRepository;
+public class UserServiceImpl implements IUserService, UserDetailsService {
+	
+	@Autowired
+    private UserRepository userRepository;
+
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -54,6 +56,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
         user.setRole(roleService.findByName(RoleEnum.USER.getRoleName()));
         return user;
     }
+
 
     @Override
     public List<UserDto> getUsers() {
