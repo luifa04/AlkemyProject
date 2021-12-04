@@ -1,8 +1,10 @@
 package com.alkemy.ong.exception;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -11,8 +13,11 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MultipartException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolationException;
 
 
 @ControllerAdvice
@@ -63,6 +68,23 @@ public class ApiExceptionHandler {
 													 EmailExistException e) {
 
 		return new ExceptionMessage(HttpStatus.BAD_REQUEST.value(), e.getMessage(), LocalDateTime.now());
+
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(MultipartException.class)
+	@ResponseBody
+	public ExceptionMessage  returnErrorMultipartException(MultipartException e, HttpServletResponse response){
+		return new ExceptionMessage(HttpStatus.BAD_REQUEST.value(), e.getMessage(), LocalDateTime.now());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(ConstraintViolationException.class)
+	@ResponseBody
+	public ExceptionMessage  returnErrorConstraintViolationException(ConstraintViolationException e,HttpServletResponse response){
+
+		String errorMessage = e.getConstraintViolations().stream().map(error ->error.getMessageTemplate()).collect(Collectors.joining());
+		return new ExceptionMessage(HttpStatus.BAD_REQUEST.value(), errorMessage, LocalDateTime.now());
 
 	}
 
