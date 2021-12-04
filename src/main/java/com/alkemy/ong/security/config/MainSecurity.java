@@ -23,7 +23,7 @@ public class MainSecurity extends WebSecurityConfigurerAdapter {
 	
     @Autowired
     private UserDetailsServiceImpl userDetailsServiceImpl;
-    
+
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();

@@ -8,10 +8,6 @@ package com.alkemy.ong.service;
 import com.alkemy.ong.dto.CategoryDto;
 
 
-/**
- *
- * @author mateo
- */
 
 public interface ICategoryService {
 
