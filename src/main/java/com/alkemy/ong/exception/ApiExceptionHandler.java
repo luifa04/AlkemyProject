@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -81,12 +83,37 @@ public class ApiExceptionHandler {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(ConstraintViolationException.class)
 	@ResponseBody
-	public ExceptionMessage  returnErrorConstraintViolationException(ConstraintViolationException e,HttpServletResponse response){
+	public ExceptionMessage  returnErrorConstraintViolationException(ConstraintViolationException e){
 
 		String errorMessage = e.getConstraintViolations().stream().map(error ->error.getMessageTemplate()).collect(Collectors.joining());
 		return new ExceptionMessage(HttpStatus.BAD_REQUEST.value(), errorMessage, LocalDateTime.now());
 
 	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(AmazonServiceException.class)
+	@ResponseBody
+	public ExceptionMessage  returnErrorAmazonServiceException(AmazonServiceException e){
+		Map<String, String> errors = new HashMap<>();
+		errors.put(e.getServiceName(), e.getErrorCode());
+		return new ExceptionMessage(e.getStatusCode(), e.getErrorMessage(), LocalDateTime.now(), errors);
+
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(SdkClientException.class)
+	@ResponseBody
+	public ExceptionMessage  returnErrorSdkClientException(SdkClientException e){
+		return new ExceptionMessage(HttpStatus.BAD_REQUEST.value(), e.getMessage(), LocalDateTime.now());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(IOException.class)
+	@ResponseBody
+	public ExceptionMessage  returnErrorIOException(IOException e){
+		return new ExceptionMessage(HttpStatus.BAD_REQUEST.value(), e.getMessage(), LocalDateTime.now());
+	}
+
 
 
 	
