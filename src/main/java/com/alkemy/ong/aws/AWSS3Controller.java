@@ -18,7 +18,6 @@ public class AWSS3Controller {
 
         private final AWSS3ServiceImpl amazonClient;
 
-
         @PostMapping("/upload")
         @PreAuthorize("hasAnyRole(T(com.alkemy.ong.security.RoleEnum).ADMIN)")
         public ResponseEntity<String> uploadImage(@RequestPart("file") MultipartFile file) throws IOException, SdkClientException {
