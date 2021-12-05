@@ -1,13 +1,16 @@
 package com.alkemy.ong.service.impl;
 
+import com.alkemy.ong.dto.UserAuthenticatedResponseDto;
 import com.alkemy.ong.dto.UserDto;
 import com.alkemy.ong.dto.UserRequest;
 import com.alkemy.ong.exception.EmailExistException;
 import com.alkemy.ong.model.User;
 import com.alkemy.ong.repository.UserRepository;
 import com.alkemy.ong.security.RoleEnum;
+import com.alkemy.ong.security.jwt.JwtProviderImpl;
 import com.alkemy.ong.service.IUserService;
 import com.alkemy.ong.service.RoleService;
+import com.alkemy.ong.util.SecurityUtils;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +32,13 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
     UserRepository userRepository;
 
     @Autowired
+    SecurityUtils securityUtils;
+
+
+    @Autowired
+    JwtProviderImpl jwtProvider;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
 
@@ -47,7 +57,6 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
     }
 
     private User generateUser(UserRequest userRequest) {
-        System.out.println("generate user");
         User user = new User();
         user.setFirstName(userRequest.getFirstName());
         user.setLastName(userRequest.getLastName());
@@ -79,7 +88,26 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        return null;
+        User user = userRepository.findByEmail(s);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found." + s);
+        }
+
+        return user;
+    }
+
+
+    public UserAuthenticatedResponseDto getUserDetails(String authorizationHeader) {
+        String username = securityUtils.extractUsername(authorizationHeader);
+        System.out.println(username);
+        User user = (User) loadUserByUsername(username);
+        System.out.println(user.getEmail());
+        return new UserAuthenticatedResponseDto(
+                user.getUserId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getPhoto());
     }
 }
 
