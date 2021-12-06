@@ -6,22 +6,29 @@
 package com.alkemy.ong.service.impl;
 
 import com.alkemy.ong.dto.CategoryDto;
+import com.alkemy.ong.exception.NotFoundException;
 import com.alkemy.ong.model.Category;
+import com.alkemy.ong.model.Organization;
 import com.alkemy.ong.repository.CategoryRepository;
 import com.alkemy.ong.service.ICategoryService;
+
+import java.util.Locale;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
+import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-/**
- *
- * @author mateo
- */
+
+
 @Service
 @AllArgsConstructor
 public class CategoryServiceImpl implements ICategoryService{
     
     public  final CategoryRepository categoryRepository;
+    
+    private final MessageSource messageSource;
     
     
     @Override
@@ -38,5 +45,18 @@ public class CategoryServiceImpl implements ICategoryService{
             categoryDto.setDateUpdate(category.getDateUpdate());
         }
         return categoryDto;
+    }
+    
+    @Override
+    public ResponseEntity<?> delete(Long id) {
+    	
+    	String notFoundCategoryMessage = messageSource.getMessage("category.notFound", null, Locale.US);
+    	String isDeletedCategoryMessage = messageSource.getMessage("category.isDeleted", null, Locale.US);
+    	
+    	Category category = categoryRepository.findById(id)
+                 .orElseThrow(()-> new NotFoundException(notFoundCategoryMessage)); 
+        categoryRepository.delete(category);
+        return new ResponseEntity<>(isDeletedCategoryMessage, HttpStatus.OK);
+       
     }
 }
