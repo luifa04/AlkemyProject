@@ -6,10 +6,14 @@
 package com.alkemy.ong.service;
 
 import com.alkemy.ong.dto.CategoryDto;
+import com.alkemy.ong.dto.CategoryRequestUpdate;
+import javax.validation.Valid;
 
 
 
 public interface ICategoryService {
 
     public CategoryDto findById(Long id);
+    
+    public CategoryDto createCategory(@Valid CategoryRequestUpdate category);
 }

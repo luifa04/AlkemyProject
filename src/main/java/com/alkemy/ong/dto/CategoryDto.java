@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.alkemy.ong.dto;
 
 import java.time.LocalDateTime;
@@ -12,10 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-/**
- *
- * @author mateo
- */
+
 @Getter
 @Setter
 @ToString
@@ -26,6 +19,6 @@ public class CategoryDto {
     private String name;
     private String descripcion;
     private String image;
-    private LocalDateTime dateCreacion;
-    private LocalDateTime dateUpdate;
+    private String dateCreacion;
+    private String dateUpdate;
 }
