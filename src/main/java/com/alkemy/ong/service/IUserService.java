@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import com.alkemy.ong.dto.UserDto;
 import com.alkemy.ong.dto.UserRequest;
+import com.alkemy.ong.dto.UserUpdateDto;
 import com.alkemy.ong.model.User;
 import com.alkemy.ong.exception.EmailExistException;
 
@@ -19,5 +20,5 @@ public interface IUserService {
 
 	List<UserDto> getUsers();
 
-	UserDto update(Long id, UserDto userDto);
+	UserUpdateDto update(Long id, UserUpdateDto userUpdateDto);
 }

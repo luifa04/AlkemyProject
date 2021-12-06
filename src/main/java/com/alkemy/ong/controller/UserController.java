@@ -2,6 +2,7 @@ package com.alkemy.ong.controller;
 
 import java.util.List;
 
+import com.alkemy.ong.dto.UserUpdateDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,9 +35,9 @@ public class UserController {
     }
 
     @PatchMapping("/users/{id}")
-    public ResponseEntity<UserDto> updateUser (@Valid @PathVariable Long id, @RequestBody UserDto userDto) {
-        UserDto result = userService.update(id, userDto);
-        return new ResponseEntity<UserDto>(result, HttpStatus.OK);
+    public ResponseEntity<UserUpdateDto> updateUser (@Valid @PathVariable Long id, @RequestBody UserUpdateDto userUpdateDto) {
+        UserUpdateDto result = userService.update(id, userUpdateDto);
+        return new ResponseEntity<UserUpdateDto>(result, HttpStatus.OK);
     }
 	
 }

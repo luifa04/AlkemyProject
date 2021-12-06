@@ -1,5 +1,6 @@
 package com.alkemy.ong.service.impl;
 
+import com.alkemy.ong.dto.UserUpdateDto;
 import com.alkemy.ong.exception.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,38 +77,46 @@ public class UserServiceImpl implements IUserService{
     private UserDto mapUserToUserDto(User user){
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(user, UserDto.class);
-    }    
-    
+    }
+
+    private UserUpdateDto mapUserToUserUpdateDto(User user){
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(user, UserUpdateDto.class);
+    }
+
 //    @Override
 //    @Transactional
 //    public void makeAdmin(String username){
 //        userRepository.updateUserRole(username, roleRepository.findByName(RoleEnum.ADMIN.getName()));
 //    }
 
-    public UserDto update(Long id, UserDto userDto){
+    public UserUpdateDto update(Long id, UserUpdateDto userUpdateDto){
         Optional<User> entity = userRepository.findById(id);
         if(!entity.isPresent()) {
             throw new NotFoundException("Id User not valid: "   + id);
         }
-        userRefreshValues(entity.get(), userDto);
+        userRefreshValues(entity.get(), userUpdateDto);
         User userSaved = userRepository.save(entity.get());
-        UserDto result = mapUserToUserDto(userSaved);
+        UserUpdateDto result = mapUserToUserUpdateDto(userSaved);
         return result;
 
     }
 
-    public void userRefreshValues(User user, UserDto userDto){
-        if(userDto.getFirstName() != null){
-            user.setFirstName(userDto.getFirstName());
+    public void userRefreshValues(User user, UserUpdateDto userUpdateDto){
+        if(userUpdateDto.getFirstName() != null){
+            user.setFirstName(userUpdateDto.getFirstName());
         }
-        if(userDto.getLastName() != null) {
-            user.setLastName(userDto.getLastName());
+        if(userUpdateDto.getLastName() != null) {
+            user.setLastName(userUpdateDto.getLastName());
         }
-        if(userDto.getEmail()!= null){
-            user.setEmail(userDto.getEmail());
+        if(userUpdateDto.getEmail()!= null){
+            user.setEmail(userUpdateDto.getEmail());
         }
-        if(userDto.getPhoto() != null){
-            user.setPhoto(userDto.getPhoto());
+        if(userUpdateDto.getPhoto() != null){
+            user.setPhoto(userUpdateDto.getPhoto());
+        }
+        if(userUpdateDto.getPassword() != null){
+            user.setPassword(passwordEncoder.encode(userUpdateDto.getPassword()));
         }
     }
 
