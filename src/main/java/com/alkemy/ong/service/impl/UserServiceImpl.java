@@ -1,5 +1,6 @@
 package com.alkemy.ong.service.impl;
 
+import com.alkemy.ong.exception.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -83,6 +84,32 @@ public class UserServiceImpl implements IUserService{
 //        userRepository.updateUserRole(username, roleRepository.findByName(RoleEnum.ADMIN.getName()));
 //    }
 
+    public UserDto update(Long id, UserDto userDto){
+        Optional<User> entity = userRepository.findById(id);
+        if(!entity.isPresent()) {
+            throw new NotFoundException("Id User not valid: "   + id);
+        }
+        userRefreshValues(entity.get(), userDto);
+        User userSaved = userRepository.save(entity.get());
+        UserDto result = mapUserToUserDto(userSaved);
+        return result;
+
+    }
+
+    public void userRefreshValues(User user, UserDto userDto){
+        if(userDto.getFirstName() != null){
+            user.setFirstName(userDto.getFirstName());
+        }
+        if(userDto.getLastName() != null) {
+            user.setLastName(userDto.getLastName());
+        }
+        if(userDto.getEmail()!= null){
+            user.setEmail(userDto.getEmail());
+        }
+        if(userDto.getPhoto() != null){
+            user.setPhoto(userDto.getPhoto());
+        }
+    }
 
 
 }

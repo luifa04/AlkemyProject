@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.alkemy.ong.dto.UserDto;
 import com.alkemy.ong.security.RoleEnum;
 import com.alkemy.ong.service.IUserService;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
@@ -31,6 +31,12 @@ public class UserController {
             e.printStackTrace();
             return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
         }
-    }	
+    }
+
+    @PatchMapping("/users/{id}")
+    public ResponseEntity<UserDto> updateUser (@Valid @PathVariable Long id, @RequestBody UserDto userDto) {
+        UserDto result = userService.update(id, userDto);
+        return new ResponseEntity<UserDto>(result, HttpStatus.OK);
+    }
 	
 }

@@ -18,4 +18,6 @@ public interface IUserService {
 	User createUser(UserRequest userRequest) throws EmailExistException;
 
 	List<UserDto> getUsers();
+
+	UserDto update(Long id, UserDto userDto);
 }
