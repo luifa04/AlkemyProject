@@ -10,14 +10,18 @@ import com.alkemy.ong.security.RoleEnum;
 import com.alkemy.ong.security.jwt.JwtProviderImpl;
 import com.alkemy.ong.service.IUserService;
 import com.alkemy.ong.service.RoleService;
+<<<<<<< HEAD
 import com.alkemy.ong.util.SecurityUtils;
 import lombok.AllArgsConstructor;
+=======
+>>>>>>> develop
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,9 +29,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
-public class UserServiceImpl implements IUserService, UserDetailsService {
 
+public class UserServiceImpl implements IUserService, UserDetailsService {
+	
+	@Autowired
+    private UserRepository userRepository;
+
+<<<<<<< HEAD
     @Autowired
     UserRepository userRepository;
 
@@ -37,6 +45,8 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 
     @Autowired
     JwtProviderImpl jwtProvider;
+=======
+>>>>>>> develop
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -66,6 +76,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
         user.setRole(roleService.findByName(RoleEnum.USER.getRoleName()));
         return user;
     }
+
 
     @Override
     public List<UserDto> getUsers() {

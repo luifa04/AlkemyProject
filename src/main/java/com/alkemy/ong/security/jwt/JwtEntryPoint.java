@@ -1,4 +1,4 @@
-package com.alkemy.ong.security;
+package com.alkemy.ong.security.jwt;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

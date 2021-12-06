@@ -1,4 +1,5 @@
-package com.alkemy.ong.security;
+package com.alkemy.ong.security.controller;
+
 
 import javax.validation.Valid;
 
@@ -13,6 +14,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import com.alkemy.ong.model.User;
+import com.alkemy.ong.security.dto.LoginDTO;
+import com.alkemy.ong.security.service.AuthenticationServiceImpl;
 
 
 @RestController
