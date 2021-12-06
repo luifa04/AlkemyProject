@@ -1,6 +1,6 @@
 package com.alkemy.ong.dto;
 
-import com.alkemy.ong.model.Role;
+
 import lombok.*;
 
 @Getter

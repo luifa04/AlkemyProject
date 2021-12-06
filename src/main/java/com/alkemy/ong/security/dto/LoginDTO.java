@@ -1,9 +1,7 @@
-package com.alkemy.ong.security;
+package com.alkemy.ong.security.dto;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
 
 public class LoginDTO {
 
@@ -17,7 +15,6 @@ public class LoginDTO {
     public LoginDTO() {
     	
     }
-    
     
 
     public LoginDTO(@NotBlank @NotNull(message = "You must enter your email to be able to login") String email,

@@ -1,6 +1,6 @@
-package com.alkemy.ong.security;
+package com.alkemy.ong.security.controller;
 
-import javax.servlet.http.HttpServletRequest;
+
 import javax.validation.Valid;
 
 import com.alkemy.ong.dto.UserRequest;
@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.alkemy.ong.model.User;
+import com.alkemy.ong.security.dto.LoginDTO;
+import com.alkemy.ong.security.service.AuthenticationServiceImpl;
 
 @RestController
 @CrossOrigin

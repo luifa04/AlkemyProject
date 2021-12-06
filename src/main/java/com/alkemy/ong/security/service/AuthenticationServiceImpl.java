@@ -1,4 +1,4 @@
-package com.alkemy.ong.security;
+package com.alkemy.ong.security.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -7,6 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.alkemy.ong.model.User;
+import com.alkemy.ong.security.dto.LoginDTO;
 import com.alkemy.ong.security.jwt.JwtProviderImpl;
 
 @Service
