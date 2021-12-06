@@ -1,6 +1,7 @@
 package com.alkemy.ong.aws;
 
 
+import com.alkemy.ong.controller.Controllers;
 import com.amazonaws.SdkClientException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,12 +15,12 @@ import java.io.IOException;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/image")
-public class AWSS3Controller {
+public class AWSS3Controller implements Controllers {
 
         private final AWSS3ServiceImpl amazonClient;
 
         @PostMapping("/upload")
-        @PreAuthorize("hasAnyRole(T(com.alkemy.ong.security.RoleEnum).ADMIN)")
+        @PreAuthorize(ADMIN)
         public ResponseEntity<String> uploadImage(@RequestPart("file") MultipartFile file) throws IOException, SdkClientException {
             return new ResponseEntity<>(amazonClient.uploadImage(file), HttpStatus.CREATED);
         }
