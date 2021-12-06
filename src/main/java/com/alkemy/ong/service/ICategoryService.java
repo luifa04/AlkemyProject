@@ -14,7 +14,7 @@ import com.alkemy.ong.dto.CategoryDto;
 
 public interface ICategoryService {
 
-    public CategoryDto findById(Long id);
-
     public ResponseEntity<?> delete(Long id);
+    CategoryDto findById(Long id);
+
 }
