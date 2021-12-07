@@ -8,6 +8,9 @@ import com.alkemy.ong.repository.RoleRepository;
 import com.alkemy.ong.repository.UserRepository;
 import com.alkemy.ong.security.RoleEnum;
 import com.alkemy.ong.service.IEmailService;
+import com.alkemy.ong.security.dto.LoggedUserDto;
+import com.alkemy.ong.security.dto.LoginDto;
+import com.alkemy.ong.security.service.IAuthenticationService;
 import com.alkemy.ong.service.IUserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,77 +23,74 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImpl implements IUserService{
+public class UserServiceImpl implements IUserService {
 
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private RoleRepository roleRepository;
-    
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
+	@Autowired
+	private IAuthenticationService authenticationService;
+
+	@Autowired
     private IEmailService emailService;
 
 
+	@Override
+	public LoggedUserDto createUser(UserRequest userRequest) throws EmailExistException {
+		if (userRepository.findByEmail(userRequest.getEmail()).isPresent()) {
+			throw new EmailExistException(userRequest.getEmail());
+		}
 
-    @Override
-    public User createUser(UserRequest userRequest) throws EmailExistException {
-        if (userRepository.findByEmail(userRequest.getEmail()).isPresent()) {
-            throw new EmailExistException(userRequest.getEmail());
-        }
-
-            emailService.sendWelcomeEmail(userRequest.getEmail(), userRequest.getFirstName(), userRequest.getLastName());
-
-        return userRepository.save(generateUser(userRequest));
-    }
-
-    private User generateUser(UserRequest userRequest) {
-        User user = new User();
-        user.setFirstName(userRequest.getFirstName());
-        user.setLastName(userRequest.getLastName());
-        user.setEmail(userRequest.getEmail());
-        user.setPhoto(userRequest.getPhoto());
-        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
-        user.setRole(roleRepository.findByName(RoleEnum.USER.getName()));
-        user.setDateCreation(LocalDateTime.now());
-        return user;
-    }
+		userRepository.save(generateUser(userRequest));
+		emailService.sendWelcomeEmail(userRequest.getEmail(), userRequest.getFirstName(), userRequest.getLastName());
+		LoginDto login = new LoginDto();
+		login.setEmail(userRequest.getEmail());
+		login.setPassword(userRequest.getPassword());
+		return authenticationService.signInAndReturnJWT(login);
+	}
 
 
-    @Override
-    public Optional<User> findByEmail(String email){
-        return userRepository.findByEmail(email);
-    }
+	private User generateUser(UserRequest userRequest) {
+		User user = new User();
+		user.setFirstName(userRequest.getFirstName());
+		user.setLastName(userRequest.getLastName());
+		user.setEmail(userRequest.getEmail());
+		user.setPhoto(userRequest.getPhoto());
+		user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+		user.setRole(roleRepository.findByName(RoleEnum.USER.getName()));
+		user.setDateCreation(LocalDateTime.now());
+		return user;
+	}
+
+	@Override
+	public Optional<User> findByEmail(String email) {
+		return userRepository.findByEmail(email);
+	}
 
 	@Override
 	public void makeAdmin(String username) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-    @Override
-    public List<UserDto> getUsers() {
+	@Override
+	public List<UserDto> getUsers() {
 
-        List<UserDto> userDto = userRepository.findAll().stream()
-                .map(this::mapUserToUserDto)
-                .collect(Collectors.toList());
-        return userDto;
-    }
+		List<UserDto> userDto = userRepository.findAll().stream().map(this::mapUserToUserDto)
+				.collect(Collectors.toList());
+		return userDto;
+	}
 
-    private UserDto mapUserToUserDto(User user){
-        ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(user, UserDto.class);
-    }    
-    
-//    @Override
-//    @Transactional
-//    public void makeAdmin(String username){
-//        userRepository.updateUserRole(username, roleRepository.findByName(RoleEnum.ADMIN.getName()));
-//    }
-
-
+	private UserDto mapUserToUserDto(User user) {
+		ModelMapper modelMapper = new ModelMapper();
+		return modelMapper.map(user, UserDto.class);
+	}
 
 }
+
