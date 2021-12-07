@@ -15,6 +15,7 @@ import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import javax.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -24,7 +25,8 @@ import javax.validation.Valid;
 @AllArgsConstructor
 public class CategoryServiceImpl implements ICategoryService{
     
-    public  final CategoryRepository categoryRepository;
+    @Autowired
+    public CategoryRepository categoryRepository;
     
     
     @Override

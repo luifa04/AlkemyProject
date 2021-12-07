@@ -4,6 +4,8 @@ package com.alkemy.ong.controller;
 import com.alkemy.ong.dto.CategoryDto;
 import com.alkemy.ong.dto.CategoryRequestUpdate;
 import com.alkemy.ong.service.ICategoryService;
+import com.alkemy.ong.security.SecurityConstant;
+
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +27,7 @@ public class CategoryController {
     private ICategoryService categoryService;
     
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole(T(com.alkemy.ong.security.RoleEnum).ADMIN)")
+    @PreAuthorize(SecurityConstant.ADMIN)
     public ResponseEntity<?> findById(@Valid @PathVariable("id") Long id ) {
         try {
 		CategoryDto categoryDto = categoryService.findById(id);
@@ -40,7 +42,7 @@ public class CategoryController {
     }
     
     @PostMapping()
-    @PreAuthorize("hasAnyRole(T(com.alkemy.ong.security.RoleEnum).ADMIN)")
+    @PreAuthorize(SecurityConstant.ADMIN)
     public ResponseEntity<?> createCategory(@Valid @RequestBody CategoryRequestUpdate category) {
         try {
                 return new ResponseEntity<>(categoryService.createCategory(category),HttpStatus.OK);
@@ -48,6 +50,4 @@ public class CategoryController {
 			return new ResponseEntity<>(e.toString(), HttpStatus.CONFLICT);
 		}
     }
-    
-    
 }

@@ -16,7 +16,7 @@ public class CategoryRequestUpdate {
     @NotNull(message = "Name should be valid.", regexp = "^[A-Za-z\\s]+$")
     private String name;
     @Nullable
-    private String descripcion;
+    private String description;
     @Nullable
     private String image;
 }
