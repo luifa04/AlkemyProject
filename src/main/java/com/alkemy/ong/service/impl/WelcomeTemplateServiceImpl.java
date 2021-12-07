@@ -22,6 +22,7 @@ public class WelcomeTemplateServiceImpl implements IWelcomeTemplateService{
     @Autowired
     private Configuration config;
 
+    @Autowired
     private MessageSource messageSource;
 
     @Override
