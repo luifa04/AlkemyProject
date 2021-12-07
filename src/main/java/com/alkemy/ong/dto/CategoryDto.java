@@ -1,7 +1,6 @@
 
 package com.alkemy.ong.dto;
 
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,8 +16,10 @@ import lombok.ToString;
 public class CategoryDto {
     private Long id;
     private String name;
-    private String descripcion;
+    private String description;
     private String image;
-    private String dateCreacion;
+
+    private String dateCreation;
+
     private String dateUpdate;
 }
