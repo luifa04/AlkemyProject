@@ -48,7 +48,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         		.antMatchers("/auth/login").permitAll()
         		.antMatchers("/auth/register").permitAll()
                 .antMatchers("/auth/me").permitAll()
-                .antMatchers("/news/**").permitAll()//TODO borrar para subir
         		.anyRequest()
                 .authenticated();
         
