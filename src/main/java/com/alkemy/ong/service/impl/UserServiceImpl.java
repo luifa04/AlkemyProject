@@ -25,17 +25,18 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements IUserService {
 
-	@Autowired
-	private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-	@Autowired
-	private RoleRepository roleRepository;
+    @Autowired
+    private RoleRepository roleRepository;
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-	
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
 	@Autowired
 	private IAuthenticationService authenticationService;
+
 
 	@Override
 	public LoggedUserDto createUser(UserRequest userRequest) throws EmailExistException {
@@ -48,6 +49,7 @@ public class UserServiceImpl implements IUserService {
 		login.setPassword(userRequest.getPassword());
 		return authenticationService.signInAndReturnJWT(login);
 	}
+
 
 	private User generateUser(UserRequest userRequest) {
 		User user = new User();
@@ -86,3 +88,4 @@ public class UserServiceImpl implements IUserService {
 	}
 
 }
+

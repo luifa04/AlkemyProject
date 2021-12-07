@@ -11,7 +11,6 @@ import com.alkemy.ong.security.dto.LoggedUserDto;
 import com.alkemy.ong.exception.EmailExistException;
 
 public interface IUserService {
-
     void makeAdmin(String username);
 
 	Optional<User> findByEmail(String email);
