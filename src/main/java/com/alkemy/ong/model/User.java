@@ -43,7 +43,7 @@ public class User implements UserDetails {
     private String email;
 
     @NotNull(message = "Password cannot be null")
-    @Length(min = 5, message = "Ingrese una contraseña de minímo 5 carácteres")
+    @Length(min = 5, message = "Password must be at least 5 characters")
     private String password;
 
     @Nullable
