@@ -41,7 +41,7 @@ public class CategoryController {
     @PreAuthorize("hasAnyRole(RoleEnum.ADMIN.getName())")
     public ResponseEntity<?> delete(@Valid @PathVariable("id") Long id ) {
        
-    	return categoryService.delete(id);
+    	return iCategoryService.delete(id);
 		
     }
     
