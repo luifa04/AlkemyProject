@@ -33,6 +33,8 @@ public class EmailServiceImpl implements IEmailService {
         if (subject.isEmpty()) {
             throw new EmailException();
         } else {
+            System.out.println(subject);
+            System.out.println(to);
             SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
             simpleMailMessage.setFrom("oalkemy@gmail.com");
             simpleMailMessage.setTo(to);
