@@ -1,9 +1,11 @@
 
-package com.alkemy.ong.service;
+package com.alkemy.ong.service.impl;
 
 
 import com.alkemy.ong.exception.EmailException;
 import com.alkemy.ong.exception.EmailExistException;
+import com.alkemy.ong.service.IEmailService;
+import com.alkemy.ong.service.IWelcomeTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -11,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class EmailService {
+public class EmailServiceImpl implements IEmailService {
 
     @Autowired
     private JavaMailSender javaMailSender;
@@ -19,6 +21,7 @@ public class EmailService {
     @Autowired
     private IWelcomeTemplateService welcomeTemplateService;
 
+    @Override
     public void sendEmail(String to, String body, String subject) throws EmailException {
 
         if (to.isEmpty()) {
@@ -41,6 +44,7 @@ public class EmailService {
 
     }
 
+    @Override
     public void sendWelcomeEmail(String to, String name, String surname) throws EmailExistException {
 
 

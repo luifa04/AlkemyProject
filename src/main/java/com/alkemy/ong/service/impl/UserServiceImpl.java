@@ -7,11 +7,10 @@ import com.alkemy.ong.model.User;
 import com.alkemy.ong.repository.RoleRepository;
 import com.alkemy.ong.repository.UserRepository;
 import com.alkemy.ong.security.RoleEnum;
-import com.alkemy.ong.service.EmailService;
+import com.alkemy.ong.service.IEmailService;
 import com.alkemy.ong.service.IUserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +32,7 @@ public class UserServiceImpl implements IUserService{
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private EmailService emailService;
+    private IEmailService emailService;
 
 
 
