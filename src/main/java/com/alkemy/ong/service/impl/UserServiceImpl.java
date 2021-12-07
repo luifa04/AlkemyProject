@@ -11,6 +11,7 @@ import com.alkemy.ong.dto.UserDto;
 import com.alkemy.ong.dto.UserRequest;
 import com.alkemy.ong.exception.EmailExistException;
 import com.alkemy.ong.model.User;
+import org.springframework.context.MessageSource;
 import com.alkemy.ong.repository.RoleRepository;
 import com.alkemy.ong.repository.UserRepository;
 import com.alkemy.ong.security.RoleEnum;
@@ -18,6 +19,7 @@ import com.alkemy.ong.service.IUserService;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -32,6 +34,9 @@ public class UserServiceImpl implements IUserService{
     
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private MessageSource messageSource;
 
     @Override
     public User createUser(UserRequest userRequest) throws EmailExistException {
@@ -92,8 +97,9 @@ public class UserServiceImpl implements IUserService{
 
     public UserUpdateDto update(Long id, UserUpdateDto userUpdateDto){
         Optional<User> entity = userRepository.findById(id);
+        String messageError = messageSource.getMessage("updateUserMessageTemplate.failure", null, Locale.US);
         if(!entity.isPresent()) {
-            throw new NotFoundException("Id User not valid: "   + id);
+            throw new NotFoundException(messageError);
         }
         userRefreshValues(entity.get(), userUpdateDto);
         User userSaved = userRepository.save(entity.get());
