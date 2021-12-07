@@ -35,7 +35,6 @@ public class UserServiceImpl implements IUserService{
     @Autowired
     private EmailService emailService;
 
-    private MessageSource messageSource;
 
 
     @Override

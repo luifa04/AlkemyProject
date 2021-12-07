@@ -49,19 +49,12 @@ public class EmailService {
         try {
             String template = welcomeTemplateService.setTemplate(name, surname);
 
-            SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-            simpleMailMessage.setFrom("oalkemy@gmail.com");
-            simpleMailMessage.setTo(to);
-            simpleMailMessage.setSubject(subject);
-            simpleMailMessage.setText(template);
-            javaMailSender.send(simpleMailMessage);
-            System.out.println("Sent Email...");
+            this.sendEmail(to, template, subject);
 
-        } catch (EmailExistException e) {
+        } catch (EmailExistException | EmailException e) {
             e.printStackTrace();
+
         }
-
     }
-
 }
 
