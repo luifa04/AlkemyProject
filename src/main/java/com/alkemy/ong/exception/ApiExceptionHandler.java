@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
+import freemarker.template.TemplateException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -115,7 +116,12 @@ public class ApiExceptionHandler {
 	}
 
 
-
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(TemplateException.class)
+	@ResponseBody
+	public ExceptionMessage  returnErrorTemplateException(TemplateException e){
+		return new ExceptionMessage(HttpStatus.BAD_REQUEST.value(), e.getMessage(), LocalDateTime.now());
+	}
 	
 	
 }
