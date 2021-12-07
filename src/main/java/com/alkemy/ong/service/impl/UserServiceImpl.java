@@ -14,6 +14,7 @@ import com.alkemy.ong.repository.UserRepository;
 import com.alkemy.ong.security.RoleEnum;
 import com.alkemy.ong.service.IUserService;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -83,6 +84,12 @@ public class UserServiceImpl implements IUserService{
 //        userRepository.updateUserRole(username, roleRepository.findByName(RoleEnum.ADMIN.getName()));
 //    }
 
-
-
+    @Transactional
+    public void deleteById(Long id) {
+        Optional<User> optional = userRepository.findById(id);
+        if (optional.isPresent()) {
+            User user = optional.get();
+            userRepository.delete(user);
+        }
+    }
 }

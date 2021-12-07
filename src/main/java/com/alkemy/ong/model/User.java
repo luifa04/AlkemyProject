@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.lang.Nullable;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @SQLDelete(sql = "UPDATE user SET enabled = false WHERE userId = ?")
+@Where(clause = "enabled = true")
 @Table(name = "user", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 public class User {
     @Id
@@ -40,11 +42,11 @@ public class User {
     private String photo;
 
     @NotNull
-    private Boolean enabled=true;
+    private Boolean enabled = true;
 
     @CreatedDate
     @NotNull
-    @Column(updatable=false)
+    @Column(updatable = false)
     private LocalDateTime dateCreation;
 
     @LastModifiedDate
@@ -52,7 +54,7 @@ public class User {
 
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name="roleId")
+    @JoinColumn(name = "roleId")
     private Role role;
 
     @Transient
