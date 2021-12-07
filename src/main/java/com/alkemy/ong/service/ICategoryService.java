@@ -5,11 +5,16 @@
  */
 package com.alkemy.ong.service;
 
+import org.springframework.http.ResponseEntity;
+
 import com.alkemy.ong.dto.CategoryDto;
+
 
 
 
 public interface ICategoryService {
 
+    public ResponseEntity<?> delete(Long id);
     CategoryDto findById(Long id);
+
 }
