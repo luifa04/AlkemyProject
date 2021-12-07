@@ -1,9 +1,11 @@
 
 package com.alkemy.ong.controller;
 
+import com.alkemy.ong.dto.CategoryByNameDto;
 import com.alkemy.ong.dto.CategoryDto;
-import com.alkemy.ong.dto.CategoryRequestUpdate;
 
+
+import com.alkemy.ong.dto.CategoryRequestUpdate;
 import com.alkemy.ong.security.SecurityConstant;
 import com.alkemy.ong.service.ICategoryService;
 
@@ -23,6 +25,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/category")
@@ -46,6 +52,13 @@ public class CategoryController {
 		}
     }
 
+    @GetMapping()
+    @PreAuthorize(SecurityConstant.ADMIN)
+    public ResponseEntity<List<CategoryByNameDto>> findCategoriesByName(){
+            List<CategoryByNameDto> listCategories = categoryService.findByName();
+            return new ResponseEntity<List<CategoryByNameDto>>(listCategories, HttpStatus.OK);
+    }
+
     
     @PostMapping()
     @PreAuthorize(SecurityConstant.ADMIN)
@@ -65,11 +78,11 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole(RoleEnum.ADMIN.getName())")
+    @PreAuthorize(SecurityConstant.ADMIN)
     public ResponseEntity<?> delete(@Valid @PathVariable("id") Long id ) {
        
     	return categoryService.delete(id);
 		
     }
-    
+
 }

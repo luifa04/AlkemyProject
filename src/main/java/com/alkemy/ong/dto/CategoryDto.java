@@ -18,8 +18,7 @@ public class CategoryDto {
     private String name;
     private String description;
     private String image;
-
     private String dateCreation;
-
     private String dateUpdate;
+
 }
