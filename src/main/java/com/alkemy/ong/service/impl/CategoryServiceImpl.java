@@ -5,26 +5,32 @@
  */
 package com.alkemy.ong.service.impl;
 
+import com.alkemy.ong.dto.CategoryByNameDto;
 import com.alkemy.ong.dto.CategoryDto;
 import com.alkemy.ong.dto.CategoryRequestUpdate;
+
+
 import com.alkemy.ong.exception.NotFoundException;
 import com.alkemy.ong.model.Category;
 import com.alkemy.ong.repository.CategoryRepository;
 import com.alkemy.ong.service.ICategoryService;
 
+
+import java.util.List;
+import java.util.Locale;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import java.util.Locale;
-import java.util.Optional;
-import lombok.AllArgsConstructor;
+import java.util.stream.Collectors;
+
 import org.springframework.context.MessageSource;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
 
 
 
@@ -33,25 +39,32 @@ public class CategoryServiceImpl implements ICategoryService{
 
 	@Autowired
     private CategoryRepository categoryRepository;
-    
+
     private MessageSource messageSource;
 
     
     @Override
     public CategoryDto findById(Long id){
         Optional<Category> rta= categoryRepository.findById(id);
-        CategoryDto categoryDto= new CategoryDto();
         if (rta.isPresent()) {
             Category category= rta.get();
-            categoryDto.setId(category.getId());
-            categoryDto.setImage(category.getImage());
-            categoryDto.setDescription(category.getDescription());
-            categoryDto.setName(category.getName());
-            categoryDto.setDateCreation(category.getDateCreation().toString());
-            categoryDto.setDateUpdate(category.getDateUpdate().toString());
+
+            return mapEntityToDto(category);
+
         }
-        return categoryDto;
+        return null;
     }
+
+    
+    @Override
+	public CategoryDto createCategory(@Valid CategoryRequestUpdate category) {
+		Category categoryEntity = new Category();
+                mapDtoToEntity(categoryEntity, category);
+                Category categoryCreate = categoryRepository.save(categoryEntity);
+	        return mapEntityToDto(categoryCreate);
+	}
+        
+    
 
 	@Override
 	public CategoryDto updateCategory(@Valid CategoryRequestUpdate category, Long id) {
@@ -77,6 +90,27 @@ public class CategoryServiceImpl implements ICategoryService{
         return new ResponseEntity<>(isDeletedCategoryMessage, HttpStatus.OK);
        
     }
+
+    @Override
+    public List<CategoryByNameDto> findByName() {
+
+        String categoryListIsEmpty = messageSource.getMessage("category.listEmpty", null, Locale.US);
+
+        List<CategoryByNameDto> categoryByNameDto = categoryRepository.findAll()
+                .stream()
+                .map(name -> mapCategoryToCategoryDto(name))
+                .collect(Collectors.toList());
+        if(categoryByNameDto.isEmpty()){
+            throw new NotFoundException(categoryListIsEmpty);
+        }
+        return categoryByNameDto;
+    }
+
+    private CategoryByNameDto mapCategoryToCategoryDto(Category category){
+        String name = category.getName();
+        return new CategoryByNameDto(name);
+    }
+
     
 	private CategoryDto mapEntityToDto(Category categoryUpdated) {
 		CategoryDto categoryDto = new CategoryDto();
@@ -98,3 +132,4 @@ public class CategoryServiceImpl implements ICategoryService{
 	}    
 
 }
+

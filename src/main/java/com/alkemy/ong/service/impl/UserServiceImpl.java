@@ -1,5 +1,11 @@
 package com.alkemy.ong.service.impl;
 
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+
 import com.alkemy.ong.dto.UserDto;
 import com.alkemy.ong.dto.UserRequest;
 import com.alkemy.ong.dto.UserUpdateDto;
@@ -14,11 +20,8 @@ import com.alkemy.ong.security.dto.LoggedUserDto;
 import com.alkemy.ong.security.dto.LoginDto;
 import com.alkemy.ong.security.service.IAuthenticationService;
 import com.alkemy.ong.service.IUserService;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.context.MessageSource;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -46,6 +49,7 @@ public class UserServiceImpl implements IUserService {
 
     @Autowired
     private MessageSource messageSource;
+
 
     @Override
     public LoggedUserDto createUser(UserRequest userRequest) throws EmailExistException {
@@ -88,8 +92,14 @@ public class UserServiceImpl implements IUserService {
     @Override
     public List<UserDto> getUsers() {
 
-        List<UserDto> userDto = userRepository.findAll().stream().map(this::mapUserToUserDto)
+        String userListIsEmpty = messageSource.getMessage("user.listEmpty", null, Locale.US);
+
+        List<UserDto> userDto = userRepository.findAll().stream()
+                .map(this::mapUserToUserDto)
                 .collect(Collectors.toList());
+        if(userDto.isEmpty()){
+            throw new NotFoundException(userListIsEmpty);
+        }
         return userDto;
     }
 
