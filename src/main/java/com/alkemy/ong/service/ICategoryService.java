@@ -15,12 +15,19 @@ import com.alkemy.ong.dto.CategoryRequestUpdate;
 
 
 
+
+
 public interface ICategoryService {
+
+
+    
+    public CategoryDto createCategory(@Valid CategoryRequestUpdate category);
 
     public ResponseEntity<?> delete(Long id);
     
     CategoryDto findById(Long id);
     
 	CategoryDto updateCategory(@Valid CategoryRequestUpdate category, Long id);
+
 
 }

@@ -7,6 +7,7 @@ package com.alkemy.ong.service.impl;
 
 import com.alkemy.ong.dto.CategoryDto;
 import com.alkemy.ong.dto.CategoryRequestUpdate;
+
 import com.alkemy.ong.exception.NotFoundException;
 import com.alkemy.ong.model.Category;
 import com.alkemy.ong.repository.CategoryRepository;
@@ -19,12 +20,15 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Locale;
+
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import javax.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 
@@ -34,24 +38,33 @@ public class CategoryServiceImpl implements ICategoryService{
 	@Autowired
     private CategoryRepository categoryRepository;
     
+
     private MessageSource messageSource;
+
 
     
     @Override
     public CategoryDto findById(Long id){
         Optional<Category> rta= categoryRepository.findById(id);
-        CategoryDto categoryDto= new CategoryDto();
         if (rta.isPresent()) {
             Category category= rta.get();
-            categoryDto.setId(category.getId());
-            categoryDto.setImage(category.getImage());
-            categoryDto.setDescription(category.getDescription());
-            categoryDto.setName(category.getName());
-            categoryDto.setDateCreation(category.getDateCreation().toString());
-            categoryDto.setDateUpdate(category.getDateUpdate().toString());
+
+            return mapEntityToDto(category);
+
         }
-        return categoryDto;
+        return null;
     }
+
+    
+    @Override
+	public CategoryDto createCategory(@Valid CategoryRequestUpdate category) {
+		Category categoryEntity = new Category();
+                mapDtoToEntity(categoryEntity, category);
+                Category categoryCreate = categoryRepository.save(categoryEntity);
+	        return mapEntityToDto(categoryCreate);
+	}
+        
+    
 
 	@Override
 	public CategoryDto updateCategory(@Valid CategoryRequestUpdate category, Long id) {
@@ -96,5 +109,6 @@ public class CategoryServiceImpl implements ICategoryService{
 		categoryEntity.setImage(category.getImage());
 		categoryEntity.setDateUpdate(LocalDateTime.now());
 	}    
+
 
 }
