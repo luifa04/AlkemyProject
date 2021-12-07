@@ -14,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Locale;
 
 @Service
@@ -39,6 +40,10 @@ public class NewsServiceImpl implements INewsService {
         Category categoryToUpdate = newsToUpdate.getCategoryId();
         Category category = categoryRepository.findById(news.getCategoryId()).orElseThrow(()->new NotFoundException(categoryNotFound));
         updateFields.updateIfNotBlankAndNotEqual(category, categoryToUpdate,newsToUpdate::setCategoryId, "category");
+
+        if (updateFields.isHasUpdate()){
+            newsToUpdate.setDateUpdate(LocalDateTime.now());
+        }
 
         return new ModelMapper()
                 .typeMap(News.class,NewsResponse.class)
