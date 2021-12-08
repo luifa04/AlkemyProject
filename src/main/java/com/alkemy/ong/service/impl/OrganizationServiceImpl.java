@@ -32,6 +32,12 @@ public class OrganizationServiceImpl implements IOrganizationService {
     private final MessageSource messageSource;
     private Boolean hasUpdate = Boolean.FALSE;
 
+    @Override
+    public Organization findById(Long id){
+        String notFoundOrganizationMessage = messageSource.getMessage("organization.notFound", null, Locale.US);
+        return organizationRepository.findById(id).orElseThrow(()->new NotFoundException(notFoundOrganizationMessage));
+    }
+
 
     @Override
     @Transactional
