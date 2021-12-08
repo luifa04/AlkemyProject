@@ -1,10 +1,12 @@
-package com.alkemy.ong.util;
+package com.alkemy.ong.security.util;
 
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+
+@Service
 public class SecurityUtils {
 
     public final static String ROLE_PREFIX = "ROLE_";
@@ -24,6 +26,6 @@ public class SecurityUtils {
             return bearerToken.substring(7);
         }
         return null;
-    }	
+    }
 	
 }
