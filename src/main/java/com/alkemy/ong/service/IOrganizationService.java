@@ -13,4 +13,5 @@ public interface IOrganizationService {
     List<OrganizationPublicDto> getAllOrganizations();
     OrganizationResponse updatePublicData(OrganizationRequest organization);
     Organization findById(Long id);
+    Organization getOrganization();
 }

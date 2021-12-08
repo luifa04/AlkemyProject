@@ -18,6 +18,4 @@ public class SlideRequest {
 
     private Integer orderSlide;
 
-    @NotNull(message="organizationId cannot be empity")
-    private Long organizationId;
 }

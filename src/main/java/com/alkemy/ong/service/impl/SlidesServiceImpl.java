@@ -3,6 +3,7 @@ package com.alkemy.ong.service.impl;
 import com.alkemy.ong.aws.IAWSS3Service;
 import com.alkemy.ong.dto.NewsResponse;
 import com.alkemy.ong.dto.SlideRequest;
+import com.alkemy.ong.exception.NotFoundException;
 import com.alkemy.ong.model.News;
 import com.alkemy.ong.model.Organization;
 import com.alkemy.ong.model.Slide;
@@ -20,7 +21,9 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.Comparator;
 import java.util.Locale;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -33,37 +36,65 @@ public class SlidesServiceImpl implements ISlidesService{
 
     @Override
     public Slide addSlide(SlideRequest slide) throws Exception {
+
         String contentTypeErrorMessage = messageSource.getMessage("awss3.errorMessage.contentType", null, Locale.US);
-        File outputFile = null;
+        String invalidNumberErrorMessage = messageSource.getMessage("slides.invalidNumber", null, Locale.US);
         final String FILE_NAME = "slides";
+        final String PREFIX_PNG = "iVBORw0KGgo";
+        final String PREFIX_JPG_JPEG = "/9j/4";
 
-        if (Strings.startsWithIgnoreCase(slide.getBase64Image(),"iVBORw0KGgo")){
-            outputFile = new File(FILE_NAME + ContentTypeEnum.PNG.getFileExtension());
-        }else if (Strings.startsWithIgnoreCase(slide.getBase64Image(),"/9j/4")){
-            outputFile = new File(FILE_NAME + ContentTypeEnum.JPG.getFileExtension());
-        }else {
-            throw new IllegalArgumentException(contentTypeErrorMessage);
+        File outputFile = contentTypeValidation(slide, contentTypeErrorMessage, FILE_NAME, PREFIX_PNG, PREFIX_JPG_JPEG);
+
+        decodeBase64ToFile(slide.getBase64Image(), outputFile);
+
+        String imageURL = awss3Service.uploadImage(outputFile);
+
+        if(slide.getOrderSlide() == null){
+            automaticOrder(slide);
+        }else{
+            Optional<Slide> repeatOrderSlide = slideRepository.findByOrderSlide(slide.getOrderSlide());
+            if (repeatOrderSlide.isPresent()){
+                throw new IllegalArgumentException(invalidNumberErrorMessage);
+            }
         }
-
-        byte[] decodedImage = Base64.getDecoder().decode(slide.getBase64Image());
-        FileUtils.writeByteArrayToFile(outputFile, decodedImage);
-
-       String imageURL = awss3Service.uploadImage(outputFile);
-
-        if(slide.getOrderSlide()== null){
-            //TODO buscar el orden mas alto y ponerlo ultimo
-        }
-
-        organizationService.findById(slide.getOrganizationId());
 
         Slide slideToAdd = new Slide();
         slideToAdd.setImageUrl(imageURL);
         slideToAdd.setText(slide.getText());
-        slideToAdd.setOrderSlide(slide.getOrderSlide());//TODO ver en el aterior caso
-        slideToAdd.setOrganizationId(slide.getOrganizationId());
+        slideToAdd.setOrderSlide(slide.getOrderSlide());
+        slideToAdd.setOrganizationId(organizationService.getOrganization().getId());
 
         return slideRepository.save(slideToAdd);
 
     }
+
+    private void automaticOrder(SlideRequest slide) {
+        Integer lastNumber = slideRepository.findAll()
+                                            .stream()
+                                            .sorted(Comparator.comparing(Slide::getOrderSlide, Comparator.reverseOrder()))
+                                            .map(Slide::getOrderSlide)
+                                            .findFirst()
+                                            .orElse(0);
+        lastNumber++;
+        slide.setOrderSlide(lastNumber);
+    }
+
+    private void decodeBase64ToFile(String base64Image, File outputFile) throws IOException {
+        byte[] decodedImage = Base64.getDecoder().decode(base64Image);
+        FileUtils.writeByteArrayToFile(outputFile, decodedImage);
+    }
+
+    private File contentTypeValidation(SlideRequest slide, String contentTypeErrorMessage, String FILE_NAME, String PREFIX_PNG, String PREFIX_JPG_JPEG) {
+        File outputFile;
+        if (Strings.startsWithIgnoreCase(slide.getBase64Image(), PREFIX_PNG)){
+            outputFile = new File(FILE_NAME + ContentTypeEnum.PNG.getFileExtension());
+        }else if (Strings.startsWithIgnoreCase(slide.getBase64Image(), PREFIX_JPG_JPEG)){
+            outputFile = new File(FILE_NAME + ContentTypeEnum.JPG.getFileExtension());
+        }else {
+            throw new IllegalArgumentException(contentTypeErrorMessage);
+        }
+        return outputFile;
+    }
+
 
 }
