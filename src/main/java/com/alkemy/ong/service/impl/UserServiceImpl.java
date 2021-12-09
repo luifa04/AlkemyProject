@@ -1,6 +1,12 @@
 package com.alkemy.ong.service.impl;
 
+import com.alkemy.ong.dto.UserUpdateDto;
 import com.alkemy.ong.exception.NotFoundException;
+import com.alkemy.ong.security.dto.LoggedUserDto;
+import com.alkemy.ong.security.dto.LoginDto;
+import com.alkemy.ong.security.service.IAuthenticationService;
+import com.alkemy.ong.service.IEmailService;
+import com.alkemy.ong.service.IUserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -25,7 +31,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImpl implements IUserService{
+public class UserServiceImpl implements IUserService {
 
     @Autowired
     private UserRepository userRepository;
@@ -36,14 +42,26 @@ public class UserServiceImpl implements IUserService{
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private IAuthenticationService authenticationService;
+
+    @Autowired
+    private IEmailService emailService;
+
     private MessageSource messageSource;
 
     @Override
-    public User createUser(UserRequest userRequest) throws EmailExistException {
+    public LoggedUserDto createUser(UserRequest userRequest) throws EmailExistException {
         if (userRepository.findByEmail(userRequest.getEmail()).isPresent()) {
             throw new EmailExistException(userRequest.getEmail());
         }
-        return userRepository.save(generateUser(userRequest));
+        emailService.sendWelcomeEmail(userRequest.getEmail(), userRequest.getFirstName(), userRequest.getLastName());
+        LoginDto login = new LoginDto ();
+        login.setEmail(userRequest.getEmail());
+        login.setPassword(userRequest.getPassword());
+        userRepository.save(generateUser(userRequest));
+        return authenticationService.signInAndReturnJWT(login);
+
     }
 
     private User generateUser(UserRequest userRequest) {
@@ -77,6 +95,11 @@ public class UserServiceImpl implements IUserService{
                 .map(this::mapUserToUserDto)
                 .collect(Collectors.toList());
         return userDto;
+    }
+
+    @Override
+    public UserUpdateDto update(Long id, UserUpdateDto userUpdateDto) {
+        return null;
     }
 
     private UserDto mapUserToUserDto(User user){
