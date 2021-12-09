@@ -21,6 +21,8 @@ public class EmailServiceImpl implements IEmailService {
     @Autowired
     private IWelcomeTemplateService welcomeTemplateService;
 
+    private static final String ORGANIZATION_EMAIL = "oalkemy@gmail.com";
+
     @Override
     public void sendEmail(String to, String body, String subject) throws EmailException {
 
@@ -33,15 +35,14 @@ public class EmailServiceImpl implements IEmailService {
         if (subject.isEmpty()) {
             throw new EmailException();
         } else {
-            System.out.println(subject);
-            System.out.println(to);
+
             SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-            simpleMailMessage.setFrom("oalkemy@gmail.com");
+            simpleMailMessage.setFrom(ORGANIZATION_EMAIL);
             simpleMailMessage.setTo(to);
             simpleMailMessage.setSubject(subject);
             simpleMailMessage.setText(body);
             javaMailSender.send(simpleMailMessage);
-            System.out.println("Sent Email...");
+
         }
 
     }
