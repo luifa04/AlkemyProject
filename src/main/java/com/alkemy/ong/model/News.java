@@ -47,7 +47,7 @@ public class News {
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "categoryId")
-    private @NonNull Category categoryId;
+    private @NonNull Category category;
 
 
 

@@ -26,27 +26,46 @@ public class NewsServiceImpl implements INewsService {
     private final MessageSource messageSource;
     private final UpdateFields updateFields;
 
+
+    @Override
+    public NewsResponse findById(Long id) {
+        String newsNotFound = messageSource.getMessage("news.notFound", null, Locale.US);
+        News news = newsRepository.findById(id).orElseThrow(() -> new NotFoundException(newsNotFound));
+
+
+        NewsResponse newsResponse = new NewsResponse();
+        newsResponse.setId(news.getId());
+        newsResponse.setName(news.getName());
+        newsResponse.setContent(news.getContent());
+        newsResponse.setImage(news.getImage());
+        newsResponse.setCategoryId(news.getCategory().getId());
+
+        return newsResponse;
+    }
+
+
     @Override
     public NewsResponse updateNewsById(Long id, NewsRequest news) {
         String newsNotFound = messageSource.getMessage("news.notFound", null, Locale.US);
         String categoryNotFound = messageSource.getMessage("category.notFound", null, Locale.US);
 
-        News newsToUpdate = newsRepository.findById(id).orElseThrow(()->new NotFoundException(newsNotFound));
+        News newsToUpdate = newsRepository.findById(id).orElseThrow(() -> new NotFoundException(newsNotFound));
 
-        updateFields.updateIfNotBlankAndNotEqual(news.getName(),newsToUpdate.getName(),newsToUpdate::setName, "name");
-        updateFields.updateIfNotBlankAndNotEqual(news.getContent(),newsToUpdate.getContent(),newsToUpdate::setContent, "content");
-        updateFields.updateIfNotBlankAndNotEqual(news.getImage(),newsToUpdate.getImage(),newsToUpdate::setImage, "image");
+        updateFields.updateIfNotBlankAndNotEqual(news.getName(), newsToUpdate.getName(), newsToUpdate::setName, "name");
+        updateFields.updateIfNotBlankAndNotEqual(news.getContent(), newsToUpdate.getContent(), newsToUpdate::setContent, "content");
+        updateFields.updateIfNotBlankAndNotEqual(news.getImage(), newsToUpdate.getImage(), newsToUpdate::setImage, "image");
 
-        Category categoryToUpdate = newsToUpdate.getCategoryId();
-        Category category = categoryRepository.findById(news.getCategoryId()).orElseThrow(()->new NotFoundException(categoryNotFound));
-        updateFields.updateIfNotBlankAndNotEqual(category, categoryToUpdate,newsToUpdate::setCategoryId, "category");
+        Category categoryToUpdate = newsToUpdate.getCategory();
+        Category category = categoryRepository.findById(news.getCategoryId()).orElseThrow(() -> new NotFoundException(categoryNotFound));
+        updateFields.updateIfNotBlankAndNotEqual(category, categoryToUpdate, newsToUpdate::setCategory, "category");
 
-        if (updateFields.isHasUpdate()){
+        if (updateFields.isHasUpdate()) {
             newsToUpdate.setDateUpdate(LocalDateTime.now());
         }
 
         return new ModelMapper()
-                .typeMap(News.class,NewsResponse.class)
+                .typeMap(News.class, NewsResponse.class)
                 .map(newsToUpdate);
     }
 }
+

@@ -23,5 +23,16 @@ public class NewsController {
     @PreAuthorize(SecurityConstant.ADMIN)
     public ResponseEntity<NewsResponse> updateNewsById(@PathVariable("id") Long id, @Valid @RequestBody NewsRequest news){
         return new ResponseEntity<>(newsService.updateNewsById(id, news), HttpStatus.OK);
+
     }
+
+    @GetMapping("/{id}")
+    @PreAuthorize(SecurityConstant.ADMIN)
+    public ResponseEntity<?> findById(@Valid @PathVariable("id") Long id) {
+
+        return new ResponseEntity<>(newsService.findById(id), HttpStatus.OK);
+    }
+
+
+
 }
