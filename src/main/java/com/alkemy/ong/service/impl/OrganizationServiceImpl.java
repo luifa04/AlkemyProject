@@ -53,6 +53,9 @@ public class OrganizationServiceImpl implements IOrganizationService {
         updateIfNotEmptyAndNotEqual(organizationRequest.getPhone(), organization.getPhone(), organization::setPhone , "phone");
         updateIfNotEmptyAndNotEqual(organizationRequest.getAddress(), organization.getAddress(), organization::setAddress , "address");
         updateIfNotEmptyAndNotEqual(organizationRequest.getAboutUsText(), organization.getAboutUsText(), organization::setAboutUsText , "about us text");
+        updateIfNotEmptyAndNotEqual(organizationRequest.getFacebookUrl(), organization.getFacebookUrl(), organization::setFacebookUrl , "facebookUrl");
+        updateIfNotEmptyAndNotEqual(organizationRequest.getInstagramUrl(), organization.getInstagramUrl(), organization::setInstagramUrl , "instagramUrl");
+        updateIfNotEmptyAndNotEqual(organizationRequest.getLinkedinUrl(), organization.getLinkedinUrl(), organization::setLinkedinUrl , "linkedinUrl");
 
         if (hasUpdate){
             organization.setDateUpdate(LocalDateTime.now());
@@ -64,7 +67,10 @@ public class OrganizationServiceImpl implements IOrganizationService {
                                         ,organization.getPhone()
                                         ,organization.getEmail()
                                         ,organization.getWelcomeText()
-                                        , organization.getAboutUsText());
+                                        ,organization.getAboutUsText()
+                                        ,organization.getFacebookUrl()
+                                        ,organization.getInstagramUrl()
+                                        ,organization.getLinkedinUrl());
     }
 
     public Organization getOrganization() {
@@ -105,6 +111,9 @@ public class OrganizationServiceImpl implements IOrganizationService {
         dto.setImage(model.getImage());
         dto.setAddress(model.getAddress());
         dto.setPhone(model.getPhone());
+        dto.setFacebookUrl(model.getFacebookUrl());
+        dto.setInstagramUrl(model.getInstagramUrl());
+        dto.setLinkedinUrl(model.getLinkedinUrl());
 
         return dto;
     }
