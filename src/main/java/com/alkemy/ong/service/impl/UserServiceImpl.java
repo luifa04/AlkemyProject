@@ -1,8 +1,14 @@
 package com.alkemy.ong.service.impl;
 
+import com.alkemy.ong.dto.UserUpdateDto;
 import com.alkemy.ong.exception.NotFoundException;
+import com.alkemy.ong.security.dto.LoggedUserDto;
+import com.alkemy.ong.security.dto.LoginDto;
+import com.alkemy.ong.security.service.IAuthenticationService;
+import com.alkemy.ong.service.IEmailService;
+import com.alkemy.ong.service.IUserService;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,25 +31,28 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImpl implements IUserService{
+@AllArgsConstructor
+public class UserServiceImpl implements IUserService {
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
-    
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    private MessageSource messageSource;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final IAuthenticationService authenticationService;
+    private final IEmailService emailService;
+    private final MessageSource messageSource;
 
     @Override
-    public User createUser(UserRequest userRequest) throws EmailExistException {
+    public LoggedUserDto createUser(UserRequest userRequest) throws EmailExistException {
         if (userRepository.findByEmail(userRequest.getEmail()).isPresent()) {
             throw new EmailExistException(userRequest.getEmail());
         }
-        return userRepository.save(generateUser(userRequest));
+        emailService.sendWelcomeEmail(userRequest.getEmail(), userRequest.getFirstName(), userRequest.getLastName());
+        LoginDto login = new LoginDto ();
+        login.setEmail(userRequest.getEmail());
+        login.setPassword(userRequest.getPassword());
+        userRepository.save(generateUser(userRequest));
+        return authenticationService.signInAndReturnJWT(login);
+
     }
 
     private User generateUser(UserRequest userRequest) {
@@ -79,16 +88,12 @@ public class UserServiceImpl implements IUserService{
         return userDto;
     }
 
+
     private UserDto mapUserToUserDto(User user){
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(user, UserDto.class);
     }    
-    
-//    @Override
-//    @Transactional
-//    public void makeAdmin(String username){
-//        userRepository.updateUserRole(username, roleRepository.findByName(RoleEnum.ADMIN.getName()));
-//    }
+
 
     @Override
     public ResponseEntity<?> deleteById(Long id) {
@@ -101,6 +106,42 @@ public class UserServiceImpl implements IUserService{
         userRepository.delete(user);
         return new ResponseEntity<>(isDeletedCategoryMessage, HttpStatus.OK);
 
+    }
+
+    public UserUpdateDto update(Long id, UserUpdateDto userUpdateDto) {
+        Optional<User> entity = userRepository.findById(id);
+        String messageError = messageSource.getMessage("updateUserMessageTemplate.failure", null, Locale.US);
+        if (!entity.isPresent()) {
+            throw new NotFoundException(messageError);
+        }
+        userRefreshValues(entity.get(), userUpdateDto);
+        User userSaved = userRepository.save(entity.get());
+        UserUpdateDto result = mapUserToUserUpdateDto(userSaved);
+        return result;
+
+    }
+
+    private UserUpdateDto mapUserToUserUpdateDto(User user) {
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(user, UserUpdateDto.class);
+    }
+
+    public void userRefreshValues(User user, UserUpdateDto userUpdateDto) {
+        if (userUpdateDto.getFirstName() != null) {
+            user.setFirstName(userUpdateDto.getFirstName());
+        }
+        if (userUpdateDto.getLastName() != null) {
+            user.setLastName(userUpdateDto.getLastName());
+        }
+        if (userUpdateDto.getEmail() != null) {
+            user.setEmail(userUpdateDto.getEmail());
+        }
+        if (userUpdateDto.getPhoto() != null) {
+            user.setPhoto(userUpdateDto.getPhoto());
+        }
+        if (userUpdateDto.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(userUpdateDto.getPassword()));
+        }
     }
 
 

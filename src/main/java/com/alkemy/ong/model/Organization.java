@@ -1,6 +1,7 @@
 package com.alkemy.ong.model;
 
 
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.lang.Nullable;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ import java.time.LocalDateTime;
 @Setter
 @SQLDelete(sql = "UPDATE organizations SET deleted = true WHERE id=?")
 @Where(clause = "deleted=false")
+@EntityListeners(AuditingEntityListener.class)
 public class Organization {
 
     @Id

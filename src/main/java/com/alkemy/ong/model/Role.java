@@ -1,15 +1,8 @@
 package com.alkemy.ong.model;
 
 import java.util.Date;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +10,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import lombok.NonNull;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.lang.Nullable;
 
 import com.alkemy.ong.security.RoleEnum;
@@ -29,6 +23,7 @@ import com.alkemy.ong.security.RoleEnum;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@EntityListeners(AuditingEntityListener.class)
 public class Role {
 	
 	 @Id
