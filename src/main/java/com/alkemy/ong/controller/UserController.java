@@ -20,8 +20,9 @@ import javax.validation.Valid;
 @RequestMapping("/api")
 public class UserController {
 
+
     @Autowired
-    private IUserService  userService;
+    private IUserService userService;
 
     @GetMapping("/users")
     @PreAuthorize(SecurityConstant.ADMIN)
@@ -35,6 +36,14 @@ public class UserController {
     public ResponseEntity<UserUpdateDto> updateUser (@Valid @PathVariable Long id, @RequestBody UserUpdateDto userUpdateDto) {
         UserUpdateDto result = userService.update(id, userUpdateDto);
         return new ResponseEntity<UserUpdateDto>(result, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize(SecurityConstant.ADMIN)
+    public ResponseEntity<?> delete(@Valid @PathVariable("id") Long id ) {
+
+        return userService.deleteById(id);
+
     }
 
 }

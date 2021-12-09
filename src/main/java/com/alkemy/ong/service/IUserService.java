@@ -10,15 +10,18 @@ import com.alkemy.ong.dto.UserUpdateDto;
 import com.alkemy.ong.model.User;
 import com.alkemy.ong.security.dto.LoggedUserDto;
 import com.alkemy.ong.exception.EmailExistException;
+import org.springframework.http.ResponseEntity;
 
 public interface IUserService {
     void makeAdmin(String username);
 
-	Optional<User> findByEmail(String email);
+    Optional<User> findByEmail(String email);
 
-	LoggedUserDto createUser(UserRequest userRequest) throws EmailExistException;
+    LoggedUserDto createUser(UserRequest userRequest) throws EmailExistException;
 
-	List<UserDto> getUsers();
+    List<UserDto> getUsers();
 
-	UserUpdateDto update(Long id, UserUpdateDto userUpdateDto);
+    UserUpdateDto update(Long id, UserUpdateDto userUpdateDto);
+
+    ResponseEntity<?> deleteById(Long id);
 }
