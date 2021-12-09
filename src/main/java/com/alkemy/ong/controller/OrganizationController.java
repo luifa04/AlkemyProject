@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.alkemy.ong.security.SecurityConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,7 @@ public class OrganizationController {
     private IOrganizationService organizationService;
 
     @GetMapping("/public")
+    @PreAuthorize(SecurityConstant.ADMIN)
     public ResponseEntity<List<OrganizationPublicDto>> getAll() {
         try {
             List<OrganizationPublicDto> organizations = organizationService.getAllOrganizations();
@@ -38,7 +40,7 @@ public class OrganizationController {
     }
 
     @PatchMapping("/public")
-    @PreAuthorize("hasAnyRole(T(com.alkemy.ong.security.RoleEnum).ADMIN)")
+    @PreAuthorize(SecurityConstant.ADMIN)
     public ResponseEntity<OrganizationResponse> updatePublicData(@Valid @RequestBody OrganizationRequest organization){
         return new ResponseEntity<OrganizationResponse>(organizationService.updatePublicData(organization), HttpStatus.OK);
     }

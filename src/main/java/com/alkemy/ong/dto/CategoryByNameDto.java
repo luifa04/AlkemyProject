@@ -7,12 +7,6 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class NewsResponse {
-
-    private Long id;
+public class CategoryByNameDto {
     private String name;
-    private String content;
-    private String image;
-    private Long categoryId;
-
 }

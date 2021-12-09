@@ -32,13 +32,18 @@ public class OrganizationServiceImpl implements IOrganizationService {
     private final MessageSource messageSource;
     private Boolean hasUpdate = Boolean.FALSE;
 
+    @Override
+    public Organization findById(Long id){
+        String notFoundOrganizationMessage = messageSource.getMessage("organization.notFound", null, Locale.US);
+        return organizationRepository.findById(id).orElseThrow(()->new NotFoundException(notFoundOrganizationMessage));
+    }
+
 
     @Override
     @Transactional
     public OrganizationResponse updatePublicData(OrganizationRequest organizationRequest) {
-        String notFoundOrganizationMessage = messageSource.getMessage("organization.notFound", null, Locale.US);
-        Organization organization = organizationRepository.findAll().stream().findFirst()
-                                                        .orElseThrow(()-> new NotFoundException(notFoundOrganizationMessage));
+
+        Organization organization = getOrganization();
 
         updateIfNotBlankAndNotEqual(organizationRequest.getName(), organization.getName(), organization::setName , "name");
         updateIfNotBlankAndNotEqual(organizationRequest.getImage(), organization.getImage(), organization::setImage , "image");
@@ -60,6 +65,13 @@ public class OrganizationServiceImpl implements IOrganizationService {
                                         ,organization.getEmail()
                                         ,organization.getWelcomeText()
                                         , organization.getAboutUsText());
+    }
+
+    public Organization getOrganization() {
+        String notFoundOrganizationMessage = messageSource.getMessage("organization.notFound", null, Locale.US);
+        Organization organization = organizationRepository.findAll().stream().findFirst()
+                                                        .orElseThrow(()-> new NotFoundException(notFoundOrganizationMessage));
+        return organization;
     }
 
     private <T> void updateIfNotBlankAndNotEqual(T source , T destination, Consumer<T> update, String parameterName){

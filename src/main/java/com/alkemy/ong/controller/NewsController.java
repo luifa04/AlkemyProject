@@ -1,29 +1,38 @@
 package com.alkemy.ong.controller;
 
+import com.alkemy.ong.dto.NewsRequest;
+import com.alkemy.ong.dto.NewsResponse;
 import com.alkemy.ong.security.SecurityConstant;
 import com.alkemy.ong.service.INewsService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("news")
+@RequestMapping("/news")
+@AllArgsConstructor
 public class NewsController {
 
-    @Autowired
-    private INewsService newsService;
+    private final INewsService newsService;
+
+    @PutMapping(path = "{id}")
+    @PreAuthorize(SecurityConstant.ADMIN)
+    public ResponseEntity<NewsResponse> updateNewsById(@PathVariable("id") Long id, @Valid @RequestBody NewsRequest news){
+        return new ResponseEntity<>(newsService.updateNewsById(id, news), HttpStatus.OK);
+
+    }
 
     @GetMapping("/{id}")
     @PreAuthorize(SecurityConstant.ADMIN)
-    public ResponseEntity<?> findById(@Valid @PathVariable("id") Long id){
+    public ResponseEntity<?> findById(@Valid @PathVariable("id") Long id) {
 
         return new ResponseEntity<>(newsService.findById(id), HttpStatus.OK);
     }
+
+
+
 }
