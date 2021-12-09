@@ -22,6 +22,9 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import javax.validation.Valid;
+
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.stream.Collectors;
 
@@ -33,38 +36,27 @@ import org.springframework.stereotype.Service;
 
 
 
-
+@RequiredArgsConstructor
 @Service
 public class CategoryServiceImpl implements ICategoryService{
 
-	@Autowired
-    private CategoryRepository categoryRepository;
-
-    private MessageSource messageSource;
-
+    private final CategoryRepository categoryRepository;
+    private final MessageSource messageSource;
     
     @Override
-    public CategoryDto findById(Long id){
-        Optional<Category> rta= categoryRepository.findById(id);
-        if (rta.isPresent()) {
-            Category category= rta.get();
-
-            return mapEntityToDto(category);
-
-        }
-        return null;
+    public CategoryDto findById(Long id) throws NotFoundException{
+		String notFoundCategoryMessage = messageSource.getMessage("category.notFound", null, Locale.US);
+        Category rta= categoryRepository.findById(id).orElseThrow(()-> new NotFoundException(notFoundCategoryMessage));
+		return mapEntityToDto(rta);
     }
-
     
     @Override
 	public CategoryDto createCategory(@Valid CategoryRequestUpdate category) {
 		Category categoryEntity = new Category();
-                mapDtoToEntity(categoryEntity, category);
-                Category categoryCreate = categoryRepository.save(categoryEntity);
-	        return mapEntityToDto(categoryCreate);
+		mapDtoToEntityWithDateOfCreation(categoryEntity, category);
+		Category categoryCreate = categoryRepository.save(categoryEntity);
+		return mapEntityToDto(categoryCreate);
 	}
-        
-    
 
 	@Override
 	public CategoryDto updateCategory(@Valid CategoryRequestUpdate category, Long id) {
@@ -110,7 +102,6 @@ public class CategoryServiceImpl implements ICategoryService{
         String name = category.getName();
         return new CategoryByNameDto(name);
     }
-
     
 	private CategoryDto mapEntityToDto(Category categoryUpdated) {
 		CategoryDto categoryDto = new CategoryDto();
@@ -123,13 +114,20 @@ public class CategoryServiceImpl implements ICategoryService{
 		return categoryDto;
 	}
 
-
 	private void mapDtoToEntity(Category categoryEntity, @Valid CategoryRequestUpdate category) {
 		categoryEntity.setName(category.getName());
 		categoryEntity.setDescription(category.getDescription());
 		categoryEntity.setImage(category.getImage());
 		categoryEntity.setDateUpdate(LocalDateTime.now());
-	}    
+	}
+
+	private void mapDtoToEntityWithDateOfCreation(Category categoryEntity, @Valid CategoryRequestUpdate category) {
+		categoryEntity.setName(category.getName());
+		categoryEntity.setDescription(category.getDescription());
+		categoryEntity.setImage(category.getImage());
+		categoryEntity.setDateCreation(LocalDateTime.now());
+		categoryEntity.setDateUpdate(LocalDateTime.now());
+	}
 
 }
 
