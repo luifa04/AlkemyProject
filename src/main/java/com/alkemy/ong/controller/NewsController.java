@@ -1,3 +1,6 @@
+
+    
+   
 package com.alkemy.ong.controller;
 
 import com.alkemy.ong.dto.NewsRequest;
@@ -33,6 +36,13 @@ public class NewsController {
         return new ResponseEntity<>(newsService.findById(id), HttpStatus.OK);
     }
 
+    @DeleteMapping("/{id}")
+    @PreAuthorize(SecurityConstant.ADMIN)
+    public ResponseEntity<?> delete(@Valid @PathVariable("id") Long id ) {
+       
+    	return newsService.delete(id);
+		
+    }
 
 
 }
