@@ -33,6 +33,11 @@ public class NewsController {
         return new ResponseEntity<>(newsService.findById(id), HttpStatus.OK);
     }
 
-
+    @PostMapping
+    @PreAuthorize(SecurityConstant.ADMIN)
+    public ResponseEntity<NewsRequest> createNews(@Valid @RequestBody NewsRequest news) throws Exception {
+        NewsRequest newsSaved = newsService.createNews(news);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newsSaved);
+    }
 
 }
