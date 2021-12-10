@@ -54,6 +54,17 @@ public class AWSS3ServiceImpl implements IAWSS3Service {
         return fileUrl;
     }
 
+    @Override
+    public String uploadImage(File file) throws IOException, SdkClientException{
+        String fileUrl = "";
+        String fileName = generateFileName(file.getName());
+        fileUrl = endpointUrl + "/" + bucketName + "/" + fileName;
+        uploadFileTos3bucket(fileName, file);
+        file.delete();
+
+        return fileUrl;
+    }
+
     private void uploadFileTos3bucket(String fileName, File file) {
         s3client.putObject(new PutObjectRequest(bucketName, fileName, file)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
@@ -61,6 +72,9 @@ public class AWSS3ServiceImpl implements IAWSS3Service {
 
     private String generateFileName(MultipartFile multiPart) {
         return new Date().getTime() + "-" + multiPart.getOriginalFilename().replace(" ", "_");
+    }
+    private String generateFileName(String fileName) {
+        return new Date().getTime() + "-" + fileName.replace(" ", "_");
     }
 
     private File convertMultiPartToFile(MultipartFile file) throws IOException {

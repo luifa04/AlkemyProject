@@ -6,6 +6,7 @@ import com.alkemy.ong.dto.CategoryDto;
 
 
 import com.alkemy.ong.dto.CategoryRequestUpdate;
+import com.alkemy.ong.exception.NotFoundException;
 import com.alkemy.ong.security.SecurityConstant;
 import com.alkemy.ong.service.ICategoryService;
 
@@ -39,17 +40,8 @@ public class CategoryController {
     
     @GetMapping("/{id}")
     @PreAuthorize(SecurityConstant.ADMIN)
-    public ResponseEntity<?> findById(@Valid @PathVariable("id") Long id ) {
-        try {
-		CategoryDto categoryDto = categoryService.findById(id);
-                if (categoryDto == null) {
-                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-                }
-                return new ResponseEntity<>(categoryDto, HttpStatus.OK);
-
-		} catch (Exception e) {
-			return new ResponseEntity<>(e.toString(), HttpStatus.CONFLICT);
-		}
+    public ResponseEntity<?> findById(@Valid @PathVariable("id") Long id ){
+        return new ResponseEntity<>(categoryService.findById(id), HttpStatus.OK);
     }
 
     @GetMapping()
