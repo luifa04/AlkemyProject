@@ -1,3 +1,4 @@
+
 package com.alkemy.ong.service;
 
 import com.alkemy.ong.dto.NewsRequest;
@@ -8,5 +9,7 @@ public interface INewsService {
     NewsResponse findById(Long id);
 
     NewsResponse updateNewsById(Long id, NewsRequest news);
+
+    ResponseEntity<?> delete(Long id);
 
 }
