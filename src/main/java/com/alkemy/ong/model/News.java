@@ -12,6 +12,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlElement;
 import java.time.LocalDateTime;
 
 @Data
@@ -43,6 +44,8 @@ public class News {
 
     @LastModifiedDate
     private LocalDateTime dateUpdate;
+
+    private String type = "news";
 
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
