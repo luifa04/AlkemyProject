@@ -30,6 +30,7 @@ public class ApiExceptionHandler {
 	@ExceptionHandler(Exception.class)
 	@ResponseBody
 	public ExceptionMessage returnError(Exception e) {
+		e.printStackTrace();
 		return new ExceptionMessage(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(), LocalDateTime.now());
 
 	}
