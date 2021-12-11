@@ -25,7 +25,7 @@ public class ActivityController {
 	
 	 	@PutMapping("/{id}")
 	 	@PreAuthorize(SecurityConstant.ADMIN)
-	    public ResponseEntity<ActivityResponse> update(@Valid @RequestBody ActivityRequest activity, @PathVariable("id") Long id){
+	    public ResponseEntity<ActivityResponse> update(@PathVariable(value = "id") Long id, @Valid @RequestBody ActivityRequest activity){
 	        return new ResponseEntity<ActivityResponse>(activityService.updateActivity(activity, id), HttpStatus.OK);
 	    }
 
