@@ -1,3 +1,5 @@
+
+
 package com.alkemy.ong.service.impl;
 
 import com.alkemy.ong.dto.CategoryDto;
@@ -15,6 +17,8 @@ import com.alkemy.ong.util.UpdateFields;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -101,5 +105,16 @@ public class NewsServiceImpl implements INewsService {
                 .typeMap(News.class, NewsResponse.class)
                 .map(newsToUpdate);
     }
+  
+   @Override
+    public ResponseEntity<?> delete(Long id) {
+        String newsNotFound = messageSource.getMessage("news.notFound", null, Locale.US);
+        String isDeletedNewsMessage = messageSource.getMessage("news.isDeleted", null, Locale.US);
+        
+        News news = newsRepository.findById(id).orElseThrow(()-> new NotFoundException(newsNotFound));
+        newsRepository.delete(news);
+        return new ResponseEntity<>(isDeletedNewsMessage, HttpStatus.OK);
+    }
 }
+
 
