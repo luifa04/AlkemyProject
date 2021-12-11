@@ -1,32 +1,41 @@
 package com.alkemy.ong.controller;
 
-import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.alkemy.ong.dto.ActivityRequest;
 import com.alkemy.ong.dto.ActivityResponse;
 import com.alkemy.ong.security.SecurityConstant;
 import com.alkemy.ong.service.IActivityService;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/activity")
+@AllArgsConstructor
 public class ActivityController {
-	
-	@Autowired
-	private IActivityService activityService;
-	
-	 	@PutMapping("/{id}")
-	 	@PreAuthorize(SecurityConstant.ADMIN)
-	    public ResponseEntity<ActivityResponse> update(@PathVariable(value = "id") Long id, @Valid @RequestBody ActivityRequest activity){
-	        return new ResponseEntity<ActivityResponse>(activityService.updateActivity(activity, id), HttpStatus.OK);
-	    }
+
+    private final IActivityService activityService;
+
+    @PostMapping
+    @PreAuthorize(SecurityConstant.ADMIN)
+    public ResponseEntity<ActivityResponse> createActivity(@Valid @RequestBody ActivityRequest activity){
+        return new ResponseEntity<ActivityResponse>(activityService.createActivity(activity), HttpStatus.CREATED);
+    };
+    
+    @PutMapping("/{id}")
+ 	@PreAuthorize(SecurityConstant.ADMIN)
+    public ResponseEntity<ActivityResponse> update(@PathVariable(value = "id") Long id, @Valid @RequestBody ActivityRequest activity){
+        return new ResponseEntity<ActivityResponse>(activityService.updateActivity(activity, id), HttpStatus.OK);
+    }
+
 
 }

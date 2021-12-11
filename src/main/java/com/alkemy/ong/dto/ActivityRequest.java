@@ -1,21 +1,21 @@
 package com.alkemy.ong.dto;
 
-import org.springframework.lang.Nullable;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.validator.constraints.URL;
+import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
 @ToString
 public class ActivityRequest {
-	
-	@Nullable
+
+    @NotBlank(message = "Name field is necessary")
     private String name;
-	@Nullable
+    @NotBlank(message = "Content field is necessary")
     private String content;
-	@Nullable
+    @URL(message = "Image field must be a valid url")
     private String image;
-  
+
 }

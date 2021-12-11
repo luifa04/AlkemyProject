@@ -1,5 +1,6 @@
 package com.alkemy.ong.service.impl;
 
+
 import java.time.LocalDateTime;
 import java.util.Locale;
 import javax.transaction.Transactional;
@@ -11,11 +12,8 @@ import com.alkemy.ong.dto.ActivityResponse;
 import com.alkemy.ong.exception.NotFoundException;
 import com.alkemy.ong.model.Activity;
 import com.alkemy.ong.repository.ActivityRepository;
-import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.service.IActivityService;
 import com.alkemy.ong.util.UpdateFields;
-
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 
@@ -49,9 +47,34 @@ public class ActivityServiceImpl implements IActivityService {
 		 		
 		 	   return new ActivityResponse(activity.getName()
 		 			   					   ,activity.getContent()
-		 			   					   ,activity.getImage());
+		 			   					   ,activity.getImage()
+		 			   					   ,activity.getDateCreation().toString()
+		 			   					   ,activity.getDateUpdate().toString());
                        	
 		}
 	    
-	 
+
+
+    @Override
+    public ActivityResponse createActivity(ActivityRequest activityRequest) {
+        Activity activity = new Activity();
+        activity.setName(activityRequest.getName());
+        activity.setContent(activityRequest.getContent());
+        activity.setImage(activityRequest.getImage());
+        activity.setDateCreation(LocalDateTime.now());
+        activity.setDateUpdate((LocalDateTime.now()));
+        Activity createActivity = activityRepository.save(activity);
+        return generateActivity(createActivity);
+    }
+
+    private ActivityResponse generateActivity(Activity request){
+        ActivityResponse activity = new ActivityResponse();
+        activity.setName(request.getName());
+        activity.setContent(request.getContent());
+        activity.setImage(request.getImage());
+        activity.setDateCreation(request.getDateCreation().toString());
+        activity.setDateUpdate(request.getDateUpdate().toString());
+        return activity;
+    }
+
 }
