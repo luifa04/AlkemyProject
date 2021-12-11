@@ -1,10 +1,9 @@
 package com.alkemy.ong.service.impl;
 
-import com.alkemy.ong.dto.OrganizationRequest;
-import com.alkemy.ong.dto.OrganizationResponse;
-import com.alkemy.ong.dto.OrganizationPublicDto;
+import com.alkemy.ong.dto.*;
 import com.alkemy.ong.exception.NotFoundException;
 import com.alkemy.ong.model.Organization;
+import com.alkemy.ong.model.Slide;
 import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.service.IOrganizationService;
 import lombok.RequiredArgsConstructor;
@@ -105,6 +104,8 @@ public class OrganizationServiceImpl implements IOrganizationService {
         dto.setImage(model.getImage());
         dto.setAddress(model.getAddress());
         dto.setPhone(model.getPhone());
+        List<SlidePublicDto> slideDto = slideList2DTOList((List<Slide>)model.getSlides());
+        dto.setSlidePublicDto(slideDto);
 
         return dto;
     }
@@ -123,4 +124,22 @@ public class OrganizationServiceImpl implements IOrganizationService {
         return result;
     }
 
+    public SlidePublicDto slideModel2DTO(Slide entity) {
+        SlidePublicDto dto = new SlidePublicDto();
+        dto.setId(entity.getId());
+        dto.setImageUrl(entity.getImageUrl());
+        dto.setText(entity.getText());
+        dto.setOrderSlide(entity.getOrderSlide());
+        dto.setOrganizationId(entity.getOrganizationId());
+
+        return dto;
+    }
+
+    public List<SlidePublicDto> slideList2DTOList(List<Slide> entities) {
+        List<SlidePublicDto> dtos = new ArrayList<>();
+        for (Slide entity : entities) {
+            dtos.add(this.slideModel2DTO(entity));
+        }
+        return dtos;
+    }
 }
