@@ -7,6 +7,7 @@ import com.alkemy.ong.exception.NotFoundException;
 import com.alkemy.ong.model.Organization;
 import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.service.IOrganizationService;
+import com.alkemy.ong.util.UpdateFields;
 import lombok.RequiredArgsConstructor;
 import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.context.MessageSource;
@@ -27,10 +28,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrganizationServiceImpl implements IOrganizationService {
 
-    @Autowired
     private final OrganizationRepository organizationRepository;
     private final MessageSource messageSource;
-    private Boolean hasUpdate = Boolean.FALSE;
+    private final UpdateFields updateFields;
+
 
     @Override
     public Organization findById(Long id){
@@ -45,16 +46,16 @@ public class OrganizationServiceImpl implements IOrganizationService {
 
         Organization organization = getOrganization();
 
-        updateIfNotBlankAndNotEqual(organizationRequest.getName(), organization.getName(), organization::setName , "name");
-        updateIfNotBlankAndNotEqual(organizationRequest.getImage(), organization.getImage(), organization::setImage , "image");
-        updateIfNotBlankAndNotEqual(organizationRequest.getEmail(), organization.getEmail(), organization::setEmail , "email");
-        updateIfNotBlankAndNotEqual(organizationRequest.getWelcomeText(), organization.getWelcomeText(), organization::setWelcomeText , "welcome text");
+        updateFields.updateIfNotBlankAndNotEqual(organizationRequest.getName(), organization.getName(), organization::setName , "name");
+        updateFields.updateIfNotBlankAndNotEqual(organizationRequest.getImage(), organization.getImage(), organization::setImage , "image");
+        updateFields.updateIfNotBlankAndNotEqual(organizationRequest.getEmail(), organization.getEmail(), organization::setEmail , "email");
+        updateFields.updateIfNotBlankAndNotEqual(organizationRequest.getWelcomeText(), organization.getWelcomeText(), organization::setWelcomeText , "welcome text");
 
-        updateIfNotEmptyAndNotEqual(organizationRequest.getPhone(), organization.getPhone(), organization::setPhone , "phone");
-        updateIfNotEmptyAndNotEqual(organizationRequest.getAddress(), organization.getAddress(), organization::setAddress , "address");
-        updateIfNotEmptyAndNotEqual(organizationRequest.getAboutUsText(), organization.getAboutUsText(), organization::setAboutUsText , "about us text");
+        updateFields.updateIfNotEmptyAndNotEqual(organizationRequest.getPhone(), organization.getPhone(), organization::setPhone , "phone");
+        updateFields.updateIfNotEmptyAndNotEqual(organizationRequest.getAddress(), organization.getAddress(), organization::setAddress , "address");
+        updateFields.updateIfNotEmptyAndNotEqual(organizationRequest.getAboutUsText(), organization.getAboutUsText(), organization::setAboutUsText , "about us text");
 
-        if (hasUpdate){
+        if (updateFields.isHasUpdate()){
             organization.setDateUpdate(LocalDateTime.now());
         }
 
@@ -72,31 +73,6 @@ public class OrganizationServiceImpl implements IOrganizationService {
         Organization organization = organizationRepository.findAll().stream().findFirst()
                                                         .orElseThrow(()-> new NotFoundException(notFoundOrganizationMessage));
         return organization;
-    }
-
-    private <T> void updateIfNotBlankAndNotEqual(T source , T destination, Consumer<T> update, String parameterName){
-        String notBeBlankMessage = messageSource.getMessage("organization.blank", null, Locale.US);
-        if (source != null && !source.equals(destination)){
-            if (source.getClass().equals(String.class) && ((String) source).isBlank()){
-                throw new IllegalArgumentException(String.format("%s %s", parameterName, notBeBlankMessage));
-            }
-            update.accept(source);
-            hasUpdate = Boolean.TRUE;
-        }
-    }
-
-    private <T> void updateIfNotEmptyAndNotEqual(JsonNullable<T> source , T destination, Consumer<T> update, String parameterName){
-        String notBeBlankMessage = messageSource.getMessage("organization.blank", null, Locale.US);
-        if (source != null) {
-            T internalSource = source.orElse(null);
-            if (internalSource != null && internalSource.getClass().equals(String.class) && ((String) internalSource).isBlank()) {
-                throw new IllegalArgumentException(String.format("%s %s", parameterName, notBeBlankMessage));
-            }
-            if(!Objects.equals(internalSource, destination)){
-                update.accept(internalSource);
-                hasUpdate = Boolean.TRUE;
-            }
-        }
     }
 
     public OrganizationPublicDto model2DTO(Organization model){
