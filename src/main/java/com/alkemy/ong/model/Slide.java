@@ -33,16 +33,16 @@ public class Slide {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
     
-    @NotNull(message="the Url of the image cannot be empity")
+    @NotNull(message="the Url of the image cannot be empty")
     private String imageUrl;
     
-    @NotNull(message="El text cannot be empity")
+    @NotNull(message="El text cannot be empty")
     private String text;
     
-    @NotNull(message="the order cannot be empity")
+    @NotNull(message="the order cannot be empty")
     private Integer orderSlide;
     
-    @NotNull(message="the organizationId cannot be empity")
+    @NotNull(message="the organizationId cannot be empty")
     private Long organizationId;
     
 }
