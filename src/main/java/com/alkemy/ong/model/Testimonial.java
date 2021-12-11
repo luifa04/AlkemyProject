@@ -32,11 +32,9 @@ public class Testimonial {
     @Column(nullable = false)
     private String name;
 
-    @Null
     @Column(nullable = true)
     private String image;
 
-    @Null
     @Column(nullable = true)
     private String content;
 
