@@ -84,11 +84,11 @@ public class SlidesServiceImpl implements ISlidesService{
 
     private void automaticOrder(SlideRequest slide) {
         Integer lastNumber = slideRepository.findAll()
-                .stream()
-                .sorted(Comparator.comparing(Slide::getOrderSlide, Comparator.reverseOrder()))
-                .map(Slide::getOrderSlide)
-                .findFirst()
-                .orElse(0);
+                                            .stream()
+                                            .sorted(Comparator.comparing(Slide::getOrderSlide, Comparator.reverseOrder()))
+                                            .map(Slide::getOrderSlide)
+                                            .findFirst()
+                                            .orElse(0);
         lastNumber++;
         slide.setOrderSlide(lastNumber);
     }
