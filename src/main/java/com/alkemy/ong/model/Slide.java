@@ -20,10 +20,6 @@ import lombok.Data;
 
 
 
-/**
- *
- * @author mateo
- */
 @Data
 @Entity
 @Table(name="slides")
@@ -44,6 +40,5 @@ public class Slide {
     
     @NotNull(message="the organizationId cannot be empty")
     private Long organizationId;
-
 
 }

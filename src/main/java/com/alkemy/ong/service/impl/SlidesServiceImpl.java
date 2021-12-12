@@ -1,9 +1,9 @@
 package com.alkemy.ong.service.impl;
 
 import com.alkemy.ong.aws.IAWSS3Service;
-import com.alkemy.ong.dto.NewsResponse;
 import com.alkemy.ong.dto.SlidePublicDto;
 import com.alkemy.ong.dto.SlideRequest;
+import com.alkemy.ong.exception.NotFoundException;
 import com.alkemy.ong.model.Slide;
 import com.alkemy.ong.repository.SlideRepository;
 import com.alkemy.ong.service.IOrganizationService;
@@ -13,6 +13,8 @@ import io.jsonwebtoken.lang.Strings;
 import lombok.AllArgsConstructor;
 import org.apache.commons.io.FileUtils;
 import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -62,13 +64,24 @@ public class SlidesServiceImpl implements ISlidesService{
 
     }
 
+    @Override
+    public ResponseEntity<?> delete(Long id) {
+        String notFoundSlideMessage = messageSource.getMessage("slide.notFound", null, Locale.US);
+        String isDeletedSlideMessage = messageSource.getMessage("slide.isDeleted", null, Locale.US);
+
+        Slide slide = slideRepository.findById(id)
+                .orElseThrow(()->new NotFoundException(notFoundSlideMessage));
+        slideRepository.delete(slide);
+        return new ResponseEntity<>(isDeletedSlideMessage, HttpStatus.OK);
+    }
+
     private void automaticOrder(SlideRequest slide) {
         Integer lastNumber = slideRepository.findAll()
-                                            .stream()
-                                            .sorted(Comparator.comparing(Slide::getOrderSlide, Comparator.reverseOrder()))
-                                            .map(Slide::getOrderSlide)
-                                            .findFirst()
-                                            .orElse(0);
+                .stream()
+                .sorted(Comparator.comparing(Slide::getOrderSlide, Comparator.reverseOrder()))
+                .map(Slide::getOrderSlide)
+                .findFirst()
+                .orElse(0);
         lastNumber++;
         slide.setOrderSlide(lastNumber);
     }
@@ -88,25 +101,6 @@ public class SlidesServiceImpl implements ISlidesService{
             throw new IllegalArgumentException(contentTypeErrorMessage);
         }
         return outputFile;
-    }
-
-    public SlidePublicDto slideModel2DTO(Slide entity) {
-        SlidePublicDto dto = new SlidePublicDto();
-        dto.setId(entity.getId());
-        dto.setImageUrl(entity.getImageUrl());
-        dto.setText(entity.getText());
-        dto.setOrderSlide(entity.getOrderSlide());
-        dto.setOrganizationId(entity.getOrganizationId());
-
-        return dto;
-    }
-
-    public List<SlidePublicDto> slideList2DTOList(List<Slide> entities) {
-        List<SlidePublicDto> dtos = new ArrayList<>();
-        for (Slide entity : entities) {
-            dtos.add(this.slideModel2DTO(entity));
-        }
-        return dtos;
     }
 
 

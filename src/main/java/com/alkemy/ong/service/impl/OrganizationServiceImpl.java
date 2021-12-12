@@ -1,35 +1,36 @@
 package com.alkemy.ong.service.impl;
 
 import com.alkemy.ong.dto.*;
+
+import com.alkemy.ong.dto.OrganizationPublicDto;
+import com.alkemy.ong.dto.OrganizationRequest;
+import com.alkemy.ong.dto.OrganizationResponse;
 import com.alkemy.ong.exception.NotFoundException;
+import com.alkemy.ong.mapper.OrganizationMapper;
 import com.alkemy.ong.model.Organization;
-import com.alkemy.ong.model.Slide;
 import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.service.IOrganizationService;
+import com.alkemy.ong.util.UpdateFields;
 import lombok.RequiredArgsConstructor;
-import org.openapitools.jackson.nullable.JsonNullable;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
-
 
 import javax.transaction.Transactional;
-
 import java.time.LocalDateTime;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.function.Consumer;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
 public class OrganizationServiceImpl implements IOrganizationService {
 
-    @Autowired
     private final OrganizationRepository organizationRepository;
     private final MessageSource messageSource;
-    private Boolean hasUpdate = Boolean.FALSE;
+    private final UpdateFields updateFields;
+    @Autowired
+    private OrganizationMapper organizationMapper;
+
 
     @Override
     public Organization findById(Long id){
@@ -44,16 +45,19 @@ public class OrganizationServiceImpl implements IOrganizationService {
 
         Organization organization = getOrganization();
 
-        updateIfNotBlankAndNotEqual(organizationRequest.getName(), organization.getName(), organization::setName , "name");
-        updateIfNotBlankAndNotEqual(organizationRequest.getImage(), organization.getImage(), organization::setImage , "image");
-        updateIfNotBlankAndNotEqual(organizationRequest.getEmail(), organization.getEmail(), organization::setEmail , "email");
-        updateIfNotBlankAndNotEqual(organizationRequest.getWelcomeText(), organization.getWelcomeText(), organization::setWelcomeText , "welcome text");
+        updateFields.updateIfNotBlankAndNotEqual(organizationRequest.getName(), organization.getName(), organization::setName , "name");
+        updateFields.updateIfNotBlankAndNotEqual(organizationRequest.getImage(), organization.getImage(), organization::setImage , "image");
+        updateFields.updateIfNotBlankAndNotEqual(organizationRequest.getEmail(), organization.getEmail(), organization::setEmail , "email");
+        updateFields.updateIfNotBlankAndNotEqual(organizationRequest.getWelcomeText(), organization.getWelcomeText(), organization::setWelcomeText , "welcome text");
 
-        updateIfNotEmptyAndNotEqual(organizationRequest.getPhone(), organization.getPhone(), organization::setPhone , "phone");
-        updateIfNotEmptyAndNotEqual(organizationRequest.getAddress(), organization.getAddress(), organization::setAddress , "address");
-        updateIfNotEmptyAndNotEqual(organizationRequest.getAboutUsText(), organization.getAboutUsText(), organization::setAboutUsText , "about us text");
+        updateFields.updateIfNotEmptyAndNotEqual(organizationRequest.getPhone(), organization.getPhone(), organization::setPhone , "phone");
+        updateFields.updateIfNotEmptyAndNotEqual(organizationRequest.getAddress(), organization.getAddress(), organization::setAddress , "address");
+        updateFields.updateIfNotEmptyAndNotEqual(organizationRequest.getAboutUsText(), organization.getAboutUsText(), organization::setAboutUsText , "about us text");
+        updateFields.updateIfNotEmptyAndNotEqual(organizationRequest.getFacebookUrl(), organization.getFacebookUrl(), organization::setFacebookUrl , "facebookUrl");
+        updateFields.updateIfNotEmptyAndNotEqual(organizationRequest.getInstagramUrl(), organization.getInstagramUrl(), organization::setInstagramUrl , "instagramUrl");
+        updateFields.updateIfNotEmptyAndNotEqual(organizationRequest.getLinkedinUrl(), organization.getLinkedinUrl(), organization::setLinkedinUrl , "linkedinUrl");
 
-        if (hasUpdate){
+        if (updateFields.isHasUpdate()){
             organization.setDateUpdate(LocalDateTime.now());
         }
 
@@ -63,7 +67,10 @@ public class OrganizationServiceImpl implements IOrganizationService {
                                         ,organization.getPhone()
                                         ,organization.getEmail()
                                         ,organization.getWelcomeText()
-                                        , organization.getAboutUsText());
+                                        ,organization.getAboutUsText()
+                                        ,organization.getFacebookUrl()
+                                        ,organization.getInstagramUrl()
+                                        ,organization.getLinkedinUrl());
     }
 
     public Organization getOrganization() {
@@ -73,73 +80,10 @@ public class OrganizationServiceImpl implements IOrganizationService {
         return organization;
     }
 
-    private <T> void updateIfNotBlankAndNotEqual(T source , T destination, Consumer<T> update, String parameterName){
-        String notBeBlankMessage = messageSource.getMessage("organization.blank", null, Locale.US);
-        if (source != null && !source.equals(destination)){
-            if (source.getClass().equals(String.class) && ((String) source).isBlank()){
-                throw new IllegalArgumentException(String.format("%s %s", parameterName, notBeBlankMessage));
-            }
-            update.accept(source);
-            hasUpdate = Boolean.TRUE;
-        }
-    }
-
-    private <T> void updateIfNotEmptyAndNotEqual(JsonNullable<T> source , T destination, Consumer<T> update, String parameterName){
-        String notBeBlankMessage = messageSource.getMessage("organization.blank", null, Locale.US);
-        if (source != null) {
-            T internalSource = source.orElse(null);
-            if (internalSource != null && internalSource.getClass().equals(String.class) && ((String) internalSource).isBlank()) {
-                throw new IllegalArgumentException(String.format("%s %s", parameterName, notBeBlankMessage));
-            }
-            if(!Objects.equals(internalSource, destination)){
-                update.accept(internalSource);
-                hasUpdate = Boolean.TRUE;
-            }
-        }
-    }
-
-    public OrganizationPublicDto model2DTO(Organization model){
-        OrganizationPublicDto dto = new OrganizationPublicDto();
-        dto.setName(model.getName());
-        dto.setImage(model.getImage());
-        dto.setAddress(model.getAddress());
-        dto.setPhone(model.getPhone());
-        List<SlidePublicDto> slideDto = slideList2DTOList((List<Slide>)model.getSlides());
-        dto.setSlidePublicDto(slideDto);
-
-        return dto;
-    }
-
-    public List<OrganizationPublicDto> modelList2DTOList(List<Organization> entities){
-        List<OrganizationPublicDto> dtos = new ArrayList<>();
-        for (Organization entity : entities) {
-            dtos.add(model2DTO(entity));
-        }
-        return dtos;
-    }
-
     public List<OrganizationPublicDto> getAllOrganizations() {
         List<Organization> entities = organizationRepository.findAll();
-        List<OrganizationPublicDto> result = this.modelList2DTOList(entities);
+        List<OrganizationPublicDto> result = organizationMapper.modelList2DTOList(entities);
         return result;
     }
 
-    public SlidePublicDto slideModel2DTO(Slide entity) {
-        SlidePublicDto dto = new SlidePublicDto();
-        dto.setId(entity.getId());
-        dto.setImageUrl(entity.getImageUrl());
-        dto.setText(entity.getText());
-        dto.setOrderSlide(entity.getOrderSlide());
-        dto.setOrganizationId(entity.getOrganizationId());
-
-        return dto;
-    }
-
-    public List<SlidePublicDto> slideList2DTOList(List<Slide> entities) {
-        List<SlidePublicDto> dtos = new ArrayList<>();
-        for (Slide entity : entities) {
-            dtos.add(this.slideModel2DTO(entity));
-        }
-        return dtos;
-    }
 }

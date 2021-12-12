@@ -54,6 +54,15 @@ public class Organization {
     @Nullable
     private String aboutUsText;
 
+    @Nullable
+    private String facebookUrl;
+
+    @Nullable
+    private String instagramUrl;
+
+    @Nullable
+    private String linkedinUrl;
+
     @CreatedDate
     @NotNull
     @Column(nullable = false, updatable = false)
@@ -66,7 +75,6 @@ public class Organization {
     private boolean deleted = Boolean.FALSE;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "slide_id")
     private List<Slide> slides = new ArrayList<>();
 
 }
