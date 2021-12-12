@@ -1,9 +1,12 @@
 package com.alkemy.ong.service.impl;
 
 import com.alkemy.ong.aws.IAWSS3Service;
-import com.alkemy.ong.dto.SlidePublicDto;
+import com.alkemy.ong.dto.NewsResponse;
 import com.alkemy.ong.dto.SlideRequest;
 import com.alkemy.ong.exception.NotFoundException;
+import com.alkemy.ong.model.Category;
+import com.alkemy.ong.model.News;
+import com.alkemy.ong.model.Organization;
 import com.alkemy.ong.model.Slide;
 import com.alkemy.ong.repository.SlideRepository;
 import com.alkemy.ong.service.IOrganizationService;
@@ -12,6 +15,7 @@ import com.alkemy.ong.util.ContentTypeEnum;
 import io.jsonwebtoken.lang.Strings;
 import lombok.AllArgsConstructor;
 import org.apache.commons.io.FileUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +23,10 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Base64;
+import java.util.Comparator;
+import java.util.Locale;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
