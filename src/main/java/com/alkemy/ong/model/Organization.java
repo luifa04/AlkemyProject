@@ -75,6 +75,7 @@ public class Organization {
     private boolean deleted = Boolean.FALSE;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "organizationId")
     private List<Slide> slides = new ArrayList<>();
 
 }
