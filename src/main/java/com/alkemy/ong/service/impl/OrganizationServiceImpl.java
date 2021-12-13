@@ -1,20 +1,23 @@
 package com.alkemy.ong.service.impl;
 
+import com.alkemy.ong.dto.*;
+
 import com.alkemy.ong.dto.OrganizationPublicDto;
 import com.alkemy.ong.dto.OrganizationRequest;
 import com.alkemy.ong.dto.OrganizationResponse;
 import com.alkemy.ong.exception.NotFoundException;
+import com.alkemy.ong.mapper.OrganizationMapper;
 import com.alkemy.ong.model.Organization;
 import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.service.IOrganizationService;
 import com.alkemy.ong.util.UpdateFields;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -25,6 +28,8 @@ public class OrganizationServiceImpl implements IOrganizationService {
     private final OrganizationRepository organizationRepository;
     private final MessageSource messageSource;
     private final UpdateFields updateFields;
+    @Autowired
+    private OrganizationMapper organizationMapper;
 
 
     @Override
@@ -75,30 +80,9 @@ public class OrganizationServiceImpl implements IOrganizationService {
         return organization;
     }
 
-    public OrganizationPublicDto model2DTO(Organization model){
-        OrganizationPublicDto dto = new OrganizationPublicDto();
-        dto.setName(model.getName());
-        dto.setImage(model.getImage());
-        dto.setAddress(model.getAddress());
-        dto.setPhone(model.getPhone());
-        dto.setFacebookUrl(model.getFacebookUrl());
-        dto.setInstagramUrl(model.getInstagramUrl());
-        dto.setLinkedinUrl(model.getLinkedinUrl());
-
-        return dto;
-    }
-
-    public List<OrganizationPublicDto> modelList2DTOList(List<Organization> entities){
-        List<OrganizationPublicDto> dtos = new ArrayList<>();
-        for (Organization entity : entities) {
-            dtos.add(model2DTO(entity));
-        }
-        return dtos;
-    }
-
     public List<OrganizationPublicDto> getAllOrganizations() {
         List<Organization> entities = organizationRepository.findAll();
-        List<OrganizationPublicDto> result = this.modelList2DTOList(entities);
+        List<OrganizationPublicDto> result = organizationMapper.modelList2DTOList(entities);
         return result;
     }
 

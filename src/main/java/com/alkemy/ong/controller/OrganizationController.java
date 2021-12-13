@@ -28,7 +28,7 @@ public class OrganizationController {
     private IOrganizationService organizationService;
 
     @GetMapping("/public")
-    @PreAuthorize(SecurityConstant.ADMIN)
+    @PreAuthorize(SecurityConstant.USER)
     public ResponseEntity<List<OrganizationPublicDto>> getAll() {
         try {
             List<OrganizationPublicDto> organizations = organizationService.getAllOrganizations();

@@ -16,13 +16,10 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import lombok.Data;
-import org.hibernate.annotations.SQLDelete;
 
 
-/**
- *
- * @author mateo
- */
+
+
 @Data
 @Entity
 @Table(name="slides")
@@ -43,5 +40,5 @@ public class Slide {
     
     @NotNull(message="the organizationId cannot be empty")
     private Long organizationId;
-    
+
 }

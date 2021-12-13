@@ -15,6 +15,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "organizations")
@@ -71,6 +73,11 @@ public class Organization {
 
     @NotNull
     private boolean deleted = Boolean.FALSE;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "organizationId")
+    private List<Slide> slides = new ArrayList<>();
+
 }
 
 
