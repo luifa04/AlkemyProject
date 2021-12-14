@@ -2,11 +2,10 @@ package com.alkemy.ong.service.impl;
 
 import com.alkemy.ong.exception.EmailExistException;
 import com.alkemy.ong.service.IWelcomeTemplateService;
-
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
@@ -17,13 +16,11 @@ import java.util.Locale;
 import java.util.Map;
 
 @Service
+@AllArgsConstructor
 public class WelcomeTemplateServiceImpl implements IWelcomeTemplateService{
 
-    @Autowired
-    private Configuration config;
-
-    @Autowired
-    private MessageSource messageSource;
+    private final Configuration config;
+    private final MessageSource messageSource;
 
     @Override
     public String setTemplate(String name, String surname) throws EmailExistException {

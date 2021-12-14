@@ -1,26 +1,22 @@
 package com.alkemy.ong.security.service;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import com.alkemy.ong.model.User;
+import com.alkemy.ong.security.dto.LoggedUserDto;
+import com.alkemy.ong.security.dto.LoginDto;
+import com.alkemy.ong.security.jwt.IJwtProvider;
+import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import com.alkemy.ong.model.User;
-
-import com.alkemy.ong.security.dto.LoggedUserDto;
-import com.alkemy.ong.security.dto.LoginDto;
-import com.alkemy.ong.security.jwt.IJwtProvider;
-
 
 @Service
+@AllArgsConstructor
 public class AuthenticationServiceImpl implements IAuthenticationService {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private IJwtProvider jwtProvider;
-
+    private final AuthenticationManager authenticationManager;
+    private final IJwtProvider jwtProvider;
 
     @Override
     public LoggedUserDto signInAndReturnJWT(LoginDto signInRequest){

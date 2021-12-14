@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @SQLDelete(sql = "UPDATE user SET enabled = false WHERE userId = ?")
-@Where(clause = "enabled = true")
+@Where(clause = "enabled=true")
 @Table(name = "user", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 @EntityListeners(AuditingEntityListener.class)
 public class User {

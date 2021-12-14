@@ -8,31 +8,22 @@ package com.alkemy.ong.service.impl;
 import com.alkemy.ong.dto.CategoryByNameDto;
 import com.alkemy.ong.dto.CategoryDto;
 import com.alkemy.ong.dto.CategoryRequestUpdate;
-
-
 import com.alkemy.ong.exception.NotFoundException;
 import com.alkemy.ong.model.Category;
 import com.alkemy.ong.repository.CategoryRepository;
 import com.alkemy.ong.service.ICategoryService;
-
-
-import java.util.List;
-import java.util.Locale;
-import java.time.LocalDateTime;
-import java.util.Optional;
-
-import javax.validation.Valid;
-
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import java.util.stream.Collectors;
-
 import org.springframework.context.MessageSource;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 
