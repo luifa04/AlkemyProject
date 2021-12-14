@@ -24,8 +24,8 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@SQLDelete(sql = "UPDATE organizations SET deleted = true WHERE id=?")
-@Where(clause = "deleted=false")
+@SQLDelete(sql = "UPDATE organizations SET enabled = false WHERE id = ?")
+@Where(clause = "enabled=true")
 @EntityListeners(AuditingEntityListener.class)
 public class Organization {
 
@@ -72,7 +72,7 @@ public class Organization {
     private LocalDateTime dateUpdate;
 
     @NotNull
-    private boolean deleted = Boolean.FALSE;
+    private boolean enabled = true;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "organizationId")

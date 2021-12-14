@@ -4,17 +4,17 @@ import com.alkemy.ong.dto.OrganizationPublicDto;
 import com.alkemy.ong.dto.SlidePublicDto;
 import com.alkemy.ong.model.Organization;
 import com.alkemy.ong.model.Slide;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@AllArgsConstructor
 public class OrganizationMapper {
 
-    @Autowired
-    private SlideMapper slideMapper;
+    private final SlideMapper slideMapper;
 
     public OrganizationPublicDto model2DTO(Organization model){
         OrganizationPublicDto dto = new OrganizationPublicDto();

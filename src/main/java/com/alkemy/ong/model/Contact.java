@@ -23,8 +23,8 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "contacts")
-@SQLDelete(sql = "UPDATE contacts SET deleted = true WHERE id=?")
-@Where(clause = "deleted=false")
+@SQLDelete(sql = "UPDATE contacts SET enabled = false WHERE id = ?")
+@Where(clause = "enabled=true")
 public class Contact {
 
 	@Id
@@ -48,6 +48,6 @@ public class Contact {
 	private String message;
 	
 	@NotNull
-	private boolean deleted = Boolean.FALSE;
+	private boolean enabled = true;
 	
 }

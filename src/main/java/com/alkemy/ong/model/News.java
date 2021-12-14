@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @SQLDelete(sql = "UPDATE news SET enabled = false WHERE id = ?")
+@Where(clause = "enabled=true")
 @Table(name = "news")
 @EntityListeners(AuditingEntityListener.class)
 public class News {
@@ -34,7 +36,7 @@ public class News {
     @NotNull(message = "image cannot be null")
     private @NonNull String image;
 
-    private @NonNull Boolean enabled = Boolean.TRUE;
+    private boolean enabled = true;
 
     @CreatedDate
     @NotNull

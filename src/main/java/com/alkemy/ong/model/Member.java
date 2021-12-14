@@ -19,8 +19,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name="members")
-@SQLDelete(sql = "UPDATE members SET deleted = true WHERE id=?")
-@Where(clause = "deleted=false")
+@SQLDelete(sql = "UPDATE members SET enabled = false WHERE id = ?")
+@Where(clause = "enabled=true")
 @EntityListeners(AuditingEntityListener.class)
 public class Member {
 
@@ -40,7 +40,7 @@ public class Member {
     private LocalDateTime dateCreation;
     @LastModifiedDate
     private LocalDateTime dateUpdate;
-    private boolean deleted = Boolean.FALSE;
+    private boolean enabled = true;
 
 }
 

@@ -2,7 +2,6 @@
 
 package com.alkemy.ong.service.impl;
 
-import com.alkemy.ong.dto.CategoryDto;
 import com.alkemy.ong.dto.NewsRequest;
 import com.alkemy.ong.dto.NewsResponse;
 import com.alkemy.ong.exception.NotFoundException;
@@ -10,8 +9,6 @@ import com.alkemy.ong.model.Category;
 import com.alkemy.ong.model.News;
 import com.alkemy.ong.repository.CategoryRepository;
 import com.alkemy.ong.repository.NewsRepository;
-import com.alkemy.ong.security.RoleEnum;
-import com.alkemy.ong.service.ICategoryService;
 import com.alkemy.ong.service.INewsService;
 import com.alkemy.ong.util.UpdateFields;
 import lombok.AllArgsConstructor;

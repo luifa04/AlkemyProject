@@ -1,10 +1,12 @@
 package com.alkemy.ong.security.config;
 
+import com.alkemy.ong.security.jwt.JwtAuthorizationFilter;
+import com.alkemy.ong.security.service.CustomUserDetailsService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -19,10 +21,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.alkemy.ong.security.RoleEnum;
-import com.alkemy.ong.security.jwt.JwtAuthorizationFilter;
-import com.alkemy.ong.security.service.CustomUserDetailsService;
-
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled=true)
@@ -30,7 +28,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${authentication.internal-api-key}")
     private String internalApiKey;
-
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
