@@ -3,6 +3,7 @@ package com.alkemy.ong.service.impl;
 import com.alkemy.ong.dto.ActivityRequest;
 import com.alkemy.ong.dto.ActivityResponse;
 import com.alkemy.ong.dto.TestimonialRequest;
+import com.alkemy.ong.dto.TestimonialResponse;
 import com.alkemy.ong.exception.NotFoundException;
 import com.alkemy.ong.model.Activity;
 import com.alkemy.ong.model.Testimonial;
@@ -76,7 +77,7 @@ public class TestimonialServiceImpl implements ITestimonialService {
 			testimonial.setDateUpdate(LocalDateTime.now());
 		}
 
-		return new TestimonialResponse(testimonial.getName(), testimonial.getContent(), tetsimonial.getImage(),
+		return new TestimonialResponse(testimonial.getName(), testimonial.getContent(), testimonial.getImage(), 
 				testimonial.getDateCreation().toString(), testimonial.getDateUpdate().toString());
 
 	}
