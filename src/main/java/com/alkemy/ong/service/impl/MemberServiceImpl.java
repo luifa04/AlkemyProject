@@ -8,7 +8,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import com.alkemy.ong.dto.MemberResponse;
-import com.alkemy.ong.exception.NotFoundException;
+import com.alkemy.ong.exception.EmptyDataException;
 import com.alkemy.ong.model.Member;
 import com.alkemy.ong.repository.MemberRepository;
 import com.alkemy.ong.service.IMemberService;
@@ -34,7 +34,7 @@ public class MemberServiceImpl implements IMemberService{
 			listMemberResponse.add(memberResponse);
 		});
         if(listMemberResponse.isEmpty()){
-            throw new NotFoundException(memberListIsEmpty);
+            throw new EmptyDataException(memberListIsEmpty);
         }		
 		return listMemberResponse;
 	}
