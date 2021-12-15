@@ -13,5 +13,5 @@ public interface ISlidesService {
     Slide addSlide(SlideRequest slide) throws Exception;
     public ResponseEntity<?> delete(Long id);
     public SlideResponse detail(Long id);
-    public List<SlideFindAllDto> findAll();
+    public ResponseEntity<?> findAll();
 }

@@ -127,18 +127,27 @@ public class SlidesServiceImpl implements ISlidesService{
     }
 
     @Override
-    public List<SlideFindAllDto> findAll() {
-        String categoryListIsEmpty = messageSource.getMessage("slide.listEmpty", null, Locale.US);
+    public ResponseEntity<?> findAll() {
+        String slideListIsEmpty = messageSource.getMessage("slide.listEmpty", null, Locale.US);
 
         List<Slide> slideEntity = slideRepository.findAll();
-        List<SlideFindAllDto> slideAllDto = new ArrayList();
-        for (Slide slideOnly : slideEntity) {
-           slideAllDto.add(mapSlideToSlideDto(slideOnly));
+        if (slideEntity.isEmpty()) {
+            return new ResponseEntity<>(slideListIsEmpty, HttpStatus.OK);
+        }else{
+            List<SlideFindAllDto> slideAllDto = new ArrayList();
+            slideEntity.stream().forEach(slide -> {
+                   slideAllDto.add(mapSlideToSlideDto(slide));
+            });
+            return new ResponseEntity<>(slideAllDto, HttpStatus.OK);
         }
-        if(slideAllDto.isEmpty()){
-            throw new NotFoundException(categoryListIsEmpty);
-        }
-        return slideAllDto;
+//        List<SlideFindAllDto> slideAllDto = new ArrayList();
+//        slideEntity.stream().forEach(slide -> {
+//                   slideAllDto.add(mapSlideToSlideDto(slide));
+//        });
+//        if(slideAllDto.isEmpty()){
+//            return new ResponseEntity<>(slideListIsEmpty, HttpStatus.OK);
+//        }
+//        return new ResponseEntity<>(slideAllDto, HttpStatus.OK);
     }
     
     private SlideFindAllDto mapSlideToSlideDto(Slide slide){

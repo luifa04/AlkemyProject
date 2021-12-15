@@ -43,9 +43,8 @@ public class SlidesContoller {
     
     @GetMapping()
     @PreAuthorize(SecurityConstant.ADMIN)
-    public ResponseEntity<List<SlideFindAllDto>> findAllSlide(){
-            List<SlideFindAllDto> listSlides = slidesService.findAll();
-            return new ResponseEntity<List<SlideFindAllDto>>(listSlides, HttpStatus.OK);
+    public ResponseEntity<?> findAllSlide(){
+            return slidesService.findAll();
     }
 
 }
