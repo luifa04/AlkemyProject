@@ -1,11 +1,5 @@
 package com.alkemy.ong.exception;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import freemarker.template.TemplateException;
@@ -22,6 +16,11 @@ import org.springframework.web.multipart.MultipartException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @ControllerAdvice
@@ -133,8 +132,6 @@ public class ApiExceptionHandler {
 	@ExceptionHandler(InternalAuthenticationServiceException.class)
 	@ResponseBody
 	public ExceptionMessage  returnErrorInternalAuthenticationServiceException(InternalAuthenticationServiceException e){
-		e.printStackTrace();
-		System.out.println(e.getCause());
 		return new ExceptionMessage(HttpStatus.BAD_REQUEST.value(), e.getMessage(), LocalDateTime.now());
 	}
 }
