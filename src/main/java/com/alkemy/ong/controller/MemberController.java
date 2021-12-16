@@ -18,7 +18,6 @@ import com.alkemy.ong.service.IMemberService;
 import lombok.AllArgsConstructor;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.Min;
 
 @RestController
 @AllArgsConstructor
