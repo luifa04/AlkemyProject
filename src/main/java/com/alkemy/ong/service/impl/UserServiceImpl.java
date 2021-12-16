@@ -150,5 +150,10 @@ public class UserServiceImpl implements IUserService {
         }
     }
 
+    public User findById(Long id){
+        String notFoundUserMessage = messageSource.getMessage("user.notFound", null, Locale.US);
+        return userRepository.findById(id).orElseThrow(()->new NotFoundException(notFoundUserMessage));
+    }
+
 
 }
