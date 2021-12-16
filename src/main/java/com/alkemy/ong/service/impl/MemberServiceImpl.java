@@ -31,15 +31,11 @@ public class MemberServiceImpl implements IMemberService{
 	@Override
 	public Map<String, Object> getAllMembers(Integer pageNo, String endPointName){
 
-		Map<String, Object> response = new HashMap<>();
-		String nextPage;
-		String previousPage;
 		String memberListIsEmpty = messageSource.getMessage("member.listEmpty", null, Locale.US);
 		String memberLastPage = messageSource.getMessage("member.lastPage", null, Locale.US);
 		final String membersName = "Members";
 		final String nextPageName = "Next Page";
 		final String previousPageName = "Previous Page";
-
 		endpoint = endPointName;
 
 		Pageable paging = PageRequest.of(pageNo, SIZE);
@@ -56,9 +52,10 @@ public class MemberServiceImpl implements IMemberService{
 			throw new EmptyDataException(memberListIsEmpty);
 		}
 
-		nextPage = nextPageEndpoint(pageNo.intValue(),lastPage);
-		previousPage = previousPageEndpoint(pageNo.intValue());
+		String nextPage = nextPageEndpoint(pageNo.intValue(),lastPage);
+		String previousPage = previousPageEndpoint(pageNo.intValue());
 
+		Map<String, Object> response = new HashMap<>();
 		response.put(membersName, memberResponse);
 		response.put(nextPageName, nextPage);
 		response.put(previousPageName, previousPage);
