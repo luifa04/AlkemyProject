@@ -126,6 +126,13 @@ public class ApiExceptionHandler {
 	public ExceptionMessage  returnErrorTemplateException(TemplateException e){
 		return new ExceptionMessage(HttpStatus.BAD_REQUEST.value(), e.getMessage(), LocalDateTime.now());
 	}
+	
+	@ResponseStatus(HttpStatus.OK)
+	@ExceptionHandler(EmptyDataException.class)
+	@ResponseBody
+	public ExceptionMessage returnEmptyDataException(EmptyDataException e) {
+		return new ExceptionMessage(HttpStatus.OK.value(), e.getMessage(), LocalDateTime.now());
+	}
 
 	@ResponseStatus(HttpStatus.UNAUTHORIZED)
 	@ExceptionHandler(AccessDeniedException.class)
