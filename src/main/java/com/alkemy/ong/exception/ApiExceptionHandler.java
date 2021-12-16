@@ -10,6 +10,7 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import freemarker.template.TemplateException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -125,4 +126,15 @@ public class ApiExceptionHandler {
 		return new ExceptionMessage(HttpStatus.BAD_REQUEST.value(), e.getMessage(), LocalDateTime.now());
 	}
 
+
+
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(InternalAuthenticationServiceException.class)
+	@ResponseBody
+	public ExceptionMessage  returnErrorInternalAuthenticationServiceException(InternalAuthenticationServiceException e){
+		e.printStackTrace();
+		System.out.println(e.getCause());
+		return new ExceptionMessage(HttpStatus.BAD_REQUEST.value(), e.getMessage(), LocalDateTime.now());
+	}
 }
