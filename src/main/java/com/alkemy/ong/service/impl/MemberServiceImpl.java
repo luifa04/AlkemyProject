@@ -2,6 +2,7 @@ package com.alkemy.ong.service.impl;
 
 import com.alkemy.ong.dto.MemberResponse;
 import com.alkemy.ong.exception.EmptyDataException;
+import com.alkemy.ong.exception.NotFoundException;
 import com.alkemy.ong.mapper.MemberMapper;
 import com.alkemy.ong.model.Member;
 import com.alkemy.ong.repository.MemberRepository;
@@ -41,7 +42,7 @@ public class MemberServiceImpl implements IMemberService{
 		int lastPage = pageMember.getTotalPages()-1;
 
 		if(pageNo > lastPage){
-			throw new IllegalArgumentException(memberLastPage + lastPage);
+			throw new NotFoundException(memberLastPage + lastPage);
 		}
 
 		List<MemberResponse> memberResponse = pageMember.map(memberMapper::memberModel2DTO).toList();
