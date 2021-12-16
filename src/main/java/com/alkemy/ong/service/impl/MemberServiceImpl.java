@@ -1,36 +1,29 @@
 package com.alkemy.ong.service.impl;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
-import com.alkemy.ong.controller.MemberController;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationListener;
+import com.alkemy.ong.dto.MemberResponse;
+import com.alkemy.ong.exception.EmptyDataException;
+import com.alkemy.ong.mapper.MemberMapper;
+import com.alkemy.ong.model.Member;
+import com.alkemy.ong.repository.MemberRepository;
+import com.alkemy.ong.service.IMemberService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.alkemy.ong.dto.MemberResponse;
-import com.alkemy.ong.exception.EmptyDataException;
-import com.alkemy.ong.model.Member;
-import com.alkemy.ong.repository.MemberRepository;
-import com.alkemy.ong.service.IMemberService;
-import com.alkemy.ong.mapper.MemberMapper;
-
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
 public class MemberServiceImpl implements IMemberService{
 
-	public static final String ENDPOINT = "http://localhost:8080/members?page=";
+	public final String ENDPOINT = "http://localhost:8080/members?page=";
+	public final Integer SIZE = 10;
 	private final MemberRepository memberRepository;
 	private final MemberMapper memberMapper;
 	private final MessageSource messageSource;
@@ -42,13 +35,14 @@ public class MemberServiceImpl implements IMemberService{
 		String nextPage;
 		String previousPage;
 		String memberListIsEmpty = messageSource.getMessage("member.listEmpty", null, Locale.US);
+		String memberLastPage = messageSource.getMessage("member.lastPage", null, Locale.US);
 
-		Pageable paging = PageRequest.of(pageNo, 10);
+		Pageable paging = PageRequest.of(pageNo, SIZE);
 		Page<Member> pageMember = memberRepository.findAll(paging);
 		int lastPage = pageMember.getTotalPages()-1;
 
 		if(pageNo > lastPage){
-			throw new IllegalArgumentException("El numero de pagina ingresado es erroneo, la ultima pagina es la " + lastPage);//TODO pasar a mensajes
+			throw new IllegalArgumentException(memberLastPage + lastPage);
 		}
 
 		List<MemberResponse> memberResponse = pageMember.map(memberMapper::memberModel2DTO).toList();
