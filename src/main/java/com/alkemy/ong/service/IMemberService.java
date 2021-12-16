@@ -7,6 +7,6 @@ import com.alkemy.ong.dto.MemberResponse;
 
 public interface IMemberService {
 
-	Map<String, Object> getAllMembers(Integer pageNo);
+	Map<String, Object> getAllMembers(Integer pageNo, String endPointName);
 
 }

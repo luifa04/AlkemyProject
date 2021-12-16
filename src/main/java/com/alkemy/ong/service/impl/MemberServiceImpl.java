@@ -22,20 +22,25 @@ import java.util.Map;
 @Service
 public class MemberServiceImpl implements IMemberService{
 
-	public final String ENDPOINT = "http://localhost:8080/members?page=";
+	public String endpoint;
 	public final Integer SIZE = 10;
 	private final MemberRepository memberRepository;
 	private final MemberMapper memberMapper;
 	private final MessageSource messageSource;
 	
 	@Override
-	public Map<String, Object> getAllMembers(Integer pageNo){
+	public Map<String, Object> getAllMembers(Integer pageNo, String endPointName){
 
 		Map<String, Object> response = new HashMap<>();
 		String nextPage;
 		String previousPage;
 		String memberListIsEmpty = messageSource.getMessage("member.listEmpty", null, Locale.US);
 		String memberLastPage = messageSource.getMessage("member.lastPage", null, Locale.US);
+		final String membersName = "Members";
+		final String nextPageName = "Next Page";
+		final String previousPageName = "Previous Page";
+
+		endpoint = endPointName;
 
 		Pageable paging = PageRequest.of(pageNo, SIZE);
 		Page<Member> pageMember = memberRepository.findAll(paging);
@@ -54,9 +59,9 @@ public class MemberServiceImpl implements IMemberService{
 		nextPage = nextPageEndpoint(pageNo.intValue(),lastPage);
 		previousPage = previousPageEndpoint(pageNo.intValue());
 
-		response.put("members", memberResponse);
-		response.put("nextPage", nextPage);
-		response.put("previousPage", previousPage);
+		response.put(membersName, memberResponse);
+		response.put(nextPageName, nextPage);
+		response.put(previousPageName, previousPage);
 
 		return response;
 	}
@@ -66,7 +71,7 @@ public class MemberServiceImpl implements IMemberService{
 			return null;
 		}
 		actual++;
-		return ENDPOINT.concat(actual.toString());
+		return endpoint.concat(actual.toString());
 	}
 
 	private String previousPageEndpoint(Integer actual){
@@ -74,7 +79,7 @@ public class MemberServiceImpl implements IMemberService{
 			return null;
 		}
 		actual--;
-		return ENDPOINT.concat(actual.toString());
+		return endpoint.concat(actual.toString());
 	}
 
 

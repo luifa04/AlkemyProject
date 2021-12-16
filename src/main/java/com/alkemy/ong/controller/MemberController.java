@@ -17,6 +17,7 @@ import com.alkemy.ong.service.IMemberService;
 
 import lombok.AllArgsConstructor;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Min;
 
 @RestController
@@ -28,8 +29,9 @@ public class MemberController {
 	
 	@GetMapping
 	@PreAuthorize(SecurityConstant.ADMIN)
-	public ResponseEntity<Map<String, Object>> getAllMembers(@RequestParam(name = "page") Integer pageNo){
-		Map<String, Object> listMembers = memberService.getAllMembers(pageNo);
+	public ResponseEntity<Map<String, Object>> getAllMembers(@RequestParam(name = "page") Integer pageNo, HttpServletRequest request){
+		String endPointName = request.getRequestURL() + "?" + request.getParameterNames().nextElement() + "=";
+		Map<String, Object> listMembers = memberService.getAllMembers(pageNo, endPointName);
 		return new ResponseEntity<>(listMembers, HttpStatus.OK);
 	}
 	
