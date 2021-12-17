@@ -2,6 +2,7 @@ package com.alkemy.ong.service.impl;
 
 import com.alkemy.ong.aws.IAWSS3Service;
 import com.alkemy.ong.dto.NewsResponse;
+import com.alkemy.ong.dto.SlideFindAllDto;
 import com.alkemy.ong.dto.SlideRequest;
 import com.alkemy.ong.dto.SlideResponse;
 import com.alkemy.ong.exception.NotFoundException;
@@ -13,6 +14,7 @@ import com.alkemy.ong.repository.SlideRepository;
 import com.alkemy.ong.service.IOrganizationService;
 import com.alkemy.ong.service.ISlidesService;
 import com.alkemy.ong.util.ContentTypeEnum;
+import com.sun.mail.imap.ACL;
 import io.jsonwebtoken.lang.Strings;
 import lombok.AllArgsConstructor;
 import org.apache.commons.io.FileUtils;
@@ -23,10 +25,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -119,5 +124,35 @@ public class SlidesServiceImpl implements ISlidesService{
         		 				  slide.getText(),
         		                  slide.getOrderSlide(),
         		                  slide.getOrganizationId());
+    }
+
+    @Override
+    public ResponseEntity<?> findAll() {
+        String slideListIsEmpty = messageSource.getMessage("slide.listEmpty", null, Locale.US);
+
+        List<Slide> slideEntity = slideRepository.findAll();
+        if (slideEntity.isEmpty()) {
+            return new ResponseEntity<>(slideListIsEmpty, HttpStatus.OK);
+        }else{
+            List<SlideFindAllDto> slideAllDto = new ArrayList();
+            slideEntity.stream().forEach(slide -> {
+                   slideAllDto.add(mapSlideToSlideDto(slide));
+            });
+            return new ResponseEntity<>(slideAllDto, HttpStatus.OK);
+        }
+//        List<SlideFindAllDto> slideAllDto = new ArrayList();
+//        slideEntity.stream().forEach(slide -> {
+//                   slideAllDto.add(mapSlideToSlideDto(slide));
+//        });
+//        if(slideAllDto.isEmpty()){
+//            return new ResponseEntity<>(slideListIsEmpty, HttpStatus.OK);
+//        }
+//        return new ResponseEntity<>(slideAllDto, HttpStatus.OK);
+    }
+    
+    private SlideFindAllDto mapSlideToSlideDto(Slide slide){
+        Integer orderSlide = slide.getOrderSlide();
+        String imageUrl = slide.getImageUrl();
+        return new SlideFindAllDto(imageUrl, orderSlide);
     }
 }
