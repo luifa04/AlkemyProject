@@ -1,13 +1,23 @@
 package com.alkemy.ong.service.impl;
 
 import com.alkemy.ong.dto.CommentRequest;
+import com.alkemy.ong.dto.CommentResponse;
+import com.alkemy.ong.exception.NotFoundException;
 import com.alkemy.ong.model.Comment;
 import com.alkemy.ong.model.News;
 import com.alkemy.ong.model.User;
 import com.alkemy.ong.repository.CommentRepository;
+import com.alkemy.ong.security.RoleEnum;
+import com.alkemy.ong.security.jwt.JwtProviderImpl;
 import com.alkemy.ong.service.ICommentService;
+import com.alkemy.ong.util.UpdateFields;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.context.MessageSource;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
+
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +26,11 @@ public class CommentServiceImpl implements ICommentService {
     private final CommentRepository commentRepository;
     private final UserServiceImpl userService;
     private final NewsServiceImpl newsService;
+
+    private final MessageSource messageSource;
+    private final UpdateFields updateFields;
+
+    private final JwtProviderImpl jwUtil;
 
     @Override
     public Comment addComment(CommentRequest commentRequest) {
@@ -30,5 +45,25 @@ public class CommentServiceImpl implements ICommentService {
 
         return commentRepository.save(comment);
 
+    }
+
+    @Override
+    public CommentResponse updateCommentsById(Long id, CommentRequest commentRequest, String authorizationHeader) {
+        String commentNotFound = messageSource.getMessage("comment.notFound", null, Locale.US);
+        String notFoundUserMessage = messageSource.getMessage("user.notFound", null, Locale.US);
+        String deniedUser = messageSource.getMessage("user.isNotAllowed", null, Locale.US);
+
+        Comment commentToUpdate = commentRepository.findById(id).orElseThrow(() -> new NotFoundException(commentNotFound));
+
+        User user = userService.findByEmail(jwUtil.extractUsername(authorizationHeader)).orElseThrow(()-> new NotFoundException(notFoundUserMessage));
+
+        if(!commentRequest.getUserId().equals(user.getUserId()) && !RoleEnum.ADMIN.getName().equals(user.getRole().getName())) throw new BadCredentialsException(deniedUser);
+
+        updateFields.updateIfNotBlankAndNotEqual(commentRequest.getBody(), commentToUpdate.getBody(), commentToUpdate::setBody,"body");
+        commentRepository.save(commentToUpdate);
+
+        return new ModelMapper()
+                .typeMap(Comment.class, CommentResponse.class)
+                .map(commentToUpdate);
     }
 }
