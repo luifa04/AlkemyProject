@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Table(name = "comments")
 @Setter
 @Getter
-@SQLDelete(sql = "UPDATE categories SET enabled = false WHERE id = ?")
+@SQLDelete(sql = "UPDATE comments SET enabled = false WHERE id = ?")
 @Where(clause = "enabled=true")
 @EntityListeners(AuditingEntityListener.class)
 public class Comment {

@@ -35,4 +35,12 @@ public class MemberController {
 	public ResponseEntity<?> update(@Valid @RequestBody MemberRequest memberRequest, @PathVariable("id") Long id){
 		return new ResponseEntity<>(memberService.update(memberRequest, id), HttpStatus.OK);
 	}
+
+	@PostMapping
+	@PreAuthorize(SecurityConstant.USER)
+	public ResponseEntity<MemberResponse> createMember(@Valid @RequestBody MemberRequest memberRequest){
+		return new ResponseEntity<>(memberService.createMember(memberRequest), HttpStatus.CREATED);
+	}
+
 }
+

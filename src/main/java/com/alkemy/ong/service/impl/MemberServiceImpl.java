@@ -1,26 +1,23 @@
 package com.alkemy.ong.service.impl;
 
+import com.alkemy.ong.dto.MemberRequest;
+import com.alkemy.ong.dto.MemberResponse;
+import com.alkemy.ong.exception.EmptyDataException;
+import com.alkemy.ong.exception.NotFoundException;
+import com.alkemy.ong.mapper.MemberMapper;
+import com.alkemy.ong.model.Member;
+import com.alkemy.ong.repository.MemberRepository;
+import com.alkemy.ong.service.IMemberService;
+import com.alkemy.ong.util.UpdateFields;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import com.alkemy.ong.dto.MemberRequest;
-import com.alkemy.ong.exception.NotFoundException;
-import com.alkemy.ong.util.UpdateFields;
-import org.springframework.context.MessageSource;
-import org.springframework.stereotype.Service;
-
-import com.alkemy.ong.dto.MemberResponse;
-import com.alkemy.ong.exception.EmptyDataException;
-import com.alkemy.ong.model.Member;
-import com.alkemy.ong.repository.MemberRepository;
-import com.alkemy.ong.service.IMemberService;
-import com.alkemy.ong.mapper.MemberMapper;
-
-import lombok.RequiredArgsConstructor;
-
-import javax.transaction.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -71,5 +68,19 @@ public class MemberServiceImpl implements IMemberService{
 									member.getImage(),
 									member.getDescription());
 	}
-	
+
+    @Override
+    public MemberResponse createMember(MemberRequest memberRequest) {
+        Member member = new Member();
+        member.setName(memberRequest.getName());
+        member.setFacebookUrl(String.valueOf(memberRequest.getFacebookUrl()));
+        member.setInstagramUrl(String.valueOf(memberRequest.getInstagramUrl()));
+        member.setLinkedinUrl(String.valueOf(memberRequest.getLinkedinUrl()));
+        member.setImage(memberRequest.getImage());
+        member.setDescription(memberRequest.getDescription());
+        Member memberCreate = memberRepository.save(member);
+        return memberMapper.memberModel2DTO(memberCreate);
+    }
+
 }
+
