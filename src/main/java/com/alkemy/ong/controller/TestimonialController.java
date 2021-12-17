@@ -1,5 +1,6 @@
 package com.alkemy.ong.controller;
 
+
 import com.alkemy.ong.assembler.TestimonialAssembler;
 import com.alkemy.ong.dto.TestimonialRequest;
 import com.alkemy.ong.dto.TestimonialResponse;
@@ -38,6 +39,13 @@ public class TestimonialController {
         return new ResponseEntity<>(testimonialService.addTestimonial(testimonialRequest), HttpStatus.CREATED);
 
     }
+    
+    @PutMapping("/{id}")
+ 	@PreAuthorize(SecurityConstant.ADMIN)
+    public ResponseEntity<TestimonialResponse> update(@PathVariable(value = "id") Long id, @Valid @RequestBody TestimonialRequest testimonial){
+        return new ResponseEntity<TestimonialResponse>(testimonialService.updateTestimonial(testimonial, id), HttpStatus.OK);
+    }
+
 
     @GetMapping("/{id}")
     @PreAuthorize(SecurityConstant.USER)
@@ -52,7 +60,7 @@ public class TestimonialController {
         PagedModel<TestimonialResponse> testimonialDto = pagedResourcesAssembler
         .toModel(testimonialEntities, testimonialAssembler);
 
-return new ResponseEntity<>(testimonialDto, HttpStatus.OK);
+        return new ResponseEntity<>(testimonialDto, HttpStatus.OK);
 
     }
 
