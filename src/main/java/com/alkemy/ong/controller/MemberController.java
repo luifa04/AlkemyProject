@@ -1,23 +1,18 @@
 package com.alkemy.ong.controller;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
+import com.alkemy.ong.dto.MemberRequest;
 import com.alkemy.ong.dto.MemberResponse;
 import com.alkemy.ong.security.SecurityConstant;
 import com.alkemy.ong.service.IMemberService;
-
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -33,5 +28,18 @@ public class MemberController {
 		Map<String, Object> listMembers = memberService.getAllMembers(pageNo, endPointName);
 		return new ResponseEntity<>(listMembers, HttpStatus.OK);
 	}
-	
+
+	@PutMapping("/{id}")
+	@PreAuthorize(SecurityConstant.USER)
+	public ResponseEntity<?> update(@Valid @RequestBody MemberRequest memberRequest, @PathVariable("id") Long id){
+		return new ResponseEntity<>(memberService.update(memberRequest, id), HttpStatus.OK);
+	}
+
+	@PostMapping
+	@PreAuthorize(SecurityConstant.USER)
+	public ResponseEntity<MemberResponse> createMember(@Valid @RequestBody MemberRequest memberRequest){
+		return new ResponseEntity<>(memberService.createMember(memberRequest), HttpStatus.CREATED);
+	}
+
 }
+

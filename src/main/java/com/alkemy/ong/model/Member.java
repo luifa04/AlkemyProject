@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -33,8 +34,11 @@ public class Member {
     private Long id;
     @NotNull(message = "cannot be null")
     private String name;
+    @Nullable
     private String facebookUrl;
+    @Nullable
     private String instagramUrl;
+    @Nullable
     private String linkedinUrl;
     @NotNull(message = "cannot be null")
     private String image;
