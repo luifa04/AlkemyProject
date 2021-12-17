@@ -33,8 +33,11 @@ public class Member {
     private Long id;
     @NotNull(message = "cannot be null")
     private String name;
+    @Nullable
     private String facebookUrl;
+    @Nullable
     private String instagramUrl;
+    @Nullable
     private String linkedinUrl;
     @NotNull(message = "cannot be null")
     private String image;
