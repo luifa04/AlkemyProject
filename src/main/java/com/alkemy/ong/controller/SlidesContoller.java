@@ -1,5 +1,6 @@
 package com.alkemy.ong.controller;
 
+import com.alkemy.ong.dto.SlideFindAllDto;
 import com.alkemy.ong.dto.SlideRequest;
 import com.alkemy.ong.dto.SlideResponse;
 import com.alkemy.ong.model.Slide;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/Slides")
@@ -37,6 +39,12 @@ public class SlidesContoller {
     @PreAuthorize(SecurityConstant.ADMIN)
     public ResponseEntity<SlideResponse> slideDetail(@Valid @PathVariable Long id) {
             return new ResponseEntity<>(slidesService.detail(id), HttpStatus.OK);
+    }
+    
+    @GetMapping()
+    @PreAuthorize(SecurityConstant.ADMIN)
+    public ResponseEntity<?> findAllSlide(){
+            return slidesService.findAll();
     }
 
 }
