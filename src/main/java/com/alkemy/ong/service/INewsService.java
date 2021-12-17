@@ -1,11 +1,12 @@
 
 package com.alkemy.ong.service;
 
-import org.springframework.http.ResponseEntity;
-
 import com.alkemy.ong.dto.NewsRequest;
 import com.alkemy.ong.dto.NewsResponse;
 import com.alkemy.ong.model.News;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
 public interface INewsService {
 
@@ -19,4 +20,5 @@ public interface INewsService {
 
     News findByIdReturnNews(Long id);
 
+    Page<News> findAll(Pageable pageable, int page);
 }
