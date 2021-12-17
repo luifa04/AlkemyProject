@@ -4,7 +4,6 @@ import com.alkemy.ong.dto.NewsRequest;
 import com.alkemy.ong.dto.NewsResponse;
 import com.alkemy.ong.exception.EmptyDataException;
 import com.alkemy.ong.exception.NotFoundException;
-import com.alkemy.ong.mapper.NewsMapper;
 import com.alkemy.ong.model.Category;
 import com.alkemy.ong.model.News;
 import com.alkemy.ong.repository.CategoryRepository;
@@ -140,5 +139,3 @@ public class NewsServiceImpl implements INewsService {
 
 
 }
-
-
