@@ -30,11 +30,17 @@ public class MemberController {
 		return new ResponseEntity<List<MemberResponse>>(listMembers, HttpStatus.OK);
 	}
 
+	@PutMapping("/{id}")
+	@PreAuthorize(SecurityConstant.USER)
+	public ResponseEntity<?> update(@Valid @RequestBody MemberRequest memberRequest, @PathVariable("id") Long id){
+		return new ResponseEntity<>(memberService.update(memberRequest, id), HttpStatus.OK);
+	}
+
 	@PostMapping
 	@PreAuthorize(SecurityConstant.USER)
 	public ResponseEntity<MemberResponse> createMember(@Valid @RequestBody MemberRequest memberRequest){
 		return new ResponseEntity<>(memberService.createMember(memberRequest), HttpStatus.CREATED);
 	}
-	
+
 }
 

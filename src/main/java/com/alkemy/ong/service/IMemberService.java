@@ -10,6 +10,10 @@ import java.util.List;
 public interface IMemberService {
 
 	List<MemberResponse> getAllMembers();
-    public MemberResponse createMember(@Valid MemberRequest memberRequest);
+
+    MemberResponse update(MemberRequest memberRequest, Long id);
+
+    MemberResponse createMember(@Valid MemberRequest memberRequest);
+
 }
 
