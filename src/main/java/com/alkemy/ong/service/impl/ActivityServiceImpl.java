@@ -1,12 +1,6 @@
 package com.alkemy.ong.service.impl;
 
 
-import java.time.LocalDateTime;
-import java.util.Locale;
-import javax.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.stereotype.Service;
 import com.alkemy.ong.dto.ActivityRequest;
 import com.alkemy.ong.dto.ActivityResponse;
 import com.alkemy.ong.exception.NotFoundException;
@@ -15,18 +9,21 @@ import com.alkemy.ong.repository.ActivityRepository;
 import com.alkemy.ong.service.IActivityService;
 import com.alkemy.ong.util.UpdateFields;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.util.Locale;
 
 
 @Service
 @RequiredArgsConstructor
 public class ActivityServiceImpl implements IActivityService {
-	
-	 @Autowired
-	 private ActivityRepository activityRepository;
+
+	 private final ActivityRepository activityRepository;
 	 private final UpdateFields updateFields;
 	 private final MessageSource messageSource;
-	 private static boolean hasUpdate = Boolean.FALSE;
-	
 	 
 	 	@Override
 	    @Transactional
@@ -41,7 +38,7 @@ public class ActivityServiceImpl implements IActivityService {
 		 		updateFields.updateIfNotBlankAndNotEqual(activityRequest.getContent(), activity.getContent(), activity::setContent , "content");
 		 		updateFields.updateIfNotBlankAndNotEqual(activityRequest.getImage(), activity.getImage(), activity::setImage , "image");
 		 		
-		 		if (hasUpdate){
+		 		if (updateFields.isHasUpdate()){
 		            activity.setDateUpdate(LocalDateTime.now());
 		        }
 		 		
@@ -50,10 +47,7 @@ public class ActivityServiceImpl implements IActivityService {
 		 			   					   ,activity.getImage()
 		 			   					   ,activity.getDateCreation().toString()
 		 			   					   ,activity.getDateUpdate().toString());
-                       	
 		}
-	    
-
 
     @Override
     public ActivityResponse createActivity(ActivityRequest activityRequest) {

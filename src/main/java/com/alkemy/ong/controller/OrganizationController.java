@@ -1,31 +1,25 @@
 package com.alkemy.ong.controller;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
-import com.alkemy.ong.security.SecurityConstant;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.alkemy.ong.dto.OrganizationPublicDto;
 import com.alkemy.ong.dto.OrganizationRequest;
 import com.alkemy.ong.dto.OrganizationResponse;
+import com.alkemy.ong.security.SecurityConstant;
 import com.alkemy.ong.service.IOrganizationService;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/organization")
+@AllArgsConstructor
 public class OrganizationController {
 
-   
-    @Autowired
-    private IOrganizationService organizationService;
+    private final IOrganizationService organizationService;
 
     @GetMapping("/public")
     @PreAuthorize(SecurityConstant.USER)

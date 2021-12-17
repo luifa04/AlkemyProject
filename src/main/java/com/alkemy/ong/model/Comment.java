@@ -1,8 +1,8 @@
 package com.alkemy.ong.model;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -12,45 +12,43 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 import java.time.LocalDateTime;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
 @Entity
-@Table(name = "testimonials")
-@SQLDelete(sql = "UPDATE testimonials SET enabled = false WHERE id = ?")
+@Table(name = "comments")
+@Setter
+@Getter
+@SQLDelete(sql = "UPDATE comments SET enabled = false WHERE id = ?")
 @Where(clause = "enabled=true")
 @EntityListeners(AuditingEntityListener.class)
-public class Testimonial {
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "Name field has to be present")
-    @Column(nullable = false)
-    private String name;
+    @NotNull(message = "user cannot be null")
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonBackReference
+    private User user;
 
-    @Column(nullable = true)
-    private String image;
+    @NotNull(message = "body cannot be null")
+    private String body;
 
-    @Column(nullable = true)
-    private String content;
+    @NotNull(message = "news cannot be null")
+    @ManyToOne
+    @JoinColumn(name = "news_id")
+    @JsonBackReference
+    private News news;
 
     @CreatedDate
-    @NotNull
-    @Column(nullable = false, updatable = false)
+    @Column(updatable = false)
     private LocalDateTime dateCreation;
 
     @LastModifiedDate
-    @Column(nullable = false)
     private LocalDateTime dateUpdate;
 
-    @NotNull
-    @Column(nullable = false)
+    @JsonIgnore
     private boolean enabled = true;
-
 }

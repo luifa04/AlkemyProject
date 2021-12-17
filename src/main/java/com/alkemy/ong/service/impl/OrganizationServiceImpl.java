@@ -1,7 +1,5 @@
 package com.alkemy.ong.service.impl;
 
-import com.alkemy.ong.dto.*;
-
 import com.alkemy.ong.dto.OrganizationPublicDto;
 import com.alkemy.ong.dto.OrganizationRequest;
 import com.alkemy.ong.dto.OrganizationResponse;
@@ -12,7 +10,6 @@ import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.service.IOrganizationService;
 import com.alkemy.ong.util.UpdateFields;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
@@ -28,8 +25,7 @@ public class OrganizationServiceImpl implements IOrganizationService {
     private final OrganizationRepository organizationRepository;
     private final MessageSource messageSource;
     private final UpdateFields updateFields;
-    @Autowired
-    private OrganizationMapper organizationMapper;
+    private final OrganizationMapper organizationMapper;
 
 
     @Override

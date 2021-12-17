@@ -1,42 +1,34 @@
 
 package com.alkemy.ong.controller;
 
+import com.alkemy.ong.assembler.CategoryAssembler;
 import com.alkemy.ong.dto.CategoryByNameDto;
-import com.alkemy.ong.dto.CategoryDto;
-
-
 import com.alkemy.ong.dto.CategoryRequestUpdate;
-import com.alkemy.ong.exception.NotFoundException;
+import com.alkemy.ong.model.Category;
 import com.alkemy.ong.security.SecurityConstant;
 import com.alkemy.ong.service.ICategoryService;
+import lombok.AllArgsConstructor;
 
-
-import javax.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-
-import java.util.List;
+import javax.validation.Valid;
 
 
 @RestController
 @RequestMapping("/category")
+@AllArgsConstructor
 public class CategoryController {
-	
-    @Autowired
-    private ICategoryService categoryService;
+
+    private final ICategoryService categoryService;
+    private final CategoryAssembler categoryAssembler;
+    private final PagedResourcesAssembler<Category> pagedResourcesAssembler;
     
     @GetMapping("/{id}")
     @PreAuthorize(SecurityConstant.ADMIN)
@@ -44,11 +36,14 @@ public class CategoryController {
         return new ResponseEntity<>(categoryService.findById(id), HttpStatus.OK);
     }
 
-    @GetMapping()
-    @PreAuthorize(SecurityConstant.ADMIN)
-    public ResponseEntity<List<CategoryByNameDto>> findCategoriesByName(){
-            List<CategoryByNameDto> listCategories = categoryService.findByName();
-            return new ResponseEntity<List<CategoryByNameDto>>(listCategories, HttpStatus.OK);
+    @GetMapping(params = "page")
+    @PreAuthorize(SecurityConstant.USER_ADMIN)
+    public ResponseEntity<PagedModel<CategoryByNameDto>> findAllCategoriesByName(Pageable pageable, @RequestParam("page") int page){
+        Page<Category> categoryEntities = categoryService.readAllCategoriesByName(pageable, page);
+        
+        PagedModel<CategoryByNameDto> categoryDtoModel = pagedResourcesAssembler
+                            .toModel(categoryEntities, categoryAssembler);
+        return new ResponseEntity<>(categoryDtoModel,HttpStatus.OK);
     }
 
     

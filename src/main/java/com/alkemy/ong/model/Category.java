@@ -11,11 +11,12 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+
+@Data
 @Entity
 @Table(name = "categories")
-@Data
-@SQLDelete(sql = "UPDATE categories SET deleted = true WHERE id=?")
-@Where(clause = "deleted=false")
+@SQLDelete(sql = "UPDATE categories SET enabled = false WHERE id = ?")
+@Where(clause = "enabled=true")
 @EntityListeners(AuditingEntityListener.class)
 public class Category {
 
@@ -31,5 +32,5 @@ public class Category {
     private LocalDateTime dateCreation;
     @LastModifiedDate
     private LocalDateTime dateUpdate;
-    private boolean deleted = Boolean.FALSE;
+    private boolean enabled = true;
 }

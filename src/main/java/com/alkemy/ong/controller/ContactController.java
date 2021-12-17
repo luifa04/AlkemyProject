@@ -1,6 +1,7 @@
 package com.alkemy.ong.controller;
 
 import com.alkemy.ong.dto.ContactRequestDto;
+import com.alkemy.ong.dto.ContactResponseDto;
 import com.alkemy.ong.model.Contact;
 import com.alkemy.ong.security.SecurityConstant;
 import com.alkemy.ong.service.IContactService;
@@ -8,12 +9,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/contacts")
@@ -28,4 +27,9 @@ public class ContactController {
         return new ResponseEntity<>(contactService.addContact(contactRequest), HttpStatus.OK);
     }
 
+    @GetMapping()
+    @PreAuthorize(SecurityConstant.ADMIN)
+    public ResponseEntity<List<ContactResponseDto>> findAll() {
+        return new ResponseEntity<List<ContactResponseDto>>(contactService.getAll(), HttpStatus.OK);
+    }
 }
