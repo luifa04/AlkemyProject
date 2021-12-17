@@ -1,15 +1,10 @@
 package com.alkemy.ong.exception;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import freemarker.template.TemplateException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
@@ -23,6 +18,11 @@ import org.springframework.web.multipart.MultipartException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @ControllerAdvice
@@ -148,4 +148,13 @@ public class ApiExceptionHandler {
 		return new ExceptionMessage(HttpStatus.FORBIDDEN.value(), e.getMessage(), LocalDateTime.now());
 	}
 
+
+
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(InternalAuthenticationServiceException.class)
+	@ResponseBody
+	public ExceptionMessage  returnErrorInternalAuthenticationServiceException(InternalAuthenticationServiceException e){
+		return new ExceptionMessage(HttpStatus.BAD_REQUEST.value(), e.getMessage(), LocalDateTime.now());
+	}
 }
