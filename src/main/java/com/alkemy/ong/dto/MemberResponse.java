@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.openapitools.jackson.nullable.JsonNullable;
+
 
 @Getter
 @Setter
@@ -17,5 +19,6 @@ public class MemberResponse {
     private String linkedinUrl;
     private String image;
     private String description;
-	
 }
+
+
