@@ -23,13 +23,7 @@ public class CommentController {
     @GetMapping
     @PreAuthorize(SecurityConstant.ADMIN)
     public ResponseEntity<List<CommentResponseList>> getAll() {
-        try {
-            List<CommentResponseList> comments = commentService.getAll();
-            return ResponseEntity.ok().body(comments);
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
-        }
+        List<CommentResponseList> comments = commentService.getAll();
+        return ResponseEntity.ok().body(comments);
     }
-
 }
