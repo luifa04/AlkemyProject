@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -47,6 +49,7 @@ public class CommentServiceImpl implements ICommentService {
             throw new EmptyDataException(commentListIsEmpty);
         }
         List<Comment> entities = commentRepository.findAll();
+        entities.sort(Comparator.comparing(o -> o.getDateCreation()));
         List<CommentResponseList> result = commentsMapper.commentModelList2DTOList(entities);
         return result;
     }
