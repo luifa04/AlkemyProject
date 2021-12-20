@@ -11,9 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.alkemy.ong.dto.ActivityResponse;
 import com.alkemy.ong.dto.CommentRequest;
+import com.alkemy.ong.security.SecurityConstant;
 import com.alkemy.ong.service.ICommentService;
 import lombok.AllArgsConstructor;
 
@@ -25,7 +24,7 @@ public class CommentController {
 	private final ICommentService commentService;
 	 
 	@DeleteMapping("/{id}")
-	@PreAuthorize("isAuthenticated()")
+	@PreAuthorize(SecurityConstant.ADMIN) 
 	public ResponseEntity<?> delete(@Valid @PathVariable("id") Long id) {
 
 		return commentService.delete(id);
