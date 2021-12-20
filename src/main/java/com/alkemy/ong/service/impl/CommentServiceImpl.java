@@ -6,16 +6,16 @@ import com.alkemy.ong.model.Comment;
 import com.alkemy.ong.model.News;
 import com.alkemy.ong.model.User;
 import com.alkemy.ong.repository.CommentRepository;
+import com.alkemy.ong.repository.UserRepository;
 import com.alkemy.ong.service.ICommentService;
 import lombok.RequiredArgsConstructor;
-
 import java.util.Locale;
-
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 public class CommentServiceImpl implements ICommentService {
 
 	private final CommentRepository commentRepository;
+	private final UserRepository userRepository;
 	private final UserServiceImpl userService;
 	private final NewsServiceImpl newsService;
 	private final MessageSource messageSource;
@@ -44,19 +45,22 @@ public class CommentServiceImpl implements ICommentService {
 
 	@Override
     public ResponseEntity<?> delete(Long id) {
-		User activeUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserDetails activeUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String username = activeUser.getUsername();
+		User user = userRepository.findByEmail(username).get();
+		
     	String notFoundCommentMessage = messageSource.getMessage("comment.notFound", null, Locale.US);
     	String isDeletedCommentMessage = messageSource.getMessage("comment.isDeleted", null, Locale.US); 
-    	String accessDeniedCommentMessage = messageSource.getMessage("comment.accessDenied", null, Locale.US);
+    	String notAllowedCommentMessage = messageSource.getMessage("comment.notAllowed", null, Locale.US);
     	
     	Comment comment = commentRepository.findById(id)
                  .orElseThrow(()-> new NotFoundException(notFoundCommentMessage)); 
     	
-    	if(comment.getUser().getUserId() == activeUser.getUserId()) {
+    	if(comment.getUser().getUserId() == user.getUserId()) {
     		commentRepository.delete(comment);
     		return new ResponseEntity<>(isDeletedCommentMessage, HttpStatus.OK);           
     	} else {
-    		throw new AccessDeniedException(accessDeniedCommentMessage);
+    		throw new BadCredentialsException(notAllowedCommentMessage);
     	}
     	        
     }
