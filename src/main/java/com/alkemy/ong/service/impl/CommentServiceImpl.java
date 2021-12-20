@@ -1,9 +1,8 @@
 package com.alkemy.ong.service.impl;
 
-import com.alkemy.ong.dto.CommentRequest;
+
 import com.alkemy.ong.exception.NotFoundException;
 import com.alkemy.ong.model.Comment;
-import com.alkemy.ong.model.News;
 import com.alkemy.ong.model.User;
 import com.alkemy.ong.repository.CommentRepository;
 import com.alkemy.ong.repository.UserRepository;
@@ -28,21 +27,7 @@ public class CommentServiceImpl implements ICommentService {
 	private final NewsServiceImpl newsService;
 	private final MessageSource messageSource;
 
-	@Override
-	public Comment addComment(CommentRequest commentRequest) {
-
-		Comment comment = new Comment();
-		User user = userService.findById(commentRequest.getUserId());
-		News news = newsService.findByIdReturnNews(commentRequest.getNewsId());
-
-		comment.setUser(user);
-		comment.setNews(news);
-		comment.setBody(commentRequest.getBody());
-
-		return commentRepository.save(comment);
-
-	}
-
+	
 	@Override
     public ResponseEntity<?> delete(Long id) {
 		UserDetails activeUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -64,4 +49,6 @@ public class CommentServiceImpl implements ICommentService {
     	}
     	        
     }
+
+
 }
