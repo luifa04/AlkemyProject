@@ -1,30 +1,55 @@
+
 package com.alkemy.ong.controller;
 
-import javax.validation.Valid;
+
+import com.alkemy.ong.dto.CommentRequest;
+import com.alkemy.ong.dto.CommentResponse;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import javax.validation.Valid;
+import com.alkemy.ong.dto.CommentResponseList;
 import com.alkemy.ong.security.SecurityConstant;
 import com.alkemy.ong.service.ICommentService;
-import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
 @RestController
-@RequestMapping("/comment")
+@RequestMapping("/comments")
 @AllArgsConstructor
 public class CommentController {
-	
-	private final ICommentService commentService;
-	 
-	@DeleteMapping("/{id}")
-	@PreAuthorize(SecurityConstant.USER_ADMIN) 
-	public ResponseEntity<?> delete(@Valid @PathVariable("id") Long id) {
 
-		return commentService.delete(id);
+    
+    private final ICommentService commentService;
+    
+    @PostMapping
+    public ResponseEntity<CommentRequest> createNews(@Valid @RequestBody CommentRequest comment) throws Exception {
+        CommentRequest comentRequest = commentService.addComment(comment);
+        return ResponseEntity.status(HttpStatus.CREATED).body(comentRequest);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CommentResponse> updateCommentsById(@Valid @RequestBody CommentRequest comment, @PathVariable("id") Long id, @RequestHeader(value = "Authorization") String authorizationHeader) {
+        return new ResponseEntity<>(commentService.updateCommentsById(id, comment, authorizationHeader), HttpStatus.OK);
+    }
+
+    @GetMapping
+    @PreAuthorize(SecurityConstant.ADMIN)
+    public ResponseEntity<List<CommentResponseList>> getAll() {
+        List<CommentResponseList> comments = commentService.getAll();
+        return ResponseEntity.ok().body(comments);
+    }
+    
+    	@DeleteMapping("/{id}")
+	    @PreAuthorize(SecurityConstant.USER_ADMIN) 
+	    public ResponseEntity<?> delete(@Valid @PathVariable("id") Long id) {
+
+		  return commentService.delete(id);
 
 	}
-	
-	
+
 }
