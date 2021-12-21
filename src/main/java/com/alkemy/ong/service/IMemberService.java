@@ -4,12 +4,15 @@ import com.alkemy.ong.dto.MemberRequest;
 import com.alkemy.ong.dto.MemberResponse;
 
 import javax.validation.Valid;
-import java.util.List;
-
+import java.util.Map;
 
 public interface IMemberService {
 
-	List<MemberResponse> getAllMembers();
-    public MemberResponse createMember(@Valid MemberRequest memberRequest);
+	Map<String, Object> getAllMembers(Integer pageNo, String endPointName);
+
+    MemberResponse update(MemberRequest memberRequest, Long id);
+
+    MemberResponse createMember(@Valid MemberRequest memberRequest);
+
 }
 
