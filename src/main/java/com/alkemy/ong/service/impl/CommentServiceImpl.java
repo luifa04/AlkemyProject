@@ -21,9 +21,13 @@ import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
+
+import java.time.LocalDateTime;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+
 
 @Service
 @RequiredArgsConstructor
@@ -39,18 +43,35 @@ public class CommentServiceImpl implements ICommentService {
     private final JwtProviderImpl jwUtil;
 
     @Override
-    public Comment addComment(CommentRequest commentRequest) {
+    public CommentRequest addComment(CommentRequest commentRequestDto) {
+        Comment comment = commentDTOEntity(commentRequestDto);
+        Comment commentSave = commentRepository.save(comment);
+        CommentRequest result = commentEntity2DTO(commentSave);
 
-        Comment comment = new Comment();
-        User user = userService.findById(commentRequest.getUserId());
-        News news = newsService.findByIdReturnNews(commentRequest.getNewsId());
+        return result;
 
-        comment.setUser(user);
+    }
+    
+    public Comment commentDTOEntity(CommentRequest commentDto){
+        Comment comment= new Comment();
+        User user = userService.findById(commentDto.getUserId());
+        News news = newsService.findByIdReturnNews(commentDto.getNewsId());
+        
         comment.setNews(news);
-        comment.setBody(commentRequest.getBody());
+        comment.setUser(user);
+        comment.setBody(commentDto.getBody());
+        comment.setDateUpdate(LocalDateTime.now());
+        return comment;
+    }
+    
+    public CommentRequest commentEntity2DTO(Comment comment){
+        CommentRequest commentDto= new CommentRequest();
+        
+        commentDto.setBody(comment.getBody());
+        commentDto.setUserId(comment.getUser().getUserId());
+        commentDto.setNewsId(comment.getNews().getId());
 
-        return commentRepository.save(comment);
-
+        return commentDto;
     }
 
     @Override
