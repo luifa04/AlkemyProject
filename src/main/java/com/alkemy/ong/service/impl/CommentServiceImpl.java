@@ -1,32 +1,32 @@
 package com.alkemy.ong.service.impl;
 
+import com.alkemy.ong.exception.NotFoundException;
 import com.alkemy.ong.dto.CommentRequest;
 import com.alkemy.ong.dto.CommentResponse;
-import com.alkemy.ong.exception.NotFoundException;
 import com.alkemy.ong.dto.CommentResponseList;
 import com.alkemy.ong.exception.EmptyDataException;
 import com.alkemy.ong.mapper.CommentsMapper;
 import com.alkemy.ong.model.Comment;
-import com.alkemy.ong.model.News;
 import com.alkemy.ong.model.User;
 import com.alkemy.ong.repository.CommentRepository;
+import com.alkemy.ong.repository.UserRepository;
 import com.alkemy.ong.security.RoleEnum;
 import com.alkemy.ong.security.jwt.JwtProviderImpl;
 import com.alkemy.ong.service.ICommentService;
 import com.alkemy.ong.util.UpdateFields;
 import lombok.RequiredArgsConstructor;
-
-import org.modelmapper.ModelMapper;
+import java.util.Locale;
 import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-
-
 import java.time.LocalDateTime;
-
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 
 
 @Service
@@ -39,8 +39,8 @@ public class CommentServiceImpl implements ICommentService {
     private final NewsServiceImpl newsService;
     private final MessageSource messageSource;
     private final UpdateFields updateFields;
-
     private final JwtProviderImpl jwUtil;
+   	private final UserRepository userRepository;
 
     @Override
     public CommentRequest addComment(CommentRequest commentRequestDto) {
@@ -105,4 +105,25 @@ public class CommentServiceImpl implements ICommentService {
         List<CommentResponseList> result = commentsMapper.commentModelList2DTOList(entities);
         return result;
     }
+  
+    @Override
+    public ResponseEntity<?> delete(Long id) {
+		  UserDetails activeUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		  String username = activeUser.getUsername();
+	  	User user = userRepository.findByEmail(username).get();
+		
+    	String notFoundCommentMessage = messageSource.getMessage("comment.notFound", null, Locale.US);
+    	String isDeletedCommentMessage = messageSource.getMessage("comment.isDeleted", null, Locale.US); 
+    	String notAllowedCommentMessage = messageSource.getMessage("comment.notAllowed", null, Locale.US);
+    	
+    	Comment comment = commentRepository.findById(id)
+                 .orElseThrow(()-> new NotFoundException(notFoundCommentMessage)); 
+    	
+    	if(comment.getUser().getUserId() == user.getUserId()) {
+    		commentRepository.delete(comment);
+    		return new ResponseEntity<>(isDeletedCommentMessage, HttpStatus.OK);           
+    	} else {
+    		throw new BadCredentialsException(notAllowedCommentMessage);
+    	}
+    	        
 }

@@ -4,13 +4,10 @@ package com.alkemy.ong.controller;
 
 import com.alkemy.ong.dto.CommentRequest;
 import com.alkemy.ong.dto.CommentResponse;
-
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-
 import javax.validation.Valid;
 import com.alkemy.ong.dto.CommentResponseList;
 import com.alkemy.ong.security.SecurityConstant;
@@ -19,7 +16,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
 
 @RestController
@@ -47,5 +43,13 @@ public class CommentController {
         List<CommentResponseList> comments = commentService.getAll();
         return ResponseEntity.ok().body(comments);
     }
+    
+    	@DeleteMapping("/{id}")
+	    @PreAuthorize(SecurityConstant.USER_ADMIN) 
+	    public ResponseEntity<?> delete(@Valid @PathVariable("id") Long id) {
+
+		  return commentService.delete(id);
+
+	}
 
 }
