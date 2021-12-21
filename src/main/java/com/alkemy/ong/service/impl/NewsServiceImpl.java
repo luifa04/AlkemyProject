@@ -1,9 +1,8 @@
-
-
 package com.alkemy.ong.service.impl;
 
 import com.alkemy.ong.dto.NewsRequest;
 import com.alkemy.ong.dto.NewsResponse;
+import com.alkemy.ong.exception.EmptyDataException;
 import com.alkemy.ong.exception.NotFoundException;
 import com.alkemy.ong.model.Category;
 import com.alkemy.ong.model.News;
@@ -14,6 +13,9 @@ import com.alkemy.ong.util.UpdateFields;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -29,7 +31,6 @@ public class NewsServiceImpl implements INewsService {
     private final NewsRepository newsRepository;
     private final MessageSource messageSource;
     private final UpdateFields updateFields;
-
 
     public NewsRequest createNews(NewsRequest newsDto){
         News entity = newsDTO2Entity(newsDto);
@@ -118,6 +119,23 @@ public class NewsServiceImpl implements INewsService {
         String newsNotFound = messageSource.getMessage("news.notFound", null, Locale.US);
         return newsRepository.findById(id).orElseThrow(() -> new NotFoundException(newsNotFound));
     }
+
+    @Override
+    public Page<News> findAll(Pageable pageable, int page){
+        String moreThanTotalPageError = messageSource.getMessage("news.moreThanTotalPage", null, Locale.US);
+        String newsEmptyList = messageSource.getMessage("news.emptyList", null, Locale.US);
+        final int size = 10;
+        pageable = PageRequest.of(page, size);
+
+        if(newsRepository.findAll().isEmpty()){
+            throw new EmptyDataException(newsEmptyList);
+        }
+        if (page > newsRepository.findAll(pageable).getTotalPages()){
+            throw new NotFoundException(moreThanTotalPageError);
+        }
+        
+        return newsRepository.findAll(pageable);
+    }
+
+
 }
-
-

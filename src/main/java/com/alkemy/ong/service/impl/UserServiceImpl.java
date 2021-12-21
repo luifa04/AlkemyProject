@@ -7,6 +7,7 @@ import com.alkemy.ong.security.dto.LoginDto;
 import com.alkemy.ong.security.service.IAuthenticationService;
 import com.alkemy.ong.service.IEmailService;
 import com.alkemy.ong.service.IUserService;
+import com.alkemy.ong.service.RoleService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.MessageSource;
@@ -35,7 +36,7 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements IUserService {
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
+    private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
     private final IAuthenticationService authenticationService;
     private final IEmailService emailService;
@@ -62,16 +63,13 @@ public class UserServiceImpl implements IUserService {
         user.setEmail(userRequest.getEmail());
         user.setPhoto(userRequest.getPhoto());
         user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
-        user.setRole(roleRepository.findByName(RoleEnum.USER.getName()));
+        user.setRole(roleService.findByName(RoleEnum.USER.getName()));
         user.setDateCreation(LocalDateTime.now());
         return user;
     }
 
 
-    @Override
-    public Optional<User> findByEmail(String email){
-        return userRepository.findByEmail(email);
-    }
+
 
 	@Override
 	public void makeAdmin(String username) {
@@ -152,6 +150,11 @@ public class UserServiceImpl implements IUserService {
     public User findById(Long id){
         String notFoundUserMessage = messageSource.getMessage("user.notFound", null, Locale.US);
         return userRepository.findById(id).orElseThrow(()->new NotFoundException(notFoundUserMessage));
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email){
+        return userRepository.findByEmail(email);
     }
 
 

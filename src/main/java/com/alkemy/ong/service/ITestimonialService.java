@@ -15,10 +15,13 @@ public interface ITestimonialService {
 
     Testimonial addTestimonial(TestimonialRequest testimonialRequest);
 
+	TestimonialResponse updateTestimonial(TestimonialRequest testimonialRequest, Long id);
+
     public List<TestimonialResponse> findAllByName();
 
     Page<Testimonial> readAllTestimonials(Pageable pageable, int page);
 
     TestimonialResponse findById(Long id);
+
 
 }
