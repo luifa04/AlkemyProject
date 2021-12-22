@@ -1,7 +1,7 @@
 
 package com.alkemy.ong.config.seeder;
 
-import com.alkemy.ong.exception.EmailExistException;
+
 import com.alkemy.ong.model.Role;
 import com.alkemy.ong.model.User;
 import com.alkemy.ong.repository.UserRepository;
@@ -34,15 +34,28 @@ public class UserSeeder implements CommandLineRunner{
     
     
     private void createUsers(){
-        Integer k=1;
-        for (int i = 1; i < 21; i++) {
-            if (i<= 10) {
-                userRepository.save(buildUserAdmin("useradmin"+i,"useradmin"+i,"useradmin"+i+"@gmail.com","useradmin"+i));
-            }else{
-               userRepository.save(buildUser("useruser"+k,"useruser"+k,"useruser"+k+"@gmail.com","useruser"+k));
-               k++;
-            }
-        }     
+            userRepository.save(buildUserAdmin("mateo","lopez","mateolopez@gmail.com","useradmin"));
+            userRepository.save(buildUserAdmin("garbiel","suarez","gabrielsuarez@gmail.com","useradmin"));
+            userRepository.save(buildUserAdmin("rodrigo","sanchez","rodrigosanchez@gmail.com","useradmin"));
+            userRepository.save(buildUserAdmin("bruno","almeida","brunoalmeida@gmail.com","useradmin"));
+            userRepository.save(buildUserAdmin("julian","delcanto","juliandelcanto@gmail.com","useradmin"));
+            userRepository.save(buildUserAdmin("fernanda","ortiz","fernandaortiz@gmail.com","useradmin"));
+            userRepository.save(buildUserAdmin("luciana","pomilio","lucianapomilio@gmail.com","useradmin"));
+            userRepository.save(buildUserAdmin("gabriela","michelini","gabrielamichelini@gmail.com","useradmin"));
+            userRepository.save(buildUserAdmin("georgina","zenteno","georginazenteno@gmail.com","useradmin"));
+            userRepository.save(buildUserAdmin("lucia","lopez","lucialopez@gmail.com","useradmin"));
+                     
+            userRepository.save(buildUser("julia","ledesma","julialedesma@gmail.com","useruser"));
+            userRepository.save(buildUser("paula","sanchez","paulasanchez@gmail.com","useruser"));
+            userRepository.save(buildUser("natalia","perez","nataliaperez@gmail.com","useruser"));
+            userRepository.save(buildUser("clara","grivarello","claragrivarello@gmail.com","useruser"));
+            userRepository.save(buildUser("sabrina","izquierdoz","sabrinaizquierdoz@gmail.com","useruser"));
+            userRepository.save(buildUser("martin","riquelme","martinriquelme@gmail.com","useruser"));
+            userRepository.save(buildUser("horacio","orellano","horacioorellena@gmail.com","useruser"));
+            userRepository.save(buildUser("juan","palermo","juanpalermo@gmail.com","useruser"));
+            userRepository.save(buildUser("gaston","gutierrez","gastongutierrez@gmail.com","useruser"));
+            userRepository.save(buildUser("pablo","ginobili","pabloginobili@gmail.com","useruser"));
+
     }
     
     private Role createRoleUser(){
