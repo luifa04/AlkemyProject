@@ -14,3 +14,4 @@ public class CommentResponse {
     private String body;
     private Long newsId;
 }
+

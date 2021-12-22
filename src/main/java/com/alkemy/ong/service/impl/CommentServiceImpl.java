@@ -1,22 +1,31 @@
 package com.alkemy.ong.service.impl;
 
-import com.alkemy.ong.exception.NotFoundException;
 import com.alkemy.ong.dto.CommentRequest;
 import com.alkemy.ong.dto.CommentResponse;
+import com.alkemy.ong.exception.NotFoundException;
+
 import com.alkemy.ong.dto.CommentResponseList;
 import com.alkemy.ong.exception.EmptyDataException;
 import com.alkemy.ong.mapper.CommentsMapper;
+
 import com.alkemy.ong.model.Comment;
 import com.alkemy.ong.model.News;
 import com.alkemy.ong.model.User;
 import com.alkemy.ong.repository.CommentRepository;
+
+import com.alkemy.ong.repository.NewsRepository;
+
 import com.alkemy.ong.repository.UserRepository;
+
 import com.alkemy.ong.security.RoleEnum;
 import com.alkemy.ong.security.jwt.JwtProviderImpl;
+
 import com.alkemy.ong.service.ICommentService;
 import com.alkemy.ong.util.UpdateFields;
 import lombok.RequiredArgsConstructor;
-import java.util.Locale;
+
+import java.util.*;
+
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +35,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
 
 
 @Service
@@ -37,11 +44,13 @@ public class CommentServiceImpl implements ICommentService {
     private final CommentRepository commentRepository;
     private final CommentsMapper commentsMapper;
     private final UserServiceImpl userService;
+    private final NewsRepository newsRepository;
     private final NewsServiceImpl newsService;
     private final MessageSource messageSource;
     private final UpdateFields updateFields;
     private final JwtProviderImpl jwUtil;
     private final UserRepository userRepository;
+
 
     @Override
     public CommentRequest addComment(CommentRequest commentRequestDto) {
@@ -105,6 +114,35 @@ public class CommentServiceImpl implements ICommentService {
         entities.sort(Comparator.comparing(o -> o.getDateCreation()));
         List<CommentResponseList> result = commentsMapper.commentModelList2DTOList(entities);
         return result;
+    }
+
+    @Override
+    public List<CommentResponse> getAllComments(Long id) {
+        String newsNotFound = messageSource.getMessage("news.notFound", null, Locale.US);
+        String commentsListIsEmpty = messageSource.getMessage("comments.listEmpty", null, Locale.US);
+
+        Optional<News> existNews = newsRepository.findById(id);
+        List<CommentResponse> comments = new ArrayList<>();
+
+        if (existNews.isPresent()) {
+            commentRepository.findAll()
+                    .stream()
+                    .filter(comment -> comment.getNews().getId() == id)
+                    .forEach(comment -> {
+                        CommentResponse commentResponse = new CommentResponse();
+                        commentResponse.setId(comment.getId());
+                        commentResponse.setUserId(comment.getUser().getUserId());
+                        commentResponse.setBody(comment.getBody());
+                        commentResponse.setNewsId(comment.getNews().getId());
+                        comments.add(commentResponse);
+                    });
+            if (comments.isEmpty()) {
+                throw new EmptyDataException(commentsListIsEmpty);
+            }
+        } else {
+            throw new NotFoundException(newsNotFound);
+        }
+        return comments;
     }
 
     @Override
