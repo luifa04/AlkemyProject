@@ -7,6 +7,7 @@ import com.alkemy.ong.dto.CommentResponseList;
 import com.alkemy.ong.exception.EmptyDataException;
 import com.alkemy.ong.mapper.CommentsMapper;
 import com.alkemy.ong.model.Comment;
+import com.alkemy.ong.model.News;
 import com.alkemy.ong.model.User;
 import com.alkemy.ong.repository.CommentRepository;
 import com.alkemy.ong.repository.UserRepository;
@@ -40,7 +41,7 @@ public class CommentServiceImpl implements ICommentService {
     private final MessageSource messageSource;
     private final UpdateFields updateFields;
     private final JwtProviderImpl jwUtil;
-   	private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
     public CommentRequest addComment(CommentRequest commentRequestDto) {
@@ -51,22 +52,22 @@ public class CommentServiceImpl implements ICommentService {
         return result;
 
     }
-    
-    public Comment commentDTOEntity(CommentRequest commentDto){
-        Comment comment= new Comment();
+
+    public Comment commentDTOEntity(CommentRequest commentDto) {
+        Comment comment = new Comment();
         User user = userService.findById(commentDto.getUserId());
         News news = newsService.findByIdReturnNews(commentDto.getNewsId());
-        
+
         comment.setNews(news);
         comment.setUser(user);
         comment.setBody(commentDto.getBody());
         comment.setDateUpdate(LocalDateTime.now());
         return comment;
     }
-    
-    public CommentRequest commentEntity2DTO(Comment comment){
-        CommentRequest commentDto= new CommentRequest();
-        
+
+    public CommentRequest commentEntity2DTO(Comment comment) {
+        CommentRequest commentDto = new CommentRequest();
+
         commentDto.setBody(comment.getBody());
         commentDto.setUserId(comment.getUser().getUserId());
         commentDto.setNewsId(comment.getNews().getId());
@@ -97,7 +98,7 @@ public class CommentServiceImpl implements ICommentService {
 
     public List<CommentResponseList> getAll() {
         String commentListIsEmpty = messageSource.getMessage("comments.listEmpty", null, Locale.US);
-        if(commentRepository.findAll().isEmpty()){
+        if (commentRepository.findAll().isEmpty()) {
             throw new EmptyDataException(commentListIsEmpty);
         }
         List<Comment> entities = commentRepository.findAll();
@@ -105,25 +106,26 @@ public class CommentServiceImpl implements ICommentService {
         List<CommentResponseList> result = commentsMapper.commentModelList2DTOList(entities);
         return result;
     }
-  
+
     @Override
     public ResponseEntity<?> delete(Long id) {
-		  UserDetails activeUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		  String username = activeUser.getUsername();
-	  	User user = userRepository.findByEmail(username).get();
-		
-    	String notFoundCommentMessage = messageSource.getMessage("comment.notFound", null, Locale.US);
-    	String isDeletedCommentMessage = messageSource.getMessage("comment.isDeleted", null, Locale.US); 
-    	String notAllowedCommentMessage = messageSource.getMessage("comment.notAllowed", null, Locale.US);
-    	
-    	Comment comment = commentRepository.findById(id)
-                 .orElseThrow(()-> new NotFoundException(notFoundCommentMessage)); 
-    	
-    	if(comment.getUser().getUserId() == user.getUserId()) {
-    		commentRepository.delete(comment);
-    		return new ResponseEntity<>(isDeletedCommentMessage, HttpStatus.OK);           
-    	} else {
-    		throw new BadCredentialsException(notAllowedCommentMessage);
-    	}
-    	        
+        UserDetails activeUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = activeUser.getUsername();
+        User user = userRepository.findByEmail(username).get();
+
+        String notFoundCommentMessage = messageSource.getMessage("comment.notFound", null, Locale.US);
+        String isDeletedCommentMessage = messageSource.getMessage("comment.isDeleted", null, Locale.US);
+        String notAllowedCommentMessage = messageSource.getMessage("comment.notAllowed", null, Locale.US);
+
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(notFoundCommentMessage));
+
+        if (comment.getUser().getUserId() == user.getUserId()) {
+            commentRepository.delete(comment);
+            return new ResponseEntity<>(isDeletedCommentMessage, HttpStatus.OK);
+        } else {
+            throw new BadCredentialsException(notAllowedCommentMessage);
+        }
+
+    }
 }
