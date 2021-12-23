@@ -1,5 +1,7 @@
 package com.alkemy.ong.dto;
 
+import com.alkemy.ong.controller.docs.AuthenticationConstantDocs;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 @Getter
@@ -8,9 +10,15 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class UserAuthenticatedResponseDto {
+
+    @ApiModelProperty(value = AuthenticationConstantDocs.AUTHENTICATION_ID)
     private Long id;
+    @ApiModelProperty(value = AuthenticationConstantDocs.AUTHENTICATION_FIRSTNAME)
     private String firstName;
+    @ApiModelProperty(value = AuthenticationConstantDocs.AUTHENTICATION_LASTNAME)
     private String lastName;
+    @ApiModelProperty(value = AuthenticationConstantDocs.AUTHENTICATION_EMAIL)
     private String email;
+    @ApiModelProperty(value = AuthenticationConstantDocs.AUTHENTICATION_PHOTO)
     private String photo;
 }

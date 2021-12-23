@@ -1,5 +1,7 @@
 package com.alkemy.ong.security.dto;
 
+import com.alkemy.ong.controller.docs.AuthenticationConstantDocs;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +15,7 @@ import lombok.ToString;
 @ToString
 public class LoggedUserDto {
 
+	@ApiModelProperty(value = AuthenticationConstantDocs.AUTHENTICATION_TOKEN)
 	private String token;
 	
 }
