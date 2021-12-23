@@ -1,7 +1,6 @@
 package com.alkemy.ong.dto;
 
-import com.alkemy.ong.controller.docs.AuthenticationConstantDocs;
-import io.swagger.annotations.ApiModel;
+import com.alkemy.ong.util.docs.AuthenticationConstantDocs;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;

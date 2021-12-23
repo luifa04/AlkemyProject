@@ -1,6 +1,6 @@
 package com.alkemy.ong.security.controller;
 
-import com.alkemy.ong.controller.docs.AuthenticationConstantDocs;
+import com.alkemy.ong.util.docs.AuthenticationConstantDocs;
 import com.alkemy.ong.controller.docs.TestimonialConstantDocs;
 import com.alkemy.ong.dto.UserAuthenticatedResponseDto;
 import com.alkemy.ong.dto.UserRequest;

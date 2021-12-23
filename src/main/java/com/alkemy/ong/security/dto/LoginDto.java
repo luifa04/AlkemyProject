@@ -3,7 +3,7 @@ package com.alkemy.ong.security.dto;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import com.alkemy.ong.controller.docs.AuthenticationConstantDocs;
+import com.alkemy.ong.util.docs.AuthenticationConstantDocs;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
