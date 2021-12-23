@@ -1,4 +1,3 @@
-
 package com.alkemy.ong.controller;
 
 
@@ -16,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import java.util.List;
 
 @RestController
@@ -23,8 +23,14 @@ import java.util.List;
 @AllArgsConstructor
 public class CommentController {
 
-    
+
     private final ICommentService commentService;
+
+    @GetMapping("/posts/{id}/comments")
+    @PreAuthorize(SecurityConstant.USER)
+    public ResponseEntity<List<CommentResponse>> findAll(@Valid @PathVariable("id") Long id) {
+        return new ResponseEntity<>(commentService.getAllComments(id), HttpStatus.OK);
+    }
     
     @PostMapping
     public ResponseEntity<CommentRequest> createNews(@Valid @RequestBody CommentRequest comment) throws Exception {
@@ -42,6 +48,7 @@ public class CommentController {
     public ResponseEntity<List<CommentResponseList>> getAll() {
         List<CommentResponseList> comments = commentService.getAll();
         return ResponseEntity.ok().body(comments);
+
     }
     
     	@DeleteMapping("/{id}")
@@ -53,3 +60,4 @@ public class CommentController {
 	}
 
 }
+
