@@ -1,27 +1,21 @@
 package com.alkemy.ong.controller;
 
-import com.alkemy.ong.dto.CategoryDto;
+
 import com.alkemy.ong.dto.MemberRequest;
 import com.alkemy.ong.dto.MemberResponse;
 import com.alkemy.ong.security.SecurityConstant;
 import com.alkemy.ong.service.IMemberService;
-import com.alkemy.ong.util.docs.CategoryConstantDocs;
 import com.alkemy.ong.util.docs.MemberConstantDocs;
-import com.alkemy.ong.util.docs.TestimonialConstantDocs;
-
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.AllArgsConstructor;
-
 import org.springframework.data.domain.Pageable;
-import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Map;
@@ -35,7 +29,7 @@ public class MemberController {
 	
 	@GetMapping
 	@PreAuthorize(SecurityConstant.ADMIN)
-	@ApiOperation(value = MemberConstantDocs.MEMBER_FIND_ALL, response = Map.class)
+	@ApiOperation(value = MemberConstantDocs.MEMBER_FIND_ALL, response = MemberResponse.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = MemberConstantDocs.MEMBER_GET_200_OK),
             @ApiResponse(code = 404, message = MemberConstantDocs.MEMBER_GET_404_NOT_FOUND)
