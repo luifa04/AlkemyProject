@@ -106,6 +106,7 @@ public class UserServiceImpl implements IUserService {
 
         User user = userRepository.findById(id)
                 .orElseThrow(()-> new NotFoundException(notFoundUserMessage));
+
         userRepository.delete(user);
         return new ResponseEntity<>(isDeletedCategoryMessage, HttpStatus.OK);
 
