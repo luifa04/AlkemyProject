@@ -14,10 +14,6 @@ public interface MemberConstantDocs {
 	    String MEMBER_MEMBERREQUESTUPDATE_NAME = "Enter a name for the member";
 	    String MEMBER_MEMBERREQUESTUPDATE_DESCRIPTION = "Enter the description of the member";
 	    String MEMBER_MEMBERREQUESTUPDATE_IMAGE = "Enter a valid url of an image";
-
-	   /* String CATEGORY_FIND_BY_ID = "Returns a category through id parameter";
-	    String CATEGORY_GET_PARAM_ID = "Enter an existing id to search category";
-	    */
 	    
 	    String MEMBER_FIND_ALL = "Returns a paginated list of members";
 	    String MEMBER_GET_200_OK = "Member found";
