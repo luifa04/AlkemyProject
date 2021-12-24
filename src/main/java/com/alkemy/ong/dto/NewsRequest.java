@@ -1,32 +1,31 @@
 package com.alkemy.ong.dto;
 
-import com.alkemy.ong.model.Category;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.alkemy.ong.util.docs.NewsConstantsDocs;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 import org.hibernate.validator.constraints.URL;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
 public class NewsRequest {
 
+    @ApiModelProperty(value = NewsConstantsDocs.NEWS_DTOREQUEST_NAME)
     @NotNull(message = "name cannot be null")
     private String name;
 
+    @ApiModelProperty(value = NewsConstantsDocs.NEWS_DTOREQUEST_CONTENT)
     @NotNull(message = "content cannot be null")
     private String content;
 
+    @ApiModelProperty(value = NewsConstantsDocs.NEWS_DTOREQUEST_IMAGE)
     @NotNull(message = "image cannot be null")
     @URL(message = "url format not valid")
     private String image;
 
+    @ApiModelProperty(value = NewsConstantsDocs.NEWS_DTOREQUEST_CATEGORY)
     @NotNull(message = "categoryId cannot be null")
     private Long categoryId;
 
