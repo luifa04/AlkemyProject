@@ -1,10 +1,22 @@
 package com.alkemy.ong.controller;
 
+import com.alkemy.ong.dto.CategoryDto;
 import com.alkemy.ong.dto.MemberRequest;
 import com.alkemy.ong.dto.MemberResponse;
 import com.alkemy.ong.security.SecurityConstant;
 import com.alkemy.ong.service.IMemberService;
+import com.alkemy.ong.util.docs.CategoryConstantDocs;
+import com.alkemy.ong.util.docs.MemberConstantDocs;
+import com.alkemy.ong.util.docs.TestimonialConstantDocs;
+
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.AllArgsConstructor;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,7 +35,16 @@ public class MemberController {
 	
 	@GetMapping
 	@PreAuthorize(SecurityConstant.ADMIN)
-	public ResponseEntity<Map<String, Object>> getAllMembers(@RequestParam(name = "page") Integer pageNo, HttpServletRequest request){
+	@ApiOperation(value = MemberConstantDocs.MEMBER_FIND_ALL, response = Map.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = MemberConstantDocs.MEMBER_GET_200_OK),
+            @ApiResponse(code = 404, message = MemberConstantDocs.MEMBER_GET_404_NOT_FOUND)
+    })
+	public ResponseEntity<Map<String, Object>> getAllMembers(
+			@ApiParam(required = false) Pageable pageable,
+	        @ApiParam(value = MemberConstantDocs.MEMBER_GET_PARAM_PAGE_NUMBER, required = true, example = "0")
+			@RequestParam(name = "page") Integer pageNo, 
+			HttpServletRequest request){
 		String endPointName = request.getRequestURL() + "?" + request.getParameterNames().nextElement() + "=";
 		Map<String, Object> listMembers = memberService.getAllMembers(pageNo, endPointName);
 		return new ResponseEntity<>(listMembers, HttpStatus.OK);
@@ -31,13 +52,28 @@ public class MemberController {
 
 	@PutMapping("/{id}")
 	@PreAuthorize(SecurityConstant.USER)
-	public ResponseEntity<?> update(@Valid @RequestBody MemberRequest memberRequest, @PathVariable("id") Long id){
+	@ApiOperation(value = MemberConstantDocs.MEMBER_UPDATE, response = MemberResponse.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = MemberConstantDocs.MEMBER_UPDATE_OK),
+            @ApiResponse(code = 404, message = MemberConstantDocs.MEMBER_404_NOT_FOUND)
+    })
+	public ResponseEntity<?> update(
+			@ApiParam(value = MemberConstantDocs.MEMBER_UPDATE_PARAM_MEMBER_REQUEST, required = true)
+			@Valid @RequestBody MemberRequest memberRequest, 
+			@ApiParam(value = MemberConstantDocs.MEMBER_UPDATE_PARAM_ID, required = true, example = "1")
+			@PathVariable("id") Long id){
 		return new ResponseEntity<>(memberService.update(memberRequest, id), HttpStatus.OK);
 	}
 
 	@PostMapping
 	@PreAuthorize(SecurityConstant.USER)
-	public ResponseEntity<MemberResponse> createMember(@Valid @RequestBody MemberRequest memberRequest){
+	@ApiOperation(value = MemberConstantDocs.MEMBER_CREATE, response = MemberResponse.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = MemberConstantDocs.MEMBER_CREATED)
+    })
+	public ResponseEntity<MemberResponse> createMember(
+	@ApiParam(value = MemberConstantDocs.MEMBER_CREATED_PARAM_MEMBER_REQUEST, required = true)
+	@Valid @RequestBody MemberRequest memberRequest){
 		return new ResponseEntity<>(memberService.createMember(memberRequest), HttpStatus.CREATED);
 	}
 
