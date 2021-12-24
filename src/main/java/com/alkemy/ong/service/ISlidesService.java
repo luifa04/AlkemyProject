@@ -12,5 +12,5 @@ public interface ISlidesService {
     public ResponseEntity<?> delete(Long id);
     public SlideResponse detail(Long id);
     public ResponseEntity<?> findAll();
-    SlideResponse updateSlidesById(Long id, SlideRequest news);
+    SlideResponse updateSlidesById(Long id, SlideResponse news);
 }

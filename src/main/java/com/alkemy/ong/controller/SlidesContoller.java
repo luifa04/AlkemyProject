@@ -47,7 +47,7 @@ public class SlidesContoller {
 
     @PutMapping(path = "{id}")
     @PreAuthorize(SecurityConstant.ADMIN)
-    public ResponseEntity<SlideResponse> updateNewsById(@PathVariable("id") Long id, @Valid @RequestBody SlideRequest slide){
+    public ResponseEntity<SlideResponse> updateNewsById(@PathVariable("id") Long id, @Valid @RequestBody SlideResponse slide){
         return new ResponseEntity<>(slidesService.updateSlidesById(id, slide), HttpStatus.OK);
 
     }

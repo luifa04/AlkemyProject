@@ -151,14 +151,14 @@ public class SlidesServiceImpl implements ISlidesService{
     }
 
     @Override
-    public SlideResponse updateSlidesById(Long id, SlideRequest slide) {
+    public SlideResponse updateSlidesById(Long id, SlideResponse slide) {
         String slideNotFound = messageSource.getMessage("slide.notFound", null, Locale.US);
 
         Slide slideToUpdate = slideRepository.findById(id).orElseThrow(() -> new NotFoundException(slideNotFound));
 
         updateFields.updateIfNotBlankAndNotEqual(slide.getText(), slideToUpdate.getText(), slideToUpdate::setText, "name");
         updateFields.updateIfNotBlankAndNotEqual(slide.getOrderSlide(), slideToUpdate.getOrderSlide(), slideToUpdate::setOrderSlide, "content");
-        updateFields.updateIfNotBlankAndNotEqual(slide.getBase64Image(), slideToUpdate.getImageUrl(), slideToUpdate::setImageUrl, "image");
+        updateFields.updateIfNotBlankAndNotEqual(slide.getImageUrl(), slideToUpdate.getImageUrl(), slideToUpdate::setImageUrl, "image");
 
         return new ModelMapper()
                 .typeMap(Slide.class, SlideResponse.class)
