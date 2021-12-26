@@ -7,8 +7,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
 import java.time.LocalDateTime;
 
 public class BaseGeneralTest {
@@ -17,6 +15,7 @@ public class BaseGeneralTest {
 
     @MockBean
     protected UserRepository userRepository;
+
 
     @LocalServerPort
     private int PORT;
