@@ -1,6 +1,5 @@
 package com.alkemy.ong.integration.user;
 
-import com.alkemy.ong.common.BaseUserTest;
 import com.alkemy.ong.dto.UserUpdateDto;
 import com.alkemy.ong.model.User;
 import com.alkemy.ong.security.RoleEnum;
@@ -33,7 +32,7 @@ public class UserUpdateGeneralTest extends BaseUserTest {
 
         ResponseEntity<Object> response = testRestTemplate.exchange(createURLWithPort(PATH),
                 HttpMethod.PATCH, new HttpEntity<>(userUpdateDto, headers), Object.class);
-        assertEquals(response.getStatusCode(), HttpStatus.UNAUTHORIZED);
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
 
     @Test
@@ -47,7 +46,7 @@ public class UserUpdateGeneralTest extends BaseUserTest {
         ResponseEntity<Object> response = testRestTemplate.exchange(createURLWithPort(PATH),
                 HttpMethod.PATCH, new HttpEntity<>(userUpdateDto,headers), Object.class);
 
-        assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 
     }
 
@@ -80,6 +79,6 @@ public class UserUpdateGeneralTest extends BaseUserTest {
         ResponseEntity<?> response =
                 testRestTemplate.exchange(createURLWithPort(PATH), HttpMethod.PATCH, new HttpEntity<>(userUpdateDto, headers), UserUpdateDto.class);
 
-        assertEquals(response.getStatusCode(), HttpStatus.OK);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 }
