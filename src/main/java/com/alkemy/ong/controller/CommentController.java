@@ -1,16 +1,12 @@
-
 package com.alkemy.ong.controller;
 
 
 import com.alkemy.ong.dto.CommentRequest;
 import com.alkemy.ong.dto.CommentResponse;
-
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-
 import javax.validation.Valid;
 import com.alkemy.ong.dto.CommentResponseList;
 import com.alkemy.ong.security.SecurityConstant;
@@ -27,8 +23,14 @@ import java.util.List;
 @AllArgsConstructor
 public class CommentController {
 
-    
+
     private final ICommentService commentService;
+
+    @GetMapping("/posts/{id}/comments")
+    @PreAuthorize(SecurityConstant.USER)
+    public ResponseEntity<List<CommentResponse>> findAll(@Valid @PathVariable("id") Long id) {
+        return new ResponseEntity<>(commentService.getAllComments(id), HttpStatus.OK);
+    }
     
     @PostMapping
     public ResponseEntity<CommentRequest> createNews(@Valid @RequestBody CommentRequest comment) throws Exception {
@@ -46,6 +48,16 @@ public class CommentController {
     public ResponseEntity<List<CommentResponseList>> getAll() {
         List<CommentResponseList> comments = commentService.getAll();
         return ResponseEntity.ok().body(comments);
+
     }
+    
+    	@DeleteMapping("/{id}")
+	    @PreAuthorize(SecurityConstant.USER_ADMIN) 
+	    public ResponseEntity<?> delete(@Valid @PathVariable("id") Long id) {
+
+		  return commentService.delete(id);
+
+	}
 
 }
+
