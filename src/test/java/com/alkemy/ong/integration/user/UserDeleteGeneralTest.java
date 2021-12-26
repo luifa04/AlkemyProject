@@ -1,6 +1,6 @@
 package com.alkemy.ong.integration.user;
 
-import com.alkemy.ong.common.BaseTest;
+import com.alkemy.ong.common.BaseGeneralTest;
 import com.alkemy.ong.security.RoleEnum;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class UserDeleteTest extends BaseTest {
+public class UserDeleteGeneralTest extends BaseGeneralTest {
     private final Long ID2DELETE =generateUser(RoleEnum.USER.getRoleName()).getUserId();
     private final String PATH = "/users/" + ID2DELETE;
 
