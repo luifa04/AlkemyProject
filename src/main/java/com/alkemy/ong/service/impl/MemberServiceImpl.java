@@ -125,5 +125,13 @@ public class MemberServiceImpl implements IMemberService{
         return memberMapper.memberModel2DTO(memberCreate);
     }
 
+	@Override
+	public Member deleteMember(Long id) {
+		String memberNotFound = messageSource.getMessage("member.notFound", null, Locale.US);
+		Member member = memberRepository.findById(id).orElseThrow(()->new NotFoundException(memberNotFound));
+		memberRepository.delete(member);
+		return member;
+	}
+
 }
 

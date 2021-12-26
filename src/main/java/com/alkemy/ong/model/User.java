@@ -21,8 +21,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "user", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
-@SQLDelete(sql = "UPDATE user SET enabled = false WHERE userId = ?")
-@Where(clause = "enabled=true")
+@SQLDelete(sql = "UPDATE user SET enabled = false WHERE user_id = ?")
 @EntityListeners(AuditingEntityListener.class)
 public class User {
     @Id
@@ -57,8 +56,8 @@ public class User {
     private LocalDateTime dateUpdate;
 
     @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "roleId")
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "idRole")
     private Role role;
 
     @Transient
