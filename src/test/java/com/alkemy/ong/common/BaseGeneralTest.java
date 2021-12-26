@@ -3,15 +3,12 @@ package com.alkemy.ong.common;
 import com.alkemy.ong.model.Role;
 import com.alkemy.ong.model.User;
 import com.alkemy.ong.repository.UserRepository;
-import com.alkemy.ong.security.RoleEnum;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 public class BaseGeneralTest {
     protected TestRestTemplate testRestTemplate = new TestRestTemplate();

@@ -61,6 +61,7 @@ public class UserUpdateGeneralTest extends BaseUserTest {
         userModified.setEmail("modified@hotmail.com");
         userModified.setPhoto("https://modified.jpg");
 
+
         when(userRepository.findById(eq(ID2DELETE)))
                 .thenReturn(Optional.of(generateUser(RoleEnum.USER.getRoleName())));
 
@@ -72,7 +73,7 @@ public class UserUpdateGeneralTest extends BaseUserTest {
 
         UserUpdateDto userUpdateDto = exampleUserRequest();
         userUpdateDto.setFirstName("Modified");
-        userUpdateDto.setFirstName("Modified");
+        userUpdateDto.setLastName("Modified");
         userUpdateDto.setEmail("modified@hotmail.com");
         userUpdateDto.setPhoto("https://modified.jpg");
 
