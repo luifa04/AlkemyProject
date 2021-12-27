@@ -7,6 +7,7 @@ import com.alkemy.ong.model.Activity;
 import com.alkemy.ong.security.RoleEnum;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -14,7 +15,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDateTime;
+
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.isA;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -33,11 +37,17 @@ public class ActivityCreateGeneralTest extends BaseActivityTest {
 
     @Test
     public void CreateActivitySuccess() {
-        Activity activity = generateActivity(RoleEnum.ADMIN.getRoleName());
+
+        Mockito.when(activityRepository.save(isA(Activity.class))).thenReturn(generateActivity());
+
+        Activity activity = generateActivity();
         activity.setId(1L);
         activity.setName("New Activity");
         activity.setImage("https://activity.jpg");
         activity.setContent("New Content");
+        activity.setDateCreation(LocalDateTime.now());
+        activity.setDateUpdate(LocalDateTime.now());
+        activity.setEnabled(Boolean.TRUE);
 
         login(RoleEnum.ADMIN.getRoleName());
 
@@ -53,18 +63,45 @@ public class ActivityCreateGeneralTest extends BaseActivityTest {
     }
 
     @Test
-    public void CreateActivityFailed() {
-        Activity activity = generateActivity(RoleEnum.ADMIN.getRoleName());
+    public void CreateActivityFailedBecauseImage() {
+
+        Activity activity = generateActivity();
         activity.setId(1L);
         activity.setName("New Activity");
-        activity.setImage("image");
+        activity.setImage("https://somosmas.jpg");
         activity.setContent("New Content");
+
+        Mockito.when(activityRepository.save(isA(Activity.class))).thenReturn(generateActivity());
 
         login(RoleEnum.ADMIN.getRoleName());
 
         ActivityRequest activityRequest = exampleActivityRequest();
         activityRequest.setName("New Activity");
         activityRequest.setImage("image");
+        activityRequest.setContent("New Content");
+
+        ResponseEntity<?> response =
+                testRestTemplate.exchange(createURLWithPort("/activity"), HttpMethod.POST, new HttpEntity<>(activityRequest, headers), ActivityRequest.class);
+
+        assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    public void CreateActivityFailedBecauseName() {
+
+        Mockito.when(activityRepository.save(isA(Activity.class))).thenReturn(generateActivity());
+
+        Activity activity = generateActivity();
+        activity.setId(1L);
+        activity.setName("Activity");
+        activity.setImage("https://activity.jpg");
+        activity.setContent("New Content");
+
+        login(RoleEnum.ADMIN.getRoleName());
+
+        ActivityRequest activityRequest = exampleActivityRequest();
+        activityRequest.setName("");
+        activityRequest.setImage("https://activity.jpg");
         activityRequest.setContent("New Content");
 
         ResponseEntity<?> response =

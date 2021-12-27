@@ -17,6 +17,7 @@ public class BaseGeneralTest {
 
     @MockBean
     protected UserRepository userRepository;
+    @MockBean
     protected ActivityRepository activityRepository;
 
     @LocalServerPort
@@ -54,19 +55,15 @@ public class BaseGeneralTest {
         return role;
     }
 
-    protected Activity generateActivity(String role) {
+    protected Activity generateActivity() {
         Activity activity = new Activity();
         activity.setId(1L);
         activity.setName("Activity");
         activity.setContent("Activity for the family");
         activity.setImage("https://somosmas.jpg");
         activity.setDateCreation(LocalDateTime.now());
+        activity.setDateUpdate(LocalDateTime.now());
         activity.setEnabled(Boolean.TRUE);
         return activity;
     }
-
-
-
-
-
 }
