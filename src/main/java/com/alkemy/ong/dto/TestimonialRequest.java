@@ -5,12 +5,16 @@ import com.alkemy.ong.util.ImageExtension;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
+import lombok.*;
 import org.hibernate.validator.constraints.URL;
 
 import javax.validation.constraints.NotBlank;
 
 @Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @ApiModel(value = TestimonialConstantDocs.TESTIMONIAL_DTO_MODEL)
 public class TestimonialRequest {
 
