@@ -14,13 +14,13 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/users")
 @AllArgsConstructor
 public class UserController {
 
     private final IUserService userService;
 
-    @GetMapping("/users")
+    @GetMapping
     @PreAuthorize(SecurityConstant.ADMIN)
     public ResponseEntity<List<UserDto>> getUsers(){
             List<UserDto> list = userService.getUsers();
@@ -28,7 +28,7 @@ public class UserController {
     }
 
 
-    @PatchMapping("/users/{id}")
+    @PatchMapping("/{id}")
     @PreAuthorize(SecurityConstant.ADMIN)
     public ResponseEntity<UserUpdateDto> updateUser (@Valid @PathVariable Long id, @RequestBody UserUpdateDto userUpdateDto) {
         UserUpdateDto result = userService.update(id, userUpdateDto);

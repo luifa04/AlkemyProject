@@ -20,7 +20,6 @@ import com.alkemy.ong.dto.UserDto;
 import com.alkemy.ong.dto.UserRequest;
 import com.alkemy.ong.exception.EmailExistException;
 import com.alkemy.ong.model.User;
-import com.alkemy.ong.repository.RoleRepository;
 import com.alkemy.ong.repository.UserRepository;
 import com.alkemy.ong.security.RoleEnum;
 
@@ -106,6 +105,7 @@ public class UserServiceImpl implements IUserService {
 
         User user = userRepository.findById(id)
                 .orElseThrow(()-> new NotFoundException(notFoundUserMessage));
+
         userRepository.delete(user);
         return new ResponseEntity<>(isDeletedCategoryMessage, HttpStatus.OK);
 
@@ -118,6 +118,7 @@ public class UserServiceImpl implements IUserService {
             throw new NotFoundException(messageError);
         }
         userRefreshValues(entity.get(), userUpdateDto);
+
         User userSaved = userRepository.save(entity.get());
         UserUpdateDto result = mapUserToUserUpdateDto(userSaved);
         return result;
