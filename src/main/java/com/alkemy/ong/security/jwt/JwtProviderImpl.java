@@ -37,7 +37,6 @@ public class JwtProviderImpl implements IJwtProvider {
 	public String generateToken(UserDetailsImpl auth) {
 		String authorities = auth.getAuthorities().stream().map(GrantedAuthority::getAuthority)
 				.collect(Collectors.joining(","));
-
         String token = Jwts.builder().setSubject(auth.getUsername()).claim("roles", authorities).claim("userId", auth.getId())
 				.setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION_TIME))
 				.signWith(SignatureAlgorithm.HS512, JWT_SECRET).compact();
