@@ -17,6 +17,7 @@ import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
@@ -66,7 +67,7 @@ public class UserUpdateGeneralTest extends BaseUserTest {
                 .thenReturn(Optional.of(generateUser(RoleEnum.USER.getRoleName())));
 
 
-        when(userRepository.save(eq(userModified)))
+        when(userRepository.save(isA(User.class)))
                 .thenReturn(userModified);
 
         login(RoleEnum.ADMIN.getRoleName());
