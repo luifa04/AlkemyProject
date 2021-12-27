@@ -6,6 +6,7 @@ target/
 
 ### application.prop spring ###
 src/main/resources/application.properties
+src/test/java/resources/application.properties
 .application.properties
 
 ### STS ###

@@ -2,6 +2,7 @@ package com.alkemy.ong.service;
 
 import com.alkemy.ong.dto.MemberRequest;
 import com.alkemy.ong.dto.MemberResponse;
+import com.alkemy.ong.model.Member;
 
 import javax.validation.Valid;
 import java.util.Map;
@@ -14,5 +15,6 @@ public interface IMemberService {
 
     MemberResponse createMember(@Valid MemberRequest memberRequest);
 
+    Member deleteMember(Long id);
 }
 

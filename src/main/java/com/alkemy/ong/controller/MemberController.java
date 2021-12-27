@@ -3,6 +3,7 @@ package com.alkemy.ong.controller;
 
 import com.alkemy.ong.dto.MemberRequest;
 import com.alkemy.ong.dto.MemberResponse;
+import com.alkemy.ong.model.Member;
 import com.alkemy.ong.security.SecurityConstant;
 import com.alkemy.ong.service.IMemberService;
 import com.alkemy.ong.util.docs.MemberConstantDocs;
@@ -69,6 +70,12 @@ public class MemberController {
 	@ApiParam(value = MemberConstantDocs.MEMBER_CREATED_PARAM_MEMBER_REQUEST, required = true)
 	@Valid @RequestBody MemberRequest memberRequest){
 		return new ResponseEntity<>(memberService.createMember(memberRequest), HttpStatus.CREATED);
+	}
+
+	@DeleteMapping("/{id}")
+	@PreAuthorize(SecurityConstant.ADMIN)
+	public ResponseEntity<Member> deleteMember(@PathVariable("id") Long id){
+		return new ResponseEntity<>(memberService.deleteMember(id), HttpStatus.OK);
 	}
 
 }
