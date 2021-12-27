@@ -46,10 +46,6 @@ public class ActivityUpdateGeneralTest extends BaseActivityTest {
         Mockito.when(activityRepository.findById(eq(ID))).thenReturn(Optional.of(activityMod));
     }
 
-    void login(){
-
-    }
-
     @Test
     public void ReturnNotFoundIfIdNotExist() {
 
