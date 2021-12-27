@@ -1,17 +1,13 @@
-package com.alkemy.ong.category.unit;
+package com.alkemy.ong.unit.category;
 
 
-import com.alkemy.ong.dto.CategoryRequestUpdate;
 import com.alkemy.ong.mapper.CategoryMapper;
 import com.alkemy.ong.model.Category;
-import com.alkemy.ong.repository.CategoryRepository;
 import com.alkemy.ong.service.impl.CategoryServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.MessageSource;
 
 import java.util.Optional;
 
@@ -22,29 +18,18 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class UpdateCategoryTest {
+public class UpdateCategoryServiceTest extends BaseCategoryServiceTest{
 
-    @Mock
-    private CategoryRepository categoryRepository;
-    private CategoryMapper categoryMapper;
-    @Mock
-    private MessageSource messageSource;
-    private CategoryServiceImpl underTest;
-    private CategoryRequestUpdate mockCategoryUpdate;
-    private Category mockCategory;
 
     @BeforeEach
     void setUp(){
         categoryMapper = new CategoryMapper();
         underTest = new CategoryServiceImpl(categoryRepository, categoryMapper, messageSource);
 
-        mockCategoryUpdate = new CategoryRequestUpdate();
-        mockCategoryUpdate.setName("Example");
-        mockCategoryUpdate.setDescription("Example of description");
-        mockCategoryUpdate.setImage("http://image.com/image.jpg");
+        generateMockCategoryUpdate();
 
         mockCategory = new Category();
-        mockCategory.setId(1L);
+        mockCategory.setId(ID_CATEGORY);
         categoryMapper.mapDtoToEntityWithDateOfCreation(mockCategory, mockCategoryUpdate);
     }
 
@@ -52,10 +37,10 @@ public class UpdateCategoryTest {
     void canUpdateCategory(){
 
         Optional<Category> mockOptionalCategory = Optional.of(mockCategory);
-        given(categoryRepository.findById(1L)).willReturn(mockOptionalCategory);
+        given(categoryRepository.findById(ID_CATEGORY)).willReturn(mockOptionalCategory);
         given(categoryRepository.save(any(Category.class))).willReturn(mockCategory);
 
-        Object categoryDto = underTest.updateCategory(mockCategoryUpdate, 1L);
+        Object categoryDto = underTest.updateCategory(mockCategoryUpdate, ID_CATEGORY);
 
         verify(categoryRepository).save(any(Category.class));
         assertThat(categoryDto).isExactlyInstanceOf(categoryDto.getClass());
@@ -65,11 +50,11 @@ public class UpdateCategoryTest {
     @Test
     void checkIfCategoryDoesNotExist(){
 
-        given(categoryRepository.findById(2L)).willReturn(Optional.empty());
+        given(categoryRepository.findById(ID_CATEGORY_NOTFOUND)).willReturn(Optional.empty());
 
-        Object categoryDto = underTest.updateCategory(mockCategoryUpdate, 2L);
+        Object categoryDto = underTest.updateCategory(mockCategoryUpdate, ID_CATEGORY_NOTFOUND);
 
-        verify(categoryRepository).findById(2L);
+        verify(categoryRepository).findById(ID_CATEGORY_NOTFOUND);
         verify(categoryRepository,never()).save(any(Category.class));
         assertThat(categoryDto).isEqualTo(null);
     }

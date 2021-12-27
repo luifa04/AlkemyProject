@@ -1,4 +1,4 @@
-package com.alkemy.ong.integration.testimonial;
+package com.alkemy.ong.integration.category;
 
 import com.alkemy.ong.security.RoleEnum;
 import org.junit.Test;
@@ -18,26 +18,27 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class TestimonialDeleteTest extends BaseTestimonialTest{
-    private final Long ID2DELETE = generateTestimonial().getId();
-    private final String PATH = "/testimonials/" + ID2DELETE;
+public class DeleteCategoryControllerTest extends BaseCategoryTest {
+
+    private final Long ID2DELETE = generateCategory().getId();
+    private final String PATH_DELETE = PATH + "/" + ID2DELETE;
 
     @Test
     public void ReturnUnauthorizedIfUserIsNotADMIN() {
         login(RoleEnum.USER.getRoleName());
 
-        ResponseEntity<Object> response = testRestTemplate.exchange(createURLWithPort(PATH),
+        ResponseEntity<Object> response = testRestTemplate.exchange(createURLWithPort(PATH_DELETE),
                 HttpMethod.DELETE, new HttpEntity<>(headers), Object.class);
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
 
     @Test
     public void ReturnNotFoundIfIdNotExist() {
-        when(testimonialRepository.findById(eq(ID2DELETE))).thenReturn(Optional.empty());
+        when(categoryRepository.findById(ID2DELETE)).thenReturn(Optional.empty());
 
         login(RoleEnum.ADMIN.getRoleName());
 
-        ResponseEntity<Object> response = testRestTemplate.exchange(createURLWithPort(PATH),
+        ResponseEntity<Object> response = testRestTemplate.exchange(createURLWithPort(PATH_DELETE),
                 HttpMethod.DELETE, new HttpEntity<>(headers), Object.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
@@ -45,19 +46,16 @@ public class TestimonialDeleteTest extends BaseTestimonialTest{
     }
 
     @Test
-    public void DeleteTestimonialSuccess() {
-        when(testimonialRepository.findById(eq(ID2DELETE)))
-                .thenReturn(Optional.of(generateTestimonial()));
-
-
-        when(testimonialRepository.save(eq(generateTestimonial())))
-                .thenReturn(generateTestimonial());
+    public void DeleteCategorySuccess() {
+        when(categoryRepository.findById(eq(ID2DELETE)))
+                .thenReturn(Optional.of(generateCategory()));
 
         login(RoleEnum.ADMIN.getRoleName());
 
         ResponseEntity<?> response =
-                testRestTemplate.exchange(createURLWithPort(PATH), HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
+                testRestTemplate.exchange(createURLWithPort(PATH_DELETE), HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
+
 }
