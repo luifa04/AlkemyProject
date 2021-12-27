@@ -1,4 +1,4 @@
-package com.alkemy.ong.category;
+package com.alkemy.ong.category.integration;
 
 import com.alkemy.ong.dto.CategoryByNameDto;
 import com.alkemy.ong.exception.NotFoundException;

@@ -1,4 +1,4 @@
-package com.alkemy.ong.category;
+package com.alkemy.ong.category.unit;
 
 
 import com.alkemy.ong.dto.CategoryRequestUpdate;

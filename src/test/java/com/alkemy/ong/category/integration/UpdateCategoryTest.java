@@ -1,4 +1,5 @@
-package com.alkemy.ong.category;
+package com.alkemy.ong.category.integration;
+
 
 import com.alkemy.ong.dto.CategoryRequestUpdate;
 import com.alkemy.ong.mapper.CategoryMapper;
@@ -8,20 +9,20 @@ import com.alkemy.ong.service.impl.CategoryServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.MessageSource;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class CreateCategoryTest {
+public class UpdateCategoryTest {
 
     @Mock
     private CategoryRepository categoryRepository;
@@ -30,27 +31,31 @@ class CreateCategoryTest {
     private MessageSource messageSource;
     private CategoryServiceImpl underTest;
     private CategoryRequestUpdate mockCategoryUpdate;
+    private Category mockCategory;
 
     @BeforeEach
     void setUp(){
         categoryMapper = new CategoryMapper();
         underTest = new CategoryServiceImpl(categoryRepository, categoryMapper, messageSource);
-    }
-
-    @Test
-    void CanCreateCategory() {
 
         mockCategoryUpdate = new CategoryRequestUpdate();
         mockCategoryUpdate.setName("Example");
         mockCategoryUpdate.setDescription("Example of description");
         mockCategoryUpdate.setImage("http://image.com/image.jpg");
 
-        Category mockCategory = new Category();
+        mockCategory = new Category();
+        mockCategory.setId(1L);
         categoryMapper.mapDtoToEntityWithDateOfCreation(mockCategory, mockCategoryUpdate);
+    }
 
-        Mockito.when(categoryRepository.save(any(Category.class))).thenReturn(mockCategory);
+    @Test
+    void canUpdateCategory(){
 
-        Object categoryDto = underTest.createCategory(mockCategoryUpdate);
+        Optional<Category> mockOptionalCategory = Optional.of(mockCategory);
+        given(categoryRepository.findById(1L)).willReturn(mockOptionalCategory);
+        given(categoryRepository.save(any(Category.class))).willReturn(mockCategory);
+
+        Object categoryDto = underTest.updateCategory(mockCategoryUpdate, 1L);
 
         verify(categoryRepository).save(any(Category.class));
         assertThat(categoryDto).isExactlyInstanceOf(categoryDto.getClass());
@@ -58,18 +63,14 @@ class CreateCategoryTest {
     }
 
     @Test
-    void checkIfArgumentNotValid(){
-        mockCategoryUpdate = new CategoryRequestUpdate();
-        mockCategoryUpdate.setName(null);
-        mockCategoryUpdate.setDescription("Example of description");
-        mockCategoryUpdate.setImage("http://image.com/image.jpg");
+    void checkIfCategoryDoesNotExist(){
 
-        Category mockCategory = new Category();
-        categoryMapper.mapDtoToEntityWithDateOfCreation(mockCategory, mockCategoryUpdate);
+        given(categoryRepository.findById(2L)).willReturn(Optional.empty());
 
-        Mockito.when(categoryRepository.save(any(Category.class))).thenReturn(mockCategory);
+        Object categoryDto = underTest.updateCategory(mockCategoryUpdate, 2L);
 
-        assertThatThrownBy(()->underTest.createCategory(mockCategoryUpdate))
-                .isInstanceOf(MethodArgumentNotValidException.class);
+        verify(categoryRepository).findById(2L);
+        verify(categoryRepository,never()).save(any(Category.class));
+        assertThat(categoryDto).isEqualTo(null);
     }
 }

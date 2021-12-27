@@ -1,7 +1,6 @@
-package com.alkemy.ong.category;
+package com.alkemy.ong.category.unit;
 
 import com.alkemy.ong.dto.CategoryRequestUpdate;
-import com.alkemy.ong.exception.NotFoundException;
 import com.alkemy.ong.mapper.CategoryMapper;
 import com.alkemy.ong.model.Category;
 import com.alkemy.ong.repository.CategoryRepository;
@@ -9,20 +8,21 @@ import com.alkemy.ong.service.impl.CategoryServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.MessageSource;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import java.util.Optional;
-
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.never;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class DeleteTest {
+class CreateCategoryTest {
+
     @Mock
     private CategoryRepository categoryRepository;
     private CategoryMapper categoryMapper;
@@ -30,43 +30,46 @@ public class DeleteTest {
     private MessageSource messageSource;
     private CategoryServiceImpl underTest;
     private CategoryRequestUpdate mockCategoryUpdate;
-    private Category mockCategory;
-
 
     @BeforeEach
     void setUp(){
         categoryMapper = new CategoryMapper();
         underTest = new CategoryServiceImpl(categoryRepository, categoryMapper, messageSource);
+    }
+
+    @Test
+    void CanCreateCategory() {
 
         mockCategoryUpdate = new CategoryRequestUpdate();
         mockCategoryUpdate.setName("Example");
         mockCategoryUpdate.setDescription("Example of description");
         mockCategoryUpdate.setImage("http://image.com/image.jpg");
 
-        mockCategory = new Category();
-        mockCategory.setId(1L);
+        Category mockCategory = new Category();
         categoryMapper.mapDtoToEntityWithDateOfCreation(mockCategory, mockCategoryUpdate);
+
+        Mockito.when(categoryRepository.save(any(Category.class))).thenReturn(mockCategory);
+
+        Object categoryDto = underTest.createCategory(mockCategoryUpdate);
+
+        verify(categoryRepository).save(any(Category.class));
+        assertThat(categoryDto).isExactlyInstanceOf(categoryDto.getClass());
+
     }
 
     @Test
-    void canDeleteCategory(){
-        Optional<Category> mockOptionalCategory = Optional.of(mockCategory);
-        given(categoryRepository.findById(1L)).willReturn(mockOptionalCategory);
+    void checkIfArgumentNotValid(){
+        mockCategoryUpdate = new CategoryRequestUpdate();
+        mockCategoryUpdate.setName(null);
+        mockCategoryUpdate.setDescription("Example of description");
+        mockCategoryUpdate.setImage("http://image.com/image.jpg");
 
-        underTest.delete(1L);
+        Category mockCategory = new Category();
+        categoryMapper.mapDtoToEntityWithDateOfCreation(mockCategory, mockCategoryUpdate);
 
-        verify(categoryRepository).delete(mockCategory);
+        Mockito.when(categoryRepository.save(any(Category.class))).thenReturn(mockCategory);
+
+        assertThatThrownBy(()->underTest.createCategory(mockCategoryUpdate))
+                .isInstanceOf(MethodArgumentNotValidException.class);
     }
-
-    @Test
-    void checkIfCategoryDoesNotExist(){
-        Mockito.when(categoryRepository.findById(2L)).thenReturn(Optional.empty());
-
-        assertThatThrownBy(()->underTest.delete(2L))
-                .isInstanceOf(NotFoundException.class);
-
-        verify(categoryRepository).findById(2L);
-        verify(categoryRepository, never()).delete(mockCategory);
-    }
-
 }
