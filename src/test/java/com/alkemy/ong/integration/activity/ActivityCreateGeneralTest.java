@@ -6,6 +6,7 @@ import com.alkemy.ong.dto.ActivityRequest;
 import com.alkemy.ong.model.Activity;
 import com.alkemy.ong.security.RoleEnum;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,19 +36,15 @@ public class ActivityCreateGeneralTest extends BaseActivityTest {
         assertEquals(response.getStatusCode(), HttpStatus.UNAUTHORIZED);
     }
 
-    @Test
-    public void CreateActivitySuccess() {
-
-        Mockito.when(activityRepository.save(isA(Activity.class))).thenReturn(generateActivity());
+    @BeforeEach
+    void createActivity(){
 
         Activity activity = generateActivity();
-        activity.setId(1L);
-        activity.setName("New Activity");
-        activity.setImage("https://activity.jpg");
-        activity.setContent("New Content");
-        activity.setDateCreation(LocalDateTime.now());
-        activity.setDateUpdate(LocalDateTime.now());
-        activity.setEnabled(Boolean.TRUE);
+        Mockito.when(activityRepository.save(isA(Activity.class))).thenReturn(generateActivity());
+    }
+
+    @Test
+    public void CreateActivitySuccess() {
 
         login(RoleEnum.ADMIN.getRoleName());
 
@@ -55,6 +52,8 @@ public class ActivityCreateGeneralTest extends BaseActivityTest {
         activityRequest.setName("New Activity");
         activityRequest.setImage("https://activity.jpg");
         activityRequest.setContent("New Content");
+
+        Mockito.when(activityRepository.save(isA(Activity.class))).thenReturn(generateActivity());
 
         ResponseEntity<?> response =
                 testRestTemplate.exchange(createURLWithPort("/activity"), HttpMethod.POST, new HttpEntity<>(activityRequest, headers), ActivityRequest.class);
@@ -64,14 +63,6 @@ public class ActivityCreateGeneralTest extends BaseActivityTest {
 
     @Test
     public void CreateActivityFailedBecauseImage() {
-
-        Activity activity = generateActivity();
-        activity.setId(1L);
-        activity.setName("New Activity");
-        activity.setImage("https://somosmas.jpg");
-        activity.setContent("New Content");
-
-        Mockito.when(activityRepository.save(isA(Activity.class))).thenReturn(generateActivity());
 
         login(RoleEnum.ADMIN.getRoleName());
 
@@ -88,14 +79,6 @@ public class ActivityCreateGeneralTest extends BaseActivityTest {
 
     @Test
     public void CreateActivityFailedBecauseName() {
-
-        Mockito.when(activityRepository.save(isA(Activity.class))).thenReturn(generateActivity());
-
-        Activity activity = generateActivity();
-        activity.setId(1L);
-        activity.setName("Activity");
-        activity.setImage("https://activity.jpg");
-        activity.setContent("New Content");
 
         login(RoleEnum.ADMIN.getRoleName());
 

@@ -6,6 +6,7 @@ import com.alkemy.ong.dto.ActivityRequest;
 import com.alkemy.ong.model.Activity;
 import com.alkemy.ong.security.RoleEnum;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -39,10 +40,18 @@ public class ActivityUpdateGeneralTest extends BaseActivityTest {
         assertEquals(response.getStatusCode(), HttpStatus.UNAUTHORIZED);
     }
 
+    @BeforeEach
+    void tests(){
+        Activity activityMod = generateActivity();
+        Mockito.when(activityRepository.findById(eq(ID))).thenReturn(Optional.of(activityMod));
+    }
+
+    void login(){
+
+    }
+
     @Test
     public void ReturnNotFoundIfIdNotExist() {
-
-        Mockito.when(activityRepository.findById(eq(ID))).thenReturn(Optional.empty());
 
         login(RoleEnum.ADMIN.getRoleName());
         ActivityRequest activityRequest = exampleActivityRequest();
@@ -55,10 +64,7 @@ public class ActivityUpdateGeneralTest extends BaseActivityTest {
     @Test
     public void UpdateActivitySuccess() {
 
-        Activity activityMod = generateActivity();
-
-        Mockito.when(activityRepository.save(isA(Activity.class))).thenReturn(activityMod);
-        Mockito.when(activityRepository.findById(eq(ID))).thenReturn(Optional.of(activityMod));
+        Mockito.when(activityRepository.findById(eq(ID))).thenReturn(Optional.of(generateActivity()));
 
         login(RoleEnum.ADMIN.getRoleName());
 
@@ -66,7 +72,6 @@ public class ActivityUpdateGeneralTest extends BaseActivityTest {
         activityRequest.setName("Modified");
         activityRequest.setContent("Content Modify");
         activityRequest.setImage("https://cambiadosomosmas.jpg");
-        activityMod.setDateUpdate(LocalDateTime.now());
 
         ResponseEntity<ActivityRequest> response =
                 testRestTemplate.exchange(createURLWithPort(PATH), HttpMethod.PUT, new HttpEntity<>(activityRequest, headers), ActivityRequest.class);
@@ -76,14 +81,6 @@ public class ActivityUpdateGeneralTest extends BaseActivityTest {
 
     @Test
     public void UpdateActivityFailedBecauseName() {
-
-        Mockito.when(activityRepository.save(isA(Activity.class))).thenReturn(generateActivity());
-
-        Activity activityMod = generateActivity();
-        activityMod.setId(1L);
-        activityMod.setName("");
-        activityMod.setImage("https://modified.jpg");
-        activityMod.setContent("Content Modify");
 
         login(RoleEnum.ADMIN.getRoleName());
 
@@ -101,18 +98,10 @@ public class ActivityUpdateGeneralTest extends BaseActivityTest {
     @Test
     public void UpdateActivityFailedBecauseImage() {
 
-        Activity activityMod = generateActivity();
-        activityMod.setId(1L);
-        activityMod.setName("Modified");
-        activityMod.setImage("image");
-        activityMod.setContent("Content Modify");
-
         login(RoleEnum.ADMIN.getRoleName());
 
-        Mockito.when(activityRepository.save(isA(Activity.class))).thenReturn(generateActivity());
-
         ActivityRequest activityRequest = exampleActivityRequest();
-        activityMod.setName("Modified");
+        activityRequest.setName("Modified");
         activityRequest.setImage("image");
         activityRequest.setContent("Content Modify");
 
