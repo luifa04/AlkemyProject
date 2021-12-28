@@ -1,6 +1,7 @@
 package com.alkemy.ong.integration.testimonial;
 
 import com.alkemy.ong.security.RoleEnum;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,11 +32,14 @@ public class TestimonialDeleteTest extends BaseTestimonialTest{
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
 
+    @Before
+    public void AdminLogin() {
+        login(RoleEnum.ADMIN.getRoleName());
+    }
+
     @Test
     public void ReturnNotFoundIfIdNotExist() {
         when(testimonialRepository.findById(eq(ID2DELETE))).thenReturn(Optional.empty());
-
-        login(RoleEnum.ADMIN.getRoleName());
 
         ResponseEntity<Object> response = testRestTemplate.exchange(createURLWithPort(PATH),
                 HttpMethod.DELETE, new HttpEntity<>(headers), Object.class);
@@ -53,7 +57,6 @@ public class TestimonialDeleteTest extends BaseTestimonialTest{
         when(testimonialRepository.save(eq(generateTestimonial())))
                 .thenReturn(generateTestimonial());
 
-        login(RoleEnum.ADMIN.getRoleName());
 
         ResponseEntity<?> response =
                 testRestTemplate.exchange(createURLWithPort(PATH), HttpMethod.DELETE, new HttpEntity<>(headers), String.class);

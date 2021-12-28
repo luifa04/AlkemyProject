@@ -17,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.mockito.ArgumentMatchers.eq;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +32,8 @@ public class TestimonialListTest extends BaseTestimonialTest{
     private final String PATH = "/testimonials?page=";
     private static final int SIZE_DEFAULT = 10;
 
+    private List<Testimonial> testimonials = new ArrayList<>();
+
     @Test
     public void ReturnForbiddenIfUserIsNotLogged() {
         ResponseEntity<Object> response = testRestTemplate.exchange(createURLWithPort(PATH), HttpMethod.GET,
@@ -43,7 +46,7 @@ public class TestimonialListTest extends BaseTestimonialTest{
     public void ReturnNotFoundIfPageOutOfRange() {
         int page = 15;
         Pageable pageable = PageRequest.of(page, SIZE_DEFAULT);
-        List<Testimonial> testimonials = generateListTestimonial(SIZE_DEFAULT);
+        testimonials = generateListTestimonial(SIZE_DEFAULT);
         Page<Testimonial> pagedTestimonials = new PageImpl<>(testimonials);
 
         when(testimonialRepository.findAll(eq(pageable))).thenReturn(pagedTestimonials);
@@ -75,7 +78,7 @@ public class TestimonialListTest extends BaseTestimonialTest{
     public void ListTestimonialsSuccess() {
         int page = 1;
         Pageable pageable = PageRequest.of(page, SIZE_DEFAULT);
-        List<Testimonial> testimonials = generateListTestimonial(SIZE_DEFAULT * 2);
+        testimonials = generateListTestimonial(SIZE_DEFAULT * 2);
         Page<Testimonial> pagedTestimonials =
                 new PageImpl<>(testimonials, pageable, SIZE_DEFAULT * 2);
 

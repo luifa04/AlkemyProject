@@ -4,6 +4,7 @@ import com.alkemy.ong.dto.TestimonialRequest;
 import com.alkemy.ong.dto.TestimonialResponse;
 import com.alkemy.ong.model.Testimonial;
 import com.alkemy.ong.security.RoleEnum;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,22 +26,29 @@ import static org.mockito.Mockito.when;
 public class TestimonialUpdateTest extends BaseTestimonialTest{
     private final Long ID2UPDATE = generateTestimonial().getId();
     private final String PATH = "/testimonials/" + ID2UPDATE;
+    private TestimonialRequest testimonialRequest = new TestimonialRequest();
+
+    @Before
+    public void setUp(){
+        testimonialRequest=generateTestimonialRequest();
+    }
 
     @Test
     public void ReturnUnauthorizedIfUserIsNotADMIN() {
         login(RoleEnum.USER.getRoleName());
-        TestimonialRequest testimonialRequest = generateTestimonialRequest();
 
         ResponseEntity<Object> response = testRestTemplate.exchange(createURLWithPort(PATH),
                 HttpMethod.PUT, new HttpEntity<>(testimonialRequest,headers), Object.class);
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
 
+    @Before
+    public void AdminLogin() {
+        login(RoleEnum.ADMIN.getRoleName());
+    }
+
     @Test
     public void ReturnBadRequestIfAnyAttributeIsNull() {
-        login(RoleEnum.ADMIN.getRoleName());
-
-        TestimonialRequest testimonialRequest = generateTestimonialRequest();
         testimonialRequest.setName("");
         testimonialRequest.setContent("");
 
@@ -53,10 +61,6 @@ public class TestimonialUpdateTest extends BaseTestimonialTest{
     @Test
     public void ReturnNotFoundIfIdNotExist() {
         when(testimonialRepository.findById(eq(ID2UPDATE))).thenReturn(Optional.empty());
-
-        login(RoleEnum.ADMIN.getRoleName());
-
-        TestimonialRequest testimonialRequest = generateTestimonialRequest();
 
         ResponseEntity<Object> response = testRestTemplate.exchange(createURLWithPort(PATH),
                 HttpMethod.PUT, new HttpEntity<>(testimonialRequest, headers), Object.class);
@@ -76,10 +80,6 @@ public class TestimonialUpdateTest extends BaseTestimonialTest{
         when(testimonialRepository.findById(ID2UPDATE)).thenReturn(Optional.of(generateTestimonial()));
 
         when(testimonialRepository.save(isA(Testimonial.class))).thenReturn(testimonialModified);
-
-        login(RoleEnum.ADMIN.getRoleName());
-
-        TestimonialRequest testimonialRequest = generateTestimonialRequest();
 
         testimonialRequest.setName("Modified");
         testimonialRequest.setContent("Modified");

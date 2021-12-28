@@ -14,6 +14,7 @@ import com.alkemy.ong.repository.SlideRepository;
 import com.alkemy.ong.service.IOrganizationService;
 import com.alkemy.ong.service.ISlidesService;
 import com.alkemy.ong.util.ContentTypeEnum;
+import com.alkemy.ong.util.UpdateFields;
 import com.sun.mail.imap.ACL;
 import io.jsonwebtoken.lang.Strings;
 import lombok.AllArgsConstructor;
@@ -41,6 +42,7 @@ public class SlidesServiceImpl implements ISlidesService{
     private final IOrganizationService organizationService;
     private final SlideRepository slideRepository;
     private final MessageSource messageSource;
+    private final UpdateFields updateFields;
 
     @Override
     public Slide addSlide(SlideRequest slide) throws Exception {
@@ -140,19 +142,26 @@ public class SlidesServiceImpl implements ISlidesService{
             });
             return new ResponseEntity<>(slideAllDto, HttpStatus.OK);
         }
-//        List<SlideFindAllDto> slideAllDto = new ArrayList();
-//        slideEntity.stream().forEach(slide -> {
-//                   slideAllDto.add(mapSlideToSlideDto(slide));
-//        });
-//        if(slideAllDto.isEmpty()){
-//            return new ResponseEntity<>(slideListIsEmpty, HttpStatus.OK);
-//        }
-//        return new ResponseEntity<>(slideAllDto, HttpStatus.OK);
     }
     
     private SlideFindAllDto mapSlideToSlideDto(Slide slide){
         Integer orderSlide = slide.getOrderSlide();
         String imageUrl = slide.getImageUrl();
         return new SlideFindAllDto(imageUrl, orderSlide);
+    }
+
+    @Override
+    public SlideResponse updateSlidesById(Long id, SlideResponse slide) {
+        String slideNotFound = messageSource.getMessage("slide.notFound", null, Locale.US);
+
+        Slide slideToUpdate = slideRepository.findById(id).orElseThrow(() -> new NotFoundException(slideNotFound));
+
+        updateFields.updateIfNotBlankAndNotEqual(slide.getText(), slideToUpdate.getText(), slideToUpdate::setText, "name");
+        updateFields.updateIfNotBlankAndNotEqual(slide.getOrderSlide(), slideToUpdate.getOrderSlide(), slideToUpdate::setOrderSlide, "content");
+        updateFields.updateIfNotBlankAndNotEqual(slide.getImageUrl(), slideToUpdate.getImageUrl(), slideToUpdate::setImageUrl, "image");
+
+        return new ModelMapper()
+                .typeMap(Slide.class, SlideResponse.class)
+                .map(slideToUpdate);
     }
 }

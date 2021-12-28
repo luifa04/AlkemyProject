@@ -1,6 +1,5 @@
 package com.alkemy.ong.controller;
 
-import com.alkemy.ong.dto.SlideFindAllDto;
 import com.alkemy.ong.dto.SlideRequest;
 import com.alkemy.ong.dto.SlideResponse;
 import com.alkemy.ong.model.Slide;
@@ -13,11 +12,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.io.IOException;
-import java.util.List;
 
 @RestController
-@RequestMapping("/Slides")
+@RequestMapping("/slides")
 @AllArgsConstructor
 public class SlidesContoller {
 
@@ -45,6 +42,14 @@ public class SlidesContoller {
     @PreAuthorize(SecurityConstant.ADMIN)
     public ResponseEntity<?> findAllSlide(){
             return slidesService.findAll();
+    }
+
+
+    @PutMapping(path = "{id}")
+    @PreAuthorize(SecurityConstant.ADMIN)
+    public ResponseEntity<SlideResponse> updateNewsById(@PathVariable("id") Long id, @Valid @RequestBody SlideResponse slide){
+        return new ResponseEntity<>(slidesService.updateSlidesById(id, slide), HttpStatus.OK);
+
     }
 
 }

@@ -3,6 +3,7 @@ package com.alkemy.ong.integration.testimonial;
 import com.alkemy.ong.dto.TestimonialRequest;
 import com.alkemy.ong.model.Testimonial;
 import com.alkemy.ong.security.RoleEnum;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,23 +19,30 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class TestimonialCreateTest  extends BaseTestimonialTest{
+public class TestimonialCreateTest  extends BaseTestimonialTest {
     private final String PATH = "/testimonials";
+    private TestimonialRequest testimonialRequest = new TestimonialRequest();
+
+    @Before
+    public void setUp(){
+        testimonialRequest=generateTestimonialRequest();
+    }
 
     @Test
     public void ReturnUnauthorizedIfUserIsNotADMIN() {
         login(RoleEnum.USER.getRoleName());
-        TestimonialRequest testimonialRequest = generateTestimonialRequest();
         ResponseEntity<Object> response = testRestTemplate.exchange(createURLWithPort(PATH),
                 HttpMethod.POST, new HttpEntity<>(testimonialRequest, headers), Object.class);
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
 
+    @Before
+    public void AdminLogin() {
+        login(RoleEnum.ADMIN.getRoleName());
+    }
+
     @Test
     public void ReturnBadRequestIfAnyAttributeIsNull() {
-        login(RoleEnum.ADMIN.getRoleName());
-
-        TestimonialRequest testimonialRequest = generateTestimonialRequest();
         testimonialRequest.setName("");
         testimonialRequest.setContent("");
 
@@ -48,15 +56,10 @@ public class TestimonialCreateTest  extends BaseTestimonialTest{
     public void CreateATestimonialSuccessful() {
         when(testimonialRepository.save(isA(Testimonial.class))).thenReturn(generateTestimonial());
 
-        login(RoleEnum.ADMIN.getRoleName());
-
-        TestimonialRequest testimonialRequest = generateTestimonialRequest();
-
         ResponseEntity<Object> response = testRestTemplate.exchange(
                 createURLWithPort(PATH), HttpMethod.POST, new HttpEntity<>(testimonialRequest, headers), Object.class);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-
     }
 
 }
