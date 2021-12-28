@@ -5,6 +5,7 @@ import com.alkemy.ong.common.BaseActivityTest;
 import com.alkemy.ong.dto.ActivityRequest;
 import com.alkemy.ong.model.Activity;
 import com.alkemy.ong.security.RoleEnum;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
@@ -46,10 +47,14 @@ public class ActivityUpdateGeneralTest extends BaseActivityTest {
         Mockito.when(activityRepository.findById(eq(ID))).thenReturn(Optional.of(activityMod));
     }
 
+    @Before
+    public void login(){
+        login(RoleEnum.ADMIN.getRoleName());
+    }
+
     @Test
     public void ReturnNotFoundIfIdNotExist() {
 
-        login(RoleEnum.ADMIN.getRoleName());
         ActivityRequest activityRequest = exampleActivityRequest();
         ResponseEntity<Object> response = testRestTemplate.exchange(createURLWithPort(PATH),
                 HttpMethod.PUT, new HttpEntity<>(activityRequest,headers), Object.class);
@@ -61,8 +66,6 @@ public class ActivityUpdateGeneralTest extends BaseActivityTest {
     public void UpdateActivitySuccess() {
 
         Mockito.when(activityRepository.findById(eq(ID))).thenReturn(Optional.of(generateActivity()));
-
-        login(RoleEnum.ADMIN.getRoleName());
 
         ActivityRequest activityRequest = exampleActivityRequest();
         activityRequest.setName("Modified");
@@ -77,8 +80,6 @@ public class ActivityUpdateGeneralTest extends BaseActivityTest {
 
     @Test
     public void UpdateActivityFailedBecauseName() {
-
-        login(RoleEnum.ADMIN.getRoleName());
 
         ActivityRequest activityRequest = exampleActivityRequest();
         activityRequest.setName("");

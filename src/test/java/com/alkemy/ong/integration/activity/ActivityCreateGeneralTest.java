@@ -5,6 +5,7 @@ import com.alkemy.ong.common.BaseActivityTest;
 import com.alkemy.ong.dto.ActivityRequest;
 import com.alkemy.ong.model.Activity;
 import com.alkemy.ong.security.RoleEnum;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
@@ -43,10 +44,13 @@ public class ActivityCreateGeneralTest extends BaseActivityTest {
         Mockito.when(activityRepository.save(isA(Activity.class))).thenReturn(generateActivity());
     }
 
+    @Before
+    public void login(){
+        login(RoleEnum.ADMIN.getRoleName());
+    }
+
     @Test
     public void CreateActivitySuccess() {
-
-        login(RoleEnum.ADMIN.getRoleName());
 
         ActivityRequest activityRequest = exampleActivityRequest();
         activityRequest.setName("New Activity");
@@ -64,8 +68,6 @@ public class ActivityCreateGeneralTest extends BaseActivityTest {
     @Test
     public void CreateActivityFailedBecauseImage() {
 
-        login(RoleEnum.ADMIN.getRoleName());
-
         ActivityRequest activityRequest = exampleActivityRequest();
         activityRequest.setName("New Activity");
         activityRequest.setImage("image");
@@ -79,8 +81,6 @@ public class ActivityCreateGeneralTest extends BaseActivityTest {
 
     @Test
     public void CreateActivityFailedBecauseName() {
-
-        login(RoleEnum.ADMIN.getRoleName());
 
         ActivityRequest activityRequest = exampleActivityRequest();
         activityRequest.setName("");
