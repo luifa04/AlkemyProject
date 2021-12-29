@@ -1,27 +1,40 @@
 package com.alkemy.ong.integration.contact;
 
+import static org.mockito.ArgumentMatchers.isA;
+
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 
+import com.alkemy.ong.common.BaseContactTest;
+import com.alkemy.ong.dto.ContactRequestDto;
 import com.alkemy.ong.model.Contact;
 import com.alkemy.ong.repository.ContactRepository;
+import com.alkemy.ong.security.RoleEnum;
 
-public class ContactCreateGeneralTest {
+public class ContactCreateGeneralTest extends BaseContactTest {
+	
 	
 	 private ContactRepository contactRepository;
+	 private ContactRequestDto contactRequest;
+	 private RoleEnum roleEnum;
 	
+	 
     @BeforeEach
-    void createContact(){
+    Contact createContact(){
 
-        //Contact contact = generateContact();
-       // Mockito.when(contactRepository.save(isA(Activity.class))).thenReturn(generateActivity());
+        Contact contact = generateContact();
+        Mockito.when(contactRepository.save(isA(Contact.class))).thenReturn(generateContact());
+        return contact;
     }
 
-  /*  @Test
+    @Test
     public void CreateContactSuccess() {
 
-        login(RoleEnum.ADMIN.getRoleName());
+        login(roleEnum.getRoleName());
 
         contactRequest.setName("contactTest2");
         contactRequest.setEmail("prueb2a@gmail.com");
@@ -30,43 +43,57 @@ public class ContactCreateGeneralTest {
         Mockito.when(contactRepository.save(isA(Contact.class))).thenReturn(generateContact());
 
         ResponseEntity<?> response =
-                testRestTemplate.exchange(createURLWithPort("/contacts"), HttpMethod.POST, new HttpEntity<>(activityRequest, headers), ActivityRequest.class); public void CreateActivitySuccess() {
+                testRestTemplate.exchange(createURLWithPort("/contacts"), HttpMethod.POST, new HttpEntity<>(contactRequest, headers), ContactRequestDto.class); 
+        
+        
+    }
    
                 	
     @Test
     public void CreateContactFailedBecauseName() {
 
-        Activity activity = generateActivity();
-        activity.setId(1L);
-        activity.setName("New Activity");
-        activity.setImage("https://somosmas.jpg");
-        activity.setContent("New Content");
+        Contact contact = createContact();
+        contact.setId(1L);
+        contact.setName("");
+        contact.setEmail("https://somosmas.jpg");
+        contact.setMessage("Mensaje de prueba");
 
-        Mockito.when(activityRepository.save(isA(Activity.class))).thenReturn(generateActivity());
+        Mockito.when(contactRepository.save(isA(Contact.class))).thenReturn(generateContact());
 
         login(RoleEnum.ADMIN.getRoleName());
 
-        ActivityRequest activityRequest = exampleActivityRequest();
+        ContactRequestDto contactRequest = exampleContactRequest(); //por qué esta linea?
         
+    }
+    
+    @Test
     public void CreateActivityFailedBecauseMessage() {
     	
+    	 Contact contact = createContact();
+         contact.setId(1L);
+         contact.setName("Contact");
+         contact.setEmail("carlos@gmail.com");
+         contact.setMessage("Mensaje de prueba");
+
+         login(RoleEnum.ADMIN.getRoleName());
+
+         ContactRequestDto contactRequest = exampleContactRequest(); 
     	
     }
     
     
     
     @Test
-    public void CreateActivityFailedBecauseEmail() {
+    public void CreateContactFailedBecauseEmail() {
 
-        Mockito.when(activityRepository.save(isA(Activity.class))).thenReturn(generateActivity());
-
-        Activity activity = generateActivity();
-        activity.setId(1L);
-        activity.setName("Activity");
-        activity.setImage("https://activity.jpg");
-        activity.setContent("New Content");
+        Contact contact = createContact();
+        contact.setId(1L);
+        contact.setName("Contact");
+        contact.setEmail("carlos@gmail.com");
+        contact.setMessage("Mensaje de prueba");
 
         login(RoleEnum.ADMIN.getRoleName());
 
-        ActivityRequest activityRequest = exampleActivityRequest();*/
+        ContactRequestDto contactRequest = exampleContactRequest();
+}
 }

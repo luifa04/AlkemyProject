@@ -1,6 +1,6 @@
 package com.alkemy.ong.integration.contact;
 
-import com.alkemy.ong.common.BaseUserTest;
+import com.alkemy.ong.common.BaseContactTest;
 import com.alkemy.ong.model.Contact;
 import com.alkemy.ong.repository.ContactRepository;
 import com.alkemy.ong.security.RoleEnum;
@@ -19,10 +19,11 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ContactListGeneralTest extends BaseUserTest {
+public class ContactListGeneralTest extends BaseContactTest {
+	
     private final String PATH = "/contacts/";
     private ContactRepository contactRepository;
-
+   
     @Test
     public void ReturnUnauthorizedIfUserIsNotAdmin() {
         login(RoleEnum.USER.getRoleName());
@@ -47,14 +48,5 @@ public class ContactListGeneralTest extends BaseUserTest {
         assertEquals(response.getStatusCode(), HttpStatus.OK);
     }
     
-    protected Contact generateContact() {
-        Contact contact = new Contact();
-        contact.setId(1L);
-        contact.setEmail("marta.sanchez@hotmail.com");
-        contact.setMessage("mensaje de prueba");
-        contact.setEnabled(Boolean.TRUE);
-      
-        return contact;
-    }
-
+   
 }
