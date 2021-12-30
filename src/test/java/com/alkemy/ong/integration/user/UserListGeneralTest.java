@@ -1,6 +1,5 @@
 package com.alkemy.ong.integration.user;
 
-import com.alkemy.ong.common.BaseUserTest;
 import com.alkemy.ong.model.User;
 import com.alkemy.ong.security.RoleEnum;
 import org.junit.Test;
@@ -27,7 +26,7 @@ public class UserListGeneralTest extends BaseUserTest {
         login(RoleEnum.USER.getRoleName());
         ResponseEntity<Object> response = testRestTemplate.exchange(createURLWithPort(PATH), HttpMethod.GET,
                 new HttpEntity<>(headers), Object.class);
-        assertEquals(response.getStatusCode(), HttpStatus.UNAUTHORIZED);
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
 
     @Test
@@ -41,7 +40,7 @@ public class UserListGeneralTest extends BaseUserTest {
                 HttpMethod.GET,
                 new HttpEntity<>(headers),
                List.class);
-        assertEquals(response.getStatusCode(), HttpStatus.OK);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
 }
