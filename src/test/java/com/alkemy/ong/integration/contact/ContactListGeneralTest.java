@@ -23,7 +23,14 @@ public class ContactListGeneralTest extends BaseContactTest {
 	
     private final String PATH = "/contacts/";
     private ContactRepository contactRepository;
-   
+    
+    @Test
+    public void ReturnForbiddenIfUserIsNotLogged() {
+        ResponseEntity<Object> response = testRestTemplate.exchange(createURLWithPort(PATH), HttpMethod.GET,
+                new HttpEntity<>(headers), Object.class);
+        assertEquals( HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+    
     @Test
     public void ReturnUnauthorizedIfUserIsNotAdmin() {
         login(RoleEnum.USER.getRoleName());
@@ -32,19 +39,17 @@ public class ContactListGeneralTest extends BaseContactTest {
         assertEquals(response.getStatusCode(), HttpStatus.UNAUTHORIZED);
     }
 
-    @SuppressWarnings("rawtypes") //ver qué onda
+   
 	@Test
     public void ListContactSuccess() {
-        @SuppressWarnings("unchecked")
-		List<Contact> contacts = (List<Contact>) generateContact();
+       
+		List<Contact> contacts =  generateContacts(3);
         when(contactRepository.findAll()).thenReturn(contacts);
 
         login(RoleEnum.ADMIN.getRoleName());
 
-        ResponseEntity<List> response = testRestTemplate.exchange(createURLWithPort(PATH),
-                HttpMethod.GET,
-                new HttpEntity<>(headers),
-               List.class);
+        ResponseEntity<?> response = testRestTemplate.exchange(createURLWithPort(PATH), HttpMethod.GET, 
+        		new HttpEntity<>(headers), List.class);
         assertEquals(response.getStatusCode(), HttpStatus.OK);
     }
     
