@@ -29,8 +29,6 @@ public class findAllByNameControllerTest extends BaseCategoryTest{
 
     private static final int SIZE_DEFAULT = 10;
 
-
-
     @Test
     public void ReturnNotFoundIfPageOutOfRange() {
         int page = 15;

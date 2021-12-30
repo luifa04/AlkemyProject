@@ -2,6 +2,7 @@ package com.alkemy.ong.integration.user;
 
 import com.alkemy.ong.common.BaseGeneralTest;
 import com.alkemy.ong.security.RoleEnum;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,11 +31,14 @@ public class UserDeleteGeneralTest extends BaseGeneralTest {
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
 
+    @Before
+    public void AdminLogin() {
+        login(RoleEnum.ADMIN.getRoleName());
+    }
+
     @Test
     public void ReturnNotFoundIfIdNotExist() {
         when(userRepository.findById(eq(ID2DELETE))).thenReturn(Optional.empty());
-
-        login(RoleEnum.ADMIN.getRoleName());
 
         ResponseEntity<Object> response = testRestTemplate.exchange(createURLWithPort(PATH),
                 HttpMethod.DELETE, new HttpEntity<>(headers), Object.class);
@@ -51,8 +55,6 @@ public class UserDeleteGeneralTest extends BaseGeneralTest {
 
         when(userRepository.save(eq(generateUser(RoleEnum.USER.getRoleName()))))
                 .thenReturn(generateUser(RoleEnum.USER.getRoleName()));
-
-        login(RoleEnum.ADMIN.getRoleName());
 
         ResponseEntity<?> response =
                 testRestTemplate.exchange(createURLWithPort(PATH), HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
