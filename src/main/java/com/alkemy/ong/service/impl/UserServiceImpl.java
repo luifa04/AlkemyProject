@@ -118,7 +118,6 @@ public class UserServiceImpl implements IUserService {
             throw new NotFoundException(messageError);
         }
         userRefreshValues(entity.get(), userUpdateDto);
-
         User userSaved = userRepository.save(entity.get());
         UserUpdateDto result = mapUserToUserUpdateDto(userSaved);
         return result;
