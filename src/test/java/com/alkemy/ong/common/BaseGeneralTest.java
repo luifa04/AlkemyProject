@@ -1,7 +1,9 @@
 package com.alkemy.ong.common;
 
+import com.alkemy.ong.model.Activity;
 import com.alkemy.ong.model.Role;
 import com.alkemy.ong.model.User;
+import com.alkemy.ong.repository.ActivityRepository;
 import com.alkemy.ong.repository.UserRepository;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -15,7 +17,8 @@ public class BaseGeneralTest {
 
     @MockBean
     protected UserRepository userRepository;
-
+    @MockBean
+    protected ActivityRepository activityRepository;
 
     @LocalServerPort
     private int PORT;
@@ -52,8 +55,15 @@ public class BaseGeneralTest {
         return role;
     }
 
-
-
-
-
+    protected Activity generateActivity() {
+        Activity activity = new Activity();
+        activity.setId(1L);
+        activity.setName("Activity");
+        activity.setContent("Activity for the family");
+        activity.setImage("https://somosmas.jpg");
+        activity.setDateCreation(LocalDateTime.now());
+        activity.setDateUpdate(LocalDateTime.now());
+        activity.setEnabled(Boolean.TRUE);
+        return activity;
+    }
 }

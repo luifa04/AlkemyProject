@@ -29,8 +29,8 @@ public class SecurityConfigTest {
                 .collect(Collectors.joining(","));
 
         String token = Jwts.builder()
-                        .setSubject(userName)
-                        .claim("roles", authorities)
+                .setSubject(userName)
+                .claim("roles", authorities)
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS512, JWT_SECRET).compact();
 
