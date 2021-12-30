@@ -2,12 +2,19 @@ package com.alkemy.ong.common;
 
 import com.alkemy.ong.dto.ContactRequestDto;
 import com.alkemy.ong.model.Contact;
+import com.alkemy.ong.repository.ContactRepository;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class BaseContactTest extends BaseGeneralTest{
+import org.springframework.boot.test.mock.mockito.MockBean;
 
-    protected ContactRequestDto exampleContactRequest() {
+public class BaseContactTest extends BaseGeneralTest{
+	
+	@MockBean
+    protected ContactRepository contactRepository;
+	
+    protected ContactRequestDto contactRequest() {
     	ContactRequestDto contactRequestDto = new ContactRequestDto();
     	contactRequestDto.setName("Carlos");
     	contactRequestDto.setEmail("Carlos@hotmail.com");

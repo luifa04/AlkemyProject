@@ -5,7 +5,6 @@ import static org.mockito.ArgumentMatchers.isA;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -26,15 +25,11 @@ public class ContactCreateGeneralTest extends BaseContactTest {
 	 private ContactRequestDto contactRequest;
 	 private RoleEnum roleEnum;
 	
+	 @Before
+	 public void setUp(){
+	        contactRequest = contactRequest();
+	 }
 	 
-    @BeforeEach
-    Contact createContact(){
-
-        Contact contact = generateContact();
-        Mockito.when(contactRepository.save(isA(Contact.class))).thenReturn(generateContact());
-        return contact;
-    }
-    
     @Test
     public void ReturnUnauthorizedIfUserIsNotAdmin() {
 
@@ -52,10 +47,13 @@ public class ContactCreateGeneralTest extends BaseContactTest {
     
     @Test
     public void ReturnBadRequestIfAnyAttributeIsNull() {
+    	
         contactRequest.setName("");
         contactRequest.setEmail("");
         contactRequest.setMessage("");
-
+        
+        Mockito.when(contactRepository.save(isA(Contact.class))).thenReturn(generateContact()); 
+        
         ResponseEntity<ContactResponseDto> response = testRestTemplate.exchange(createURLWithPort(PATH),
                 HttpMethod.POST, new HttpEntity<>(contactRequest, headers), ContactResponseDto.class);
 
@@ -79,51 +77,6 @@ public class ContactCreateGeneralTest extends BaseContactTest {
         assertEquals(response.getStatusCode(), HttpStatus.CREATED);
     }
    
-                	
-    @Test
-    public void CreateContactFailedBecauseName() {
-    	
-    	ContactRequestDto contactRequest = exampleContactRequest();
-    	
-        contactRequest.setId(1L);
-        contactRequest.setName("");
-        contactRequest.setEmail("https://somosmas.jpg");
-        contact.setMessage("Mensaje de prueba");
-
-        Mockito.when(contactRepository.save(isA(Contact.class))).thenReturn(generateContact());
-
-        //por qué esta linea?
-        
-    }
+                 
     
-    @Test
-    public void CreateActivityFailedBecauseMessage() {
-    	
-    	 Contact contact = createContact();
-         contact.setId(1L);
-         contact.setName("Contact");
-         contact.setEmail("carlos@gmail.com");
-         contact.setMessage("Mensaje de prueba");
-
-         login(RoleEnum.ADMIN.getRoleName());
-
-         ContactRequestDto contactRequest = exampleContactRequest(); 
-    	
-    }
-    
-    
-    
-    @Test
-    public void CreateContactFailedBecauseEmail() {
-
-        Contact contact = createContact();
-        contact.setId(1L);
-        contact.setName("Contact");
-        contact.setEmail("carlos@gmail.com");
-        contact.setMessage("Mensaje de prueba");
-
-        login(RoleEnum.ADMIN.getRoleName());
-
-        ContactRequestDto contactRequest = exampleContactRequest();
-}
 }
