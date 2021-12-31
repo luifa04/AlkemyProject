@@ -98,7 +98,6 @@ public class UserSeeder implements CommandLineRunner{
         user.setEmail(email);
         user.setPhoto(null);
         user.setPassword(passwordEncoder.encode(password));
-        //user.setRole(createRoleUser());
         user.setRole(roleService.findByName(RoleEnum.USER.getName()));
         user.setDateCreation(LocalDateTime.now());
         return user; 
@@ -111,7 +110,6 @@ public class UserSeeder implements CommandLineRunner{
         user.setEmail(email);
         user.setPhoto(null);
         user.setPassword(passwordEncoder.encode(password));
-        //user.setRole(createRoleAdmin());
         user.setRole(roleService.findByName(RoleEnum.ADMIN.getName()));
         user.setDateCreation(LocalDateTime.now());
         return user; 
