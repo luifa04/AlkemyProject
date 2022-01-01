@@ -5,12 +5,14 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @PropertySource("classpath:application.properties")
+@ContextConfiguration(locations = {"classpath:application.properties", "classpath:application.yml"})
 public class SecurityConfigTest {
 
     private static String JWT_SECRET = "C9D0629998B86CE363D1885709757E9F29297B912F66BE3A019BDD74C15D3F03";
@@ -29,8 +31,8 @@ public class SecurityConfigTest {
                 .collect(Collectors.joining(","));
 
         String token = Jwts.builder()
-                        .setSubject(userName)
-                        .claim("roles", authorities)
+                .setSubject(userName)
+                .claim("roles", authorities)
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS512, JWT_SECRET).compact();
 

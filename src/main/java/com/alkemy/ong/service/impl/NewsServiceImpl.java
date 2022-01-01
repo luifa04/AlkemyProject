@@ -45,7 +45,7 @@ public class NewsServiceImpl implements INewsService {
         news.setName(newsDto.getName());
         news.setContent(newsDto.getContent());
         news.setImage(newsDto.getImage());
-        String messageError = messageSource.getMessage("category.notFound", null, Locale.US);
+        String messageError = messageSource.getMessage("news.notFound", null, Locale.US);
         if (!categoryRepository.existsById(newsDto.getCategoryId())) {
             throw new NotFoundException(messageError);
         }
@@ -130,7 +130,7 @@ public class NewsServiceImpl implements INewsService {
         if(newsRepository.findAll().isEmpty()){
             throw new EmptyDataException(newsEmptyList);
         }
-        if (page > newsRepository.findAll(pageable).getTotalPages()){
+        if (page >= newsRepository.findAll(pageable).getTotalPages()){
             throw new NotFoundException(moreThanTotalPageError);
         }
         
