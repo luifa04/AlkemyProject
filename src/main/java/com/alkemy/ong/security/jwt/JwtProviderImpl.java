@@ -1,12 +1,12 @@
 package com.alkemy.ong.security.jwt;
 
+import com.alkemy.ong.exception.NotFoundException;
 import com.alkemy.ong.security.service.UserDetailsImpl;
 import com.alkemy.ong.security.util.SecurityUtils;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,6 +14,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Set;
@@ -45,7 +47,7 @@ public class JwtProviderImpl implements IJwtProvider {
 	}
 
 	@Override
-	public Authentication getAuthentication(HttpServletRequest request) {
+	public Authentication getAuthentication(HttpServletRequest request){
 		Claims claims = extratClaims(request);
 		if (claims == null) {
 			return null;
@@ -75,12 +77,23 @@ public class JwtProviderImpl implements IJwtProvider {
 		return true;
 	}
 
-	private Claims extratClaims(HttpServletRequest request) {
+	private Claims extratClaims(HttpServletRequest request)
+			throws ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, SignatureException, IllegalArgumentException{
 		String token = SecurityUtils.extractAuthTokenFromRequest(request);
 		if (token == null) {
 			return null;
 		}
-		return Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token).getBody();
+
+		Claims body = null;
+		try {
+			body = Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token).getBody();
+		} catch (ExpiredJwtException e) {
+			request.setAttribute("expired", "expired");
+		} catch (SignatureException e) {
+			request.setAttribute("signature", "signature");
+		}
+
+		return body;
 	}
 
 	public String extractUsername(String authorizationHeader) {

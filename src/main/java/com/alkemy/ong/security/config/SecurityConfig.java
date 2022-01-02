@@ -1,5 +1,6 @@
 package com.alkemy.ong.security.config;
 
+import com.alkemy.ong.security.jwt.JwtAuthenticationEntryPoint;
 import com.alkemy.ong.security.jwt.JwtAuthorizationFilter;
 import com.alkemy.ong.security.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private String internalApiKey;
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
+    @Autowired
+    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private static final String[] SWAGGER = {
             "/v2/api-docs",
             "/configuration/ui/**",
@@ -64,8 +67,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         		.anyRequest()
                 .authenticated();
         
-        http.addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);        
+        http.addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 
+        http.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint);
     }
 
     @Override
