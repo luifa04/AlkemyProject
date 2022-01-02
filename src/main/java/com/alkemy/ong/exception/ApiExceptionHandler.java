@@ -3,6 +3,7 @@ package com.alkemy.ong.exception;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import freemarker.template.TemplateException;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.access.AccessDeniedException;
@@ -150,12 +151,12 @@ public class ApiExceptionHandler {
 	}
 
 
-
-
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(InternalAuthenticationServiceException.class)
 	@ResponseBody
 	public ExceptionMessage  returnErrorInternalAuthenticationServiceException(InternalAuthenticationServiceException e){
 		return new ExceptionMessage(HttpStatus.BAD_REQUEST.value(), e.getMessage(), LocalDateTime.now());
 	}
+
+
 }

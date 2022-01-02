@@ -17,12 +17,10 @@ import lombok.Setter;
 public class LoginDto {
 
     @ApiModelProperty(value = AuthenticationConstantDocs.AUTHENTICATION_EMAIL)
-    @NotBlank
-    @NotNull(message= "You must enter your email to be able to login")
+    @NotBlank(message= "You must enter your email to be able to login")
     private String email;
     @ApiModelProperty(value = AuthenticationConstantDocs.AUTHENTICATION_PASS)
-    @NotBlank
-    @NotNull(message= "You must enter your password to be able to login")
+    @NotBlank(message= "You must enter your password to be able to login")
     private String password;
 
 }
