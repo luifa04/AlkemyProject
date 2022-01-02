@@ -27,11 +27,11 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         final String expired = (String) request.getAttribute("expired");
         final String signature = (String) request.getAttribute("signature");
         if (expired != null) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, tokenExpired);
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, tokenExpired);
         } else if (signature != null) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, wrongSignature);
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, wrongSignature);
         } else {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, invalidLogin);
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, invalidLogin);
         }
     }
 }
