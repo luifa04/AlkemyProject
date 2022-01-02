@@ -20,14 +20,8 @@ public class BaseOngTest extends BaseGeneralTest {
         organization.setId(1L);
         organization.setName("Somos Mas");
         organization.setImage("https://somosmasImageNoticia.jpg");
-        //organization.setAddress("Avenida siempre viva 222");
-        //organization.setPhone(123231323L);
         organization.setEmail("somosMas@somosmas.com");
         organization.setWelcomeText("Bienvenidos");
-        //organization.setAboutUsText("Somos Mas, ONG about US");
-        //organization.setFacebookUrl("https://facebook.com/somosMas");
-        //organization.setInstagramUrl("https://instagram.com/somosMas");
-        //organization.setLinkedinUrl("https://linkedin.com/somosMas");
         organization.setEnabled(Boolean.TRUE);
 
         return organization;
