@@ -33,7 +33,8 @@ public class CommentController {
     }
     
     @PostMapping
-    public ResponseEntity<CommentRequest> createNews(@Valid @RequestBody CommentRequest comment) throws Exception {
+    @PreAuthorize(SecurityConstant.USER)
+    public ResponseEntity<CommentRequest> createComment(@Valid @RequestBody CommentRequest comment) throws Exception {
         CommentRequest comentRequest = commentService.addComment(comment);
         return ResponseEntity.status(HttpStatus.CREATED).body(comentRequest);
     }
