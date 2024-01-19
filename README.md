@@ -86,15 +86,45 @@ En todos los casos, la contraseña es: `useradmin`
 
 En todos los casos, la contraseña es: `useruser`
 
-## Contribución
+## Despliegue
 
-Si quieres contribuir a nuestro proyecto, ¡estamos encantados de recibir tu ayuda! Por favor, sigue estos pasos:
+La aplicación está actualmente deployada en [Render](https://render.com/) y utiliza una base de datos alojada en [Clever Cloud](https://www.clever-cloud.com/).
 
-1. Realiza un fork del proyecto.
-2. Crea una rama para tu contribución (`git checkout -b feature/MyFeature`).
-3. Realiza tus cambios y haz commit (`git commit -m 'Agrega nueva funcionalidad'`).
-4. Sube tu rama a tu fork (`git push origin feature/MyFeature`).
-5. Abre un pull request en nuestro repositorio.
+La base de datos en Clever Cloud utiliza MySQL 8.x.x.
 
-Gracias por contribuir a ONG - SOMOS MAS. ¡Juntos hacemos la diferencia!
+¡Visita [ONG-API en Render](https://ong-api-mscx.onrender.com/swagger-ui.html#) para explorar la aplicación en vivo!
+
+## Instrucciones para Ejecutar Localmente
+
+Sigue estos pasos para ejecutar el proyecto en tu máquina local:
+
+1. Clona el repositorio a tu máquina local:
+
+    ```bash
+    git clone https://github.com/tu_usuario/tu_repositorio.git
+    ```
+
+2. Navega al directorio del proyecto:
+
+    ```bash
+    cd tu_repositorio
+    ```
+
+3. Modifica los archivos `application.properties` y `application.yml`, especialmente el URL, USERNAME y PASSWORD para tu entorno local.
+
+4. Instala las dependencias:
+
+    ```bash
+    mvn install
+    ```
+
+5. Ejecuta la aplicación:
+
+    ```bash
+    mvn spring-boot:run
+    ```
+
+6. Abre tu navegador y visita [http://localhost:8080/swagger-ui.html#](http://localhost:8080/swagger-ui.html#).
+
+¡Ahora deberías poder explorar la aplicación localmente!
 
