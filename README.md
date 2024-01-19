@@ -1,62 +1,61 @@
 # ONG - SOMOS MAS
 
-¡Bienvenido a ONG - SOMOS MAS!
+Welcome to ONG - SOMOS MAS!
 
-## Descripción del Proyecto
+## Project Description
 
-**ONG - SOMOS MAS** es una iniciativa que tiene como objetivo contribuir de manera positiva a la sociedad. A través de este proyecto, buscamos facilitar la gestión y operación de organizaciones no gubernamentales, permitiendo un manejo eficiente de usuarios, roles y otras funcionalidades clave.
+**ONG - SOMOS MAS** is an initiative aimed at making a positive contribution to society. Through this project, we aim to simplify the management and operation of non-governmental organizations, enabling efficient handling of users, roles, and other key functionalities.
 
-## Tecnologías Utilizadas
+## Technologies Used
 
-Este proyecto ha sido desarrollado utilizando un conjunto de tecnologías modernas:
+This project has been developed using a set of modern technologies:
 
-- **Spring Boot**: Simplifica el desarrollo de aplicaciones Java con una configuración mínima.
-- **MySQL Driver**: Conector JDBC para la base de datos MySQL.
-- **Spring Data JPA**: Ofrece una capa de acceso a datos fácil de usar para la base de datos.
-- **Spring Web**: Proporciona herramientas para desarrollar aplicaciones web.
-- **Spring Security**: Garantiza la seguridad de la aplicación mediante la autenticación y el control de acceso.
-- **Json Web Token (JWT)**: Utilizado para la autenticación segura y la transmisión de información.
-- **Spring Validation**: Módulo de validación de Spring.
-- **Spring Hateoas**: Permite incorporar enlaces de navegación relacionados con los recursos en las respuestas de la API.
-- **Lombok**: Biblioteca que agiliza el desarrollo eliminando la necesidad de escribir ciertos métodos.
-- **FreeMarker**: Motor de plantillas para la generación de contenido web.
-- **Mail Sender**: Utilizado para enviar correos electrónicos.
-- **Amazon Web Services (AWS)**: Plataforma de servicios en la nube.
-- **JUnit - Mockito**: Herramientas para realizar pruebas unitarias y de integración.
-- **Swagger**: Facilita la creación, documentación y uso de servicios web RESTful.
+- **Spring Boot**: Simplifies Java application development with minimal configuration.
+- **MySQL Driver**: JDBC connector for MySQL database.
+- **Spring Data JPA**: Provides an easy-to-use data access layer for the database.
+- **Spring Web**: Offers tools for developing web applications.
+- **Spring Security**: Ensures application security through authentication and access control.
+- **Json Web Token (JWT)**: Used for secure authentication and information transmission.
+- **Spring Validation**: Spring validation module.
+- **Spring Hateoas**: Allows incorporating resource-related navigation links in API responses.
+- **Lombok**: Library that streamlines development by eliminating the need to write certain methods.
+- **FreeMarker**: Template engine for web content generation.
+- **Mail Sender**: Used for sending emails.
+- **Amazon Web Services (AWS)**: Cloud services platform.
+- **JUnit - Mockito**: Tools for performing unit and integration tests.
+- **Swagger**: Facilitates the creation, documentation, and use of RESTful web services.
 
-## Requerimientos
+## Requirements
 
-Asegúrate de tener las siguientes herramientas instaladas antes de comenzar con el desarrollo:
+Make sure to have the following tools installed before starting development:
 
 - **Java - 11.x.x**
 - **Maven - 4.x.x**
 - **MySQL - 8.x.x**
 
-## Herramientas utlizadas
+## Tools Used
 
-- **IntelliJ IDEA Community Edition**: Entorno de desarrollo integrado para Java.
-- **Jira**: Herramienta de gestión de proyectos y seguimiento de problemas.
-- **Git**: Sistema de control de versiones distribuido.
-- **Postman**: Plataforma para el desarrollo y la prueba de API.
-- **Discord, WhatsApp, Slack**: Herramientas de comunicación para el equipo de desarrollo.
+- **IntelliJ IDEA Community Edition**: Integrated development environment for Java.
+- **Jira**: Project management and issue tracking tool.
+- **Git**: Distributed version control system.
+- **Postman**: Platform for API development and testing.
+- **Discord, WhatsApp, Slack**: Communication tools for the development team.
 
-## Diagrama de Entidad-Relación
+## Entity-Relationship Diagram
 
-A continuación, se muestra el diagrama de entidad-relación que representa la estructura de la base de datos utilizada en este proyecto.
+Below is the entity-relationship diagram representing the database structure used in this project.
 
 ![Screenshot 2023-11-15 093046](https://github.com/luifa04/AlkemyProject/assets/88746660/36f59502-31fb-4082-84d0-4685fea19a77)
 
+## Getting Started
 
-## Comenzando
+This project features an API that includes a seed system designed to load various users, both administrators and regular users. This loading only occurs if there are no previously authenticated users in the database.
 
-Este proyecto cuenta con una API que incluye un sistema de semillas (seeders) diseñado para cargar distintos usuarios, tanto administradores como usuarios regulares. Esta carga solo se realiza si no hay usuarios previamente autenticados en la base de datos.
+Additionally, the API is documented using Swagger. You can access the documentation by visiting the following URL after launching the project: [Swagger Documentation](http://localhost:8080/swagger-ui.html).
 
-Además, la API está documentada utilizando Swagger. Puedes acceder a la documentación visitando la siguiente URL después de levantar el proyecto: [Swagger Documentation](http://localhost:8080/swagger-ui.html).
+## Login Information
 
-## Datos de Inicio de Sesión
-
-### Usuarios Admin:
+### Admin Users:
 - mateolopez@gmail.com
 - gabrielsuarez@gmail.com
 - rodrigosanchez@gmail.com
@@ -68,9 +67,9 @@ Además, la API está documentada utilizando Swagger. Puedes acceder a la docume
 - georginazenteno@gmail.com
 - lucialopez@gmail.com
 
-En todos los casos, la contraseña es: `useradmin`
+In all cases, the password is: `useradmin`
 
-### Usuarios User:
+### Regular Users:
 - julialedesma@gmail.com
 - paulasanchez@gmail.com
 - nataliaperez@gmail.com
@@ -82,47 +81,57 @@ En todos los casos, la contraseña es: `useradmin`
 - gastongutierrez@gmail.com
 - pabloginobili@gmail.com
 
-En todos los casos, la contraseña es: `useruser`
+In all cases, the password is: `useruser`
 
-## Despliegue
+## Deployment
 
-La aplicación está actualmente deployada en [Render](https://render.com/) y utiliza una base de datos alojada en [Clever Cloud](https://www.clever-cloud.com/).
+The application is currently deployed on [Render](https://render.com/) and uses a database hosted on [Clever Cloud](https://www.clever-cloud.com/).
 
-La base de datos en Clever Cloud utiliza MySQL 8.x.x.
+The Clever Cloud database uses MySQL 8.x.x.
 
-¡Visita [ONG-API en Render](https://ong-api-mscx.onrender.com/swagger-ui.html#) para explorar la aplicación en vivo!
+Visit [ONG-API on Render](https://ong-api-mscx.onrender.com/swagger-ui.html#) to explore the live application!
 
-## Instrucciones para Ejecutar Localmente
+## Instructions for Local Execution
 
-Sigue estos pasos para ejecutar el proyecto en tu máquina local:
+Follow these steps to run the project on your local machine:
 
-1. Clona el repositorio a tu máquina local:
-
-    ```bash
-    git clone https://github.com/tu_usuario/tu_repositorio.git
-    ```
-
-2. Navega al directorio del proyecto:
+1. Clone the repository to your local machine:
 
     ```bash
-    cd tu_repositorio
+    git clone https://github.com/your_username/your_repository.git
     ```
 
-3. Modifica los archivos `application.properties` y `application.yml`, especialmente el URL, USERNAME y PASSWORD para tu entorno local.
+2. Navigate to the project directory:
 
-4. Instala las dependencias:
+    ```bash
+    cd your_repository
+    ```
+
+3. Modify the `application.properties` and `application.yml` files, especially the URL, USERNAME, and PASSWORD for your local environment.
+
+4. Install dependencies:
 
     ```bash
     mvn install
     ```
 
-5. Ejecuta la aplicación:
+5. Run the application:
 
     ```bash
     mvn spring-boot:run
     ```
 
-6. Abre tu navegador y visita [http://localhost:8080/swagger-ui.html#](http://localhost:8080/swagger-ui.html#).
+6. Open your browser and visit [http://localhost:8080/swagger-ui.html#](http://localhost:8080/swagger-ui.html#).
 
-¡Ahora deberías poder explorar la aplicación localmente!
+
+
+## Additional Resources
+
+- **Project Presentation**: Explore a detailed presentation of the project by visiting [this link](https://docs.google.com/presentation/d/1N_aaGmopll2zEWi6PfpSH1Oa0QjKHO6LrJSuGfwc3Go/edit?usp=sharing).
+
+- **Problem Statement**: Understand the challenges addressed by the project by accessing the document at [this link](https://drive.google.com/file/d/1wHiD5_Oify5CDV3YQZfn_Vmjy1NBK5CQ/view?usp=sharing).
+
+...
+
+Now you should be able to explore the application locally!
 
