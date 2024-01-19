@@ -91,6 +91,12 @@ The Clever Cloud database uses MySQL 8.x.x.
 
 Visit [ONG-API on Render](https://ong-api-mscx.onrender.com/swagger-ui.html#) to explore the live application!
 
+**Recommendation for Testing:**
+
+If you want to interact with the deployed API, it is recommended to use testing tools like [Postman](https://www.postman.com/) to work with the user registration token in a more user-friendly manner.
+
+Feel free to explore and test the API using these tools!
+
 ## Instructions for Local Execution
 
 Follow these steps to run the project on your local machine:
