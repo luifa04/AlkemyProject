@@ -33,9 +33,7 @@ Asegúrate de tener las siguientes herramientas instaladas antes de comenzar con
 - **Maven - 4.x.x**
 - **MySQL - 8.x.x**
 
-## Herramientas Recomendadas
-
-Para una experiencia de desarrollo eficiente, se recomienda el uso de las siguientes herramientas:
+## Herramientas utlizadas
 
 - **IntelliJ IDEA Community Edition**: Entorno de desarrollo integrado para Java.
 - **Jira**: Herramienta de gestión de proyectos y seguimiento de problemas.
